@@ -249,24 +249,80 @@ grimoire:
 
 ## Package Structure
 
+项目采用**模块化架构**，每个模块自包含完整的 MVC 分层和通用组件，根包下不再放置公共目录。
+
 ```
 io.aik.steins.grimoire/
 ├── AikSteinsGrimoireApplication.java
-├── common/
-│   ├── constant/ArticleConstants.java
-│   ├── config/{MyBatisPlusConfig, FileStorageConfig, WebMvcConfig}
-│   ├── dto/{ArticleDto, ArticleQueryDto, CategoryDto, TagDto, CodeSnippetDto}
-│   ├── enums/ArticleTypeEnum.java         # NOTE / COMPONENT / SOLUTION / CODE
-│   ├── exception/{BusinessException, GlobalExceptionHandler}
-│   ├── po/{ArticlePo, CategoryPo, TagPo, ArticleTagRelationPo, CodeSnippetPo, AttachmentPo}
-│   ├── vo/{ArticleVo, ArticleListVo, CategoryTreeNodeVo, TagVo, CodeSnippetVo, AttachmentVo}
-│   └── utils/FileStorageUtil.java
-├── controller/{ArticleController, CategoryController, TagController, FileController}
-├── dao/{ArticleMapper, CategoryMapper, TagMapper, ArticleTagRelationMapper, CodeSnippetMapper, AttachmentMapper}
-├── service/{ArticleService, CategoryService, TagService, CodeSnippetService, AttachmentService}
-│   └── impl/{ArticleServiceImpl, CategoryServiceImpl, TagServiceImpl, ...}
+├── core/                               # 基础设施层（无业务，纯技术通用）
+│   ├── po/                             # BaseEntity 等基础实体
+│   ├── dto/                            # Result<T>, PageDTO 等统一返回
+│   ├── exception/                      # BusinessException, GlobalExceptionHandler
+│   ├── constant/                       # 通用常量（响应码等）
+│   ├── enums/                          # 通用枚举（删除标志、状态等）
+│   ├── utils/                          # SpringUtils, AssertUtils 等工具
+│   └── config/                         # MyBatisPlusConfig, JacksonConfig 等
+├── system/                             # 系统管理模块（有业务）
+│   ├── controller/
+│   ├── service/
+│   │   └── impl/
+│   ├── dao/
+│   │   └── mapping/
+│   └── common/
+│       ├── po/
+│       ├── dto/
+│       ├── vo/
+│       ├── constant/
+│       ├── enums/
+│       └── utils/
+├── article/                            # 文章知识模块（示例）
+│   ├── controller/
+│   ├── service/
+│   │   └── impl/
+│   ├── dao/
+│   │   └── mapping/
+│   └── common/
+│       ├── po/
+│       ├── dto/
+│       ├── vo/
+│       ├── constant/
+│       ├── enums/
+│       └── utils/
 └── sql/aik_tables.sql
 ```
+
+### core 与 system 的设计区别
+
+| | **core** | **system** |
+|---|---|---|
+| **定位** | 技术基础设施，无业务语义 | 业务模块，负责系统管理功能 |
+| **对外暴露** | 不暴露 Controller（纯内部支撑） | 对外暴露 REST 接口 |
+| **被依赖关系** | 被所有模块依赖 | 依赖 core，被其他业务模块可选依赖 |
+| **典型内容** | BaseEntity、Result、全局异常、工具类、配置类 | 字典管理、参数配置、操作日志、文件管理 |
+
+**划分原则**：被多个模块复用 → 下沉到 core；仅单个模块自用 → 留在该模块的 common 下。
+
+core 包详细内容：
+- **po/**：`BaseEntity`（含 `id`、`createTime`、`modifyTime` 等通用字段）
+- **dto/**：`Result<T>`、`PageDTO`
+- **exception/**：`BusinessException`、`GlobalExceptionHandler`
+- **constant/**：通用响应码常量、通用状态常量
+- **enums/**：
+  - `IResultCode` — 响应码契约接口
+  - `ResultCode` — 通用响应码枚举（SUCCESS、FAILURE、PARAM_ERROR、UNAUTHORIZED、FORBIDDEN、NOT_FOUND、INTERNAL_ERROR）
+  - `StatusEnum` — 通用状态枚举（ENABLE、DISABLE）
+  - `DeleteFlagEnum` — 删除标志枚举（NOT_DELETED、DELETED），配合 `BaseLogicEntity` 使用
+- **utils/**：
+  - `SpringUtils` — Spring 上下文工具（获取 Bean、发布事件）
+  - `AssertUtils` — 业务断言工具（抛 `BusinessException`）
+  - `JsonUtils` — JSON 序列化/反序列化统一入口（封装 Fastjson）
+  - `ServletUtils` — Web 请求工具（获取 Request/Response、请求参数）
+  - `IpUtils` — 客户端 IP 获取工具（处理代理头）
+- **config/**：
+  - `MyBatisPlusConfig` — MyBatis-Plus 分页插件拦截器
+  - `JacksonConfig` — 定制 `ObjectMapper`（日期格式、时区、忽略 null）
+  - `WebMvcConfig` — CORS 跨域、拦截器注册
+  - `FileStorageConfig` — 文件存储配置项（`@ConfigurationProperties`）
 
 ## Database Design (6 tables)
 

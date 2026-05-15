@@ -1,6 +1,8 @@
 package io.aik.steins.grimoire;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -13,6 +15,7 @@ import java.util.TimeZone;
  * @author a I k .
  */
 @Slf4j
+@MapperScan(basePackages = "io.aik.steins.grimoire.**.dao", markerInterface = BaseMapper.class)
 @SpringBootApplication
 public class AikSteinsGrimoireApplication {
 

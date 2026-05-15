@@ -46,4 +46,4 @@ springdoc:
 grimoire:
   file:
     base-path: ./grimoire-files
-    max-size: 10MB
+    max-size: 10485760
