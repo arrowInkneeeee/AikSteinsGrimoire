@@ -1,6 +1,6 @@
 # AikSteinsGrimoire
 
-a I k 的命运石魔典 — 个人知识库后端 API。
+a I k . 的命运石魔典 — 个人知识库后端 API。
 
 ## 技术栈
 
