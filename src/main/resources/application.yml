@@ -1,0 +1,49 @@
+server:
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
+  port: 18900
+  compression:
+    enabled: true
+    mime-types: application/javascript,text/css,application/json,application/xml,text/html,text/xml,text/plain
+
+spring:
+  output:
+    ansi:
+      enabled: always
+  jmx:
+    enabled: false
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://127.0.0.1:3306/aik_steins_grimoire?useUnicode=true&characterEncoding=utf8mb4&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 50MB
+
+mybatis-plus:
+  mapper-locations: classpath:io/aik/steins/grimoire/**/dao/mapping/*.xml
+  global-config:
+    db-config:
+      id-type: input
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+# --- 魔典自定义配置 ---
+grimoire:
+  file:
+    base-path: ./grimoire-files
+    max-size: 10MB

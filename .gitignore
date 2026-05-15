@@ -1,0 +1,45 @@
+# Compiled output
+target/
+*.jar
+*.war
+*.ear
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Local file storage (grimoire uploads)
+grimoire-files/
+
+# Environment configs with secrets
+application-local.yml
+application-dev-local.yml
+*.env
+
+# Maven
+.mvn/
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# GitNexus
+.gitnexus/
+contracts.json
+
+# Skills library (independent git)
+aik-skills-lab/
