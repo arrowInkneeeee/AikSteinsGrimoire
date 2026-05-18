@@ -2,7 +2,9 @@ package io.aik.steins.grimoire.system.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.aik.steins.grimoire.core.dto.ApiResponse;
+import io.aik.steins.grimoire.core.dto.IdDto;
 import io.aik.steins.grimoire.system.common.dto.FileQuery;
+import io.aik.steins.grimoire.system.common.dto.FileRenameDto;
 import io.aik.steins.grimoire.system.common.vo.FileDownloadResult;
 import io.aik.steins.grimoire.system.common.vo.FileVo;
 import io.aik.steins.grimoire.system.service.FileService;
@@ -14,6 +16,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -62,15 +65,15 @@ public class FileController {
 
     @PostMapping("/rename")
     @Operation(summary = "重命名文件")
-    public ApiResponse<Void> rename(@RequestParam Long id, @RequestParam String originalName) {
-        fileService.rename(id, originalName);
+    public ApiResponse<Void> rename(@RequestBody @Validated FileRenameDto dto) {
+        fileService.rename(dto.getId(), dto.getOriginalName());
         return ApiResponse.success();
     }
 
     @PostMapping("/remove")
     @Operation(summary = "删除文件")
-    public ApiResponse<Void> remove(@RequestParam Long id) {
-        fileService.remove(id);
+    public ApiResponse<Void> remove(@RequestBody @Validated IdDto idDto) {
+        fileService.remove(idDto.getId());
         return ApiResponse.success();
     }
 }

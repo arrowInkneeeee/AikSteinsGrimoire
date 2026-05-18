@@ -2,6 +2,8 @@ package io.aik.steins.grimoire.system.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.aik.steins.grimoire.core.dto.ApiResponse;
+import io.aik.steins.grimoire.core.dto.IdDto;
+import io.aik.steins.grimoire.system.common.dto.DictCodesDto;
 import io.aik.steins.grimoire.system.common.dto.DictItemDto;
 import io.aik.steins.grimoire.system.common.dto.DictItemQuery;
 import io.aik.steins.grimoire.system.common.vo.DictItemVo;
@@ -43,8 +45,8 @@ public class DictItemController {
 
     @PostMapping("/findMapByTypes")
     @Operation(summary = "根据多个字典类型编码批量查询字典项")
-    public ApiResponse<Map<String, List<DictItemVo>>> findMapByTypes(@RequestBody List<String> dictCodes) {
-        return ApiResponse.success(dictItemService.findMapByTypes(dictCodes));
+    public ApiResponse<Map<String, List<DictItemVo>>> findMapByTypes(@RequestBody @Validated DictCodesDto dto) {
+        return ApiResponse.success(dictItemService.findMapByTypes(dto.getDictCodes()));
     }
 
     @PostMapping("/findPage")
@@ -69,8 +71,8 @@ public class DictItemController {
 
     @PostMapping("/remove")
     @Operation(summary = "删除字典项")
-    public ApiResponse<Void> remove(@RequestParam Long id) {
-        dictItemService.remove(id);
+    public ApiResponse<Void> remove(@RequestBody @Validated IdDto idDto) {
+        dictItemService.remove(idDto.getId());
         return ApiResponse.success();
     }
 }

@@ -2,6 +2,7 @@ package io.aik.steins.grimoire.system.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.aik.steins.grimoire.core.dto.ApiResponse;
+import io.aik.steins.grimoire.core.dto.IdDto;
 import io.aik.steins.grimoire.system.common.dto.SystemParamDto;
 import io.aik.steins.grimoire.system.common.dto.SystemParamQuery;
 import io.aik.steins.grimoire.system.common.vo.SystemParamVo;
@@ -68,8 +69,8 @@ public class SystemParamController {
 
     @PostMapping("/remove")
     @Operation(summary = "删除系统参数")
-    public ApiResponse<Void> remove(@RequestParam Long id) {
-        systemParamService.remove(id);
+    public ApiResponse<Void> remove(@RequestBody @Validated IdDto idDto) {
+        systemParamService.remove(idDto.getId());
         return ApiResponse.success();
     }
 

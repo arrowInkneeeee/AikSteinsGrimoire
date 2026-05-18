@@ -2,6 +2,7 @@ package io.aik.steins.grimoire.system.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.aik.steins.grimoire.core.dto.ApiResponse;
+import io.aik.steins.grimoire.core.dto.IdDto;
 import io.aik.steins.grimoire.system.common.dto.DictTypeDto;
 import io.aik.steins.grimoire.system.common.dto.DictTypeQuery;
 import io.aik.steins.grimoire.system.common.vo.DictTypeItemsVo;
@@ -67,8 +68,8 @@ public class DictTypeController {
 
     @PostMapping("/remove")
     @Operation(summary = "删除字典类型")
-    public ApiResponse<Void> remove(@RequestParam Long id) {
-        dictTypeService.remove(id);
+    public ApiResponse<Void> remove(@RequestBody @Validated IdDto idDto) {
+        dictTypeService.remove(idDto.getId());
         return ApiResponse.success();
     }
 }
