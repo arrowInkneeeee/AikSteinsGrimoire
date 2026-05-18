@@ -26,16 +26,6 @@ public class FileStorageConfig {
     private String basePath = "./grimoire-files";
 
     /**
-     * Windows 文件存储根路径
-     */
-    private String basePathWindows;
-
-    /**
-     * Linux 文件存储根路径
-     */
-    private String basePathLinux;
-
-    /**
      * 单个文件最大大小（字节）
      */
     private Long maxSize = 10 * 1024 * 1024L;
@@ -51,14 +41,10 @@ public class FileStorageConfig {
     private String allowTypes;
 
     /**
-     * 获取当前操作系统对应的存储根路径
+     * 获取文件存储根路径
      */
     public String getEffectiveBasePath() {
-        String os = System.getProperty("os.name").toLowerCase();
-        if (os.contains("windows")) {
-            return StrUtil.isNotBlank(basePathWindows) ? basePathWindows : basePath;
-        }
-        return StrUtil.isNotBlank(basePathLinux) ? basePathLinux : basePath;
+        return basePath;
     }
 
     /**
