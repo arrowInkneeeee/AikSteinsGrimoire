@@ -14,7 +14,6 @@ import io.aik.steins.grimoire.system.service.SystemParamService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -76,7 +75,6 @@ public class SystemParamServiceImpl implements SystemParamService {
     }
 
     @Override
-    @Transactional
     public void add(SystemParamDto dto) {
         //anchor 检查参数键是否已存在
         Long count = systemParamMapper.selectCount(
@@ -97,7 +95,6 @@ public class SystemParamServiceImpl implements SystemParamService {
     }
 
     @Override
-    @Transactional
     public void modify(SystemParamDto dto) {
         AssertUtils.notNull(dto.getId(), "ID不能为空");
         SystemParamPo existing = systemParamMapper.selectById(dto.getId());
@@ -131,7 +128,6 @@ public class SystemParamServiceImpl implements SystemParamService {
     }
 
     @Override
-    @Transactional
     public void remove(Long id) {
         SystemParamPo po = systemParamMapper.selectById(id);
         AssertUtils.notNull(po, "系统参数不存在");

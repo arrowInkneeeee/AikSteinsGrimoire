@@ -40,6 +40,9 @@ public class DictItemVo {
     @Schema(description = "创建时间")
     private LocalDateTime createTime;
 
+    @Schema(description = "修改时间")
+    private LocalDateTime modifyTime;
+
     public static DictItemVo of(DictItemPo po) {
         if (po == null) {
             return null;

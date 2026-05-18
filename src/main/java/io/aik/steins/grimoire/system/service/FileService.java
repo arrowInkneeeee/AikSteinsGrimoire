@@ -2,8 +2,8 @@ package io.aik.steins.grimoire.system.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.aik.steins.grimoire.system.common.dto.FileQuery;
+import io.aik.steins.grimoire.system.common.vo.FileDownloadResult;
 import io.aik.steins.grimoire.system.common.vo.FileVo;
-import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -21,7 +21,7 @@ public interface FileService {
     /**
      * 下载文件
      */
-    Resource download(Long id);
+    FileDownloadResult download(Long id);
 
     /**
      * 分页查询

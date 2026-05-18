@@ -15,7 +15,6 @@ import io.aik.steins.grimoire.system.service.DictItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -57,7 +56,6 @@ public class DictItemServiceImpl implements DictItemService {
     }
 
     @Override
-    @Transactional
     public void add(DictItemDto dto) {
         //anchor 检查同类型下字典项编码是否重复
         Long count = dictItemMapper.selectCount(
@@ -78,7 +76,6 @@ public class DictItemServiceImpl implements DictItemService {
     }
 
     @Override
-    @Transactional
     public void modify(DictItemDto dto) {
         AssertUtils.notNull(dto.getId(), "ID不能为空");
         DictItemPo existing = dictItemMapper.selectById(dto.getId());
@@ -104,7 +101,6 @@ public class DictItemServiceImpl implements DictItemService {
     }
 
     @Override
-    @Transactional
     public void remove(Long id) {
         DictItemPo po = dictItemMapper.selectById(id);
         AssertUtils.notNull(po, "字典项不存在");

@@ -11,6 +11,8 @@ CREATE TABLE IF NOT EXISTS aik_dict_type (
     status TINYINT NOT NULL DEFAULT 1 COMMENT '状态：1-启用，0-禁用',
     create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     modify_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+    create_by VARCHAR(64) COMMENT '创建人',
+    modify_by VARCHAR(64) COMMENT '修改人',
     PRIMARY KEY (id),
     UNIQUE KEY uk_dict_code (dict_code),
     KEY idx_status (status)
@@ -27,6 +29,8 @@ CREATE TABLE IF NOT EXISTS aik_dict_item (
     remark VARCHAR(512) COMMENT '备注',
     create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     modify_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+    create_by VARCHAR(64) COMMENT '创建人',
+    modify_by VARCHAR(64) COMMENT '修改人',
     PRIMARY KEY (id),
     UNIQUE KEY uk_dict_item (dict_code, item_code),
     KEY idx_dict_code (dict_code),
@@ -44,6 +48,8 @@ CREATE TABLE IF NOT EXISTS aik_system_param (
     editable TINYINT NOT NULL DEFAULT 1 COMMENT '是否可编辑：1-是，0-否',
     create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     modify_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+    create_by VARCHAR(64) COMMENT '创建人',
+    modify_by VARCHAR(64) COMMENT '修改人',
     PRIMARY KEY (id),
     UNIQUE KEY uk_param_key (param_key),
     KEY idx_param_group (param_group)
@@ -60,6 +66,8 @@ CREATE TABLE IF NOT EXISTS aik_file_record (
     download_count INT NOT NULL DEFAULT 0 COMMENT '下载次数',
     create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     modify_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+    create_by VARCHAR(64) COMMENT '创建人',
+    modify_by VARCHAR(64) COMMENT '修改人',
     PRIMARY KEY (id),
     KEY idx_original_name (original_name),
     KEY idx_create_time (create_time)

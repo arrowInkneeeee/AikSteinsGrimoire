@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
-import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
 /**
@@ -28,8 +27,7 @@ public class JacksonConfig {
     public ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();
 
-        //anchor 统一日期格式
-        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+        //anchor 统一时区
         mapper.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
 
         //anchor 注册 Java 8 时间模块，支持 LocalDateTime 等

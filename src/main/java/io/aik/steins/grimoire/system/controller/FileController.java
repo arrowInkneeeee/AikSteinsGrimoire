@@ -3,6 +3,7 @@ package io.aik.steins.grimoire.system.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.aik.steins.grimoire.core.dto.ApiResponse;
 import io.aik.steins.grimoire.system.common.dto.FileQuery;
+import io.aik.steins.grimoire.system.common.vo.FileDownloadResult;
 import io.aik.steins.grimoire.system.common.vo.FileVo;
 import io.aik.steins.grimoire.system.service.FileService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -45,13 +46,12 @@ public class FileController {
     @GetMapping("/download")
     @Operation(summary = "下载文件")
     public ResponseEntity<Resource> download(@RequestParam Long id) {
-        FileVo fileVo = fileService.findById(id);
-        Resource resource = fileService.download(id);
+        FileDownloadResult result = fileService.download(id);
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=\"" + fileVo.getOriginalName() + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=\"" + result.getOriginalName() + "\"")
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(resource);
+                .body(result.getResource());
     }
 
     @PostMapping("/findPage")

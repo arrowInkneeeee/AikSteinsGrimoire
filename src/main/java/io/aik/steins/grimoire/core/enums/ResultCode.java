@@ -17,7 +17,7 @@ public enum ResultCode implements IResultCode {
     SUCCESS(200, "操作成功"),
 
     //note 失败
-    FAILURE(400, "操作失败"),
+    FAILURE(500, "操作失败"),
 
     //note 参数错误
     PARAM_ERROR(400, "参数错误"),

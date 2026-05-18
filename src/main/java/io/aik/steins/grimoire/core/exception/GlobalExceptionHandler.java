@@ -8,6 +8,8 @@ import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
+
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.stream.Collectors;
@@ -73,6 +75,15 @@ public class GlobalExceptionHandler {
     public ApiResponse<Void> handleHttpMessageNotReadable(HttpMessageNotReadableException e) {
         log.warn("请求体格式错误：{}", e.getMessage());
         return ApiResponse.fail(ResultCode.PARAM_ERROR.getCode(), "请求体格式错误，请检查 JSON 语法");
+    }
+
+    /**
+     * 404 接口不存在
+     */
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ApiResponse<Void> handleNoHandlerFound(NoHandlerFoundException e) {
+        log.warn("接口不存在：{} {}", e.getHttpMethod(), e.getRequestURL());
+        return ApiResponse.fail(ResultCode.NOT_FOUND.getCode(), "接口不存在");
     }
 
     /**

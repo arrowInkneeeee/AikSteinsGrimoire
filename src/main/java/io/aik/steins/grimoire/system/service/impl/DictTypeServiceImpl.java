@@ -16,7 +16,6 @@ import io.aik.steins.grimoire.system.service.DictTypeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 字典类型 Service 实现 -anchor
@@ -49,7 +48,6 @@ public class DictTypeServiceImpl implements DictTypeService {
     }
 
     @Override
-    @Transactional
     public void add(DictTypeDto dto) {
         //anchor 检查字典编码是否已存在
         Long count = dictTypeMapper.selectCount(
@@ -66,7 +64,6 @@ public class DictTypeServiceImpl implements DictTypeService {
     }
 
     @Override
-    @Transactional
     public void modify(DictTypeDto dto) {
         AssertUtils.notNull(dto.getId(), "ID不能为空");
         DictTypePo existing = dictTypeMapper.selectById(dto.getId());
@@ -89,7 +86,6 @@ public class DictTypeServiceImpl implements DictTypeService {
     }
 
     @Override
-    @Transactional
     public void remove(Long id) {
         DictTypePo po = dictTypeMapper.selectById(id);
         AssertUtils.notNull(po, "字典类型不存在");

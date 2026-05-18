@@ -10,6 +10,7 @@ import io.aik.steins.grimoire.core.exception.BusinessException;
 import io.aik.steins.grimoire.core.utils.AssertUtils;
 import io.aik.steins.grimoire.system.common.dto.FileQuery;
 import io.aik.steins.grimoire.system.common.po.FileRecordPo;
+import io.aik.steins.grimoire.system.common.vo.FileDownloadResult;
 import io.aik.steins.grimoire.system.common.vo.FileVo;
 import io.aik.steins.grimoire.system.dao.FileMapper;
 import io.aik.steins.grimoire.system.service.FileService;
@@ -46,12 +47,23 @@ public class FileServiceImpl implements FileService {
         AssertUtils.isTrue(file.getSize() <= fileStorageConfig.getMaxSize(),
                 "文件大小不能超过" + (fileStorageConfig.getMaxSize() / 1024 / 1024) + "MB");
 
+        //anchor 校验文件类型白名单
+        if (Boolean.TRUE.equals(fileStorageConfig.getTypeCheckEnabled())
+                && StrUtil.isNotBlank(fileStorageConfig.getAllowTypes())) {
+            String contentType = StrUtil.nullToEmpty(file.getContentType()).toLowerCase();
+            String ext = StrUtil.nullToEmpty(FileUtil.extName(file.getOriginalFilename())).toLowerCase();
+            boolean allowed = fileStorageConfig.getAllowTypeSet().contains(contentType)
+                    || fileStorageConfig.getAllowTypeSet().contains(ext);
+            AssertUtils.isTrue(allowed, "不支持的文件类型");
+        }
+
         String originalName = file.getOriginalFilename();
         AssertUtils.notEmpty(originalName, "文件名不能为空");
         String ext = FileUtil.extName(originalName);
         String storedName = IdUtil.simpleUUID() + (StrUtil.isNotBlank(ext) ? "." + ext : "");
         String relativePath = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
-        String fullDir = fileStorageConfig.getBasePath() + File.separator + relativePath;
+        String basePath = fileStorageConfig.getEffectiveBasePath();
+        String fullDir = basePath + File.separator + relativePath;
         String fullPath = fullDir + File.separator + storedName;
 
         //anchor 创建目录
@@ -80,11 +92,11 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public Resource download(Long id) {
+    public FileDownloadResult download(Long id) {
         FileRecordPo po = fileMapper.selectById(id);
         AssertUtils.notNull(po, "文件不存在");
 
-        String fullPath = fileStorageConfig.getBasePath() + File.separator + po.getFilePath() + File.separator + po.getStoredName();
+        String fullPath = fileStorageConfig.getEffectiveBasePath() + File.separator + po.getFilePath() + File.separator + po.getStoredName();
         File file = new File(fullPath);
         AssertUtils.isTrue(FileUtil.exist(file), "文件不存在");
 
@@ -95,7 +107,10 @@ public class FileServiceImpl implements FileService {
                         .set(FileRecordPo::getDownloadCount, po.getDownloadCount() + 1));
 
         try {
-            return new InputStreamResource(new FileInputStream(file));
+            FileDownloadResult result = new FileDownloadResult();
+            result.setResource(new InputStreamResource(new FileInputStream(file)));
+            result.setOriginalName(po.getOriginalName());
+            return result;
         } catch (IOException e) {
             log.error("文件读取失败", e);
             throw new BusinessException("文件读取失败");
@@ -124,7 +139,7 @@ public class FileServiceImpl implements FileService {
         AssertUtils.notNull(po, "文件不存在");
 
         //anchor 删除磁盘文件（如果存在）
-        String fullPath = fileStorageConfig.getBasePath() + File.separator + po.getFilePath() + File.separator + po.getStoredName();
+        String fullPath = fileStorageConfig.getEffectiveBasePath() + File.separator + po.getFilePath() + File.separator + po.getStoredName();
         if (FileUtil.exist(fullPath)) {
             FileUtil.del(fullPath);
         }

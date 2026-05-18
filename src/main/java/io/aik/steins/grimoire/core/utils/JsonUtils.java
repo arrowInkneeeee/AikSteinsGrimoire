@@ -2,8 +2,10 @@ package io.aik.steins.grimoire.core.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import io.aik.steins.grimoire.core.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -40,14 +42,24 @@ public final class JsonUtils {
      * JSON 字符串转对象
      */
     public static <T> T parseObject(String json, Class<T> clazz) {
-        return JSON.parseObject(json, clazz);
+        try {
+            return JSON.parseObject(json, clazz);
+        } catch (JSONException e) {
+            log.warn("JSON 解析失败：{}", e.getMessage());
+            throw new BusinessException("JSON 解析失败");
+        }
     }
 
     /**
      * JSON 字符串转 List
      */
     public static <T> List<T> parseList(String json, Class<T> clazz) {
-        return JSON.parseArray(json, clazz);
+        try {
+            return JSON.parseArray(json, clazz);
+        } catch (JSONException e) {
+            log.warn("JSON 解析失败：{}", e.getMessage());
+            throw new BusinessException("JSON 解析失败");
+        }
     }
 
     /**
@@ -55,21 +67,36 @@ public final class JsonUtils {
      */
     @SuppressWarnings("unchecked")
     public static Map<String, Object> parseMap(String json) {
-        return JSON.parseObject(json, Map.class);
+        try {
+            return JSON.parseObject(json, Map.class);
+        } catch (JSONException e) {
+            log.warn("JSON 解析失败：{}", e.getMessage());
+            throw new BusinessException("JSON 解析失败");
+        }
     }
 
     /**
      * JSON 字符串转 JSONObject
      */
     public static JSONObject parseObject(String json) {
-        return JSON.parseObject(json);
+        try {
+            return JSON.parseObject(json);
+        } catch (JSONException e) {
+            log.warn("JSON 解析失败：{}", e.getMessage());
+            throw new BusinessException("JSON 解析失败");
+        }
     }
 
     /**
      * JSON 字符串转 JSONArray
      */
     public static JSONArray parseArray(String json) {
-        return JSON.parseArray(json);
+        try {
+            return JSON.parseArray(json);
+        } catch (JSONException e) {
+            log.warn("JSON 解析失败：{}", e.getMessage());
+            throw new BusinessException("JSON 解析失败");
+        }
     }
 
     /**
