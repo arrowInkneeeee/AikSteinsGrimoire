@@ -60,6 +60,13 @@ public class FileController {
         return ApiResponse.success(fileService.findPage(query));
     }
 
+    @PostMapping("/rename")
+    @Operation(summary = "重命名文件")
+    public ApiResponse<Void> rename(@RequestParam Long id, @RequestParam String originalName) {
+        fileService.rename(id, originalName);
+        return ApiResponse.success();
+    }
+
     @PostMapping("/remove")
     @Operation(summary = "删除文件")
     public ApiResponse<Void> remove(@RequestParam Long id) {

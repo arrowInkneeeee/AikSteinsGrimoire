@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 字典项 Controller -anchor
@@ -38,6 +39,12 @@ public class DictItemController {
     @Operation(summary = "根据字典类型编码查询启用项列表")
     public ApiResponse<List<DictItemVo>> findListByType(@RequestParam String dictCode) {
         return ApiResponse.success(dictItemService.findListByType(dictCode));
+    }
+
+    @PostMapping("/findMapByTypes")
+    @Operation(summary = "根据多个字典类型编码批量查询字典项")
+    public ApiResponse<Map<String, List<DictItemVo>>> findMapByTypes(@RequestBody List<String> dictCodes) {
+        return ApiResponse.success(dictItemService.findMapByTypes(dictCodes));
     }
 
     @PostMapping("/findPage")

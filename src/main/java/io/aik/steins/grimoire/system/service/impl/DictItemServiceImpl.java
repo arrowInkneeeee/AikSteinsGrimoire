@@ -16,7 +16,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -31,15 +34,24 @@ public class DictItemServiceImpl implements DictItemService {
 
     private final DictItemMapper dictItemMapper;
 
+    //anchor 字典项本地缓存，key: dictCode
+    private final ConcurrentHashMap<String, List<DictItemVo>> dictItemCache = new ConcurrentHashMap<>();
+
     @Override
     public List<DictItemVo> findListByType(String dictCode) {
         AssertUtils.notEmpty(dictCode, "字典类型编码不能为空");
+        List<DictItemVo> cached = dictItemCache.get(dictCode);
+        if (cached != null) {
+            return cached;
+        }
         List<DictItemPo> list = dictItemMapper.selectList(
                 new LambdaQueryWrapper<DictItemPo>()
                         .eq(DictItemPo::getDictCode, dictCode)
                         .eq(DictItemPo::getStatus, SystemConstant.STATUS_ENABLE)
                         .orderByAsc(DictItemPo::getSortOrder));
-        return list.stream().map(DictItemVo::of).collect(Collectors.toList());
+        List<DictItemVo> result = list.stream().map(DictItemVo::of).collect(Collectors.toList());
+        dictItemCache.put(dictCode, result);
+        return result;
     }
 
     @Override
@@ -53,6 +65,16 @@ public class DictItemServiceImpl implements DictItemService {
                 .orderByDesc(DictItemPo::getCreateTime);
 
         return dictItemMapper.selectPage(query.toPage(), wrapper).convert(DictItemVo::of);
+    }
+
+    @Override
+    public Map<String, List<DictItemVo>> findMapByTypes(List<String> dictCodes) {
+        AssertUtils.notEmpty(dictCodes, "字典类型编码列表不能为空");
+        Map<String, List<DictItemVo>> result = new HashMap<>();
+        for (String dictCode : dictCodes) {
+            result.put(dictCode, findListByType(dictCode));
+        }
+        return result;
     }
 
     @Override
@@ -73,6 +95,9 @@ public class DictItemServiceImpl implements DictItemService {
         po.setStatus(dto.getStatus());
         po.setRemark(dto.getRemark());
         dictItemMapper.insert(po);
+
+        //anchor 刷新缓存
+        clearDictItemCache(dto.getDictCode());
     }
 
     @Override
@@ -98,6 +123,12 @@ public class DictItemServiceImpl implements DictItemService {
         existing.setStatus(dto.getStatus());
         existing.setRemark(dto.getRemark());
         dictItemMapper.updateById(existing);
+
+        //anchor 刷新缓存
+        clearDictItemCache(existing.getDictCode());
+        if (!existing.getDictCode().equals(dto.getDictCode())) {
+            clearDictItemCache(dto.getDictCode());
+        }
     }
 
     @Override
@@ -105,5 +136,17 @@ public class DictItemServiceImpl implements DictItemService {
         DictItemPo po = dictItemMapper.selectById(id);
         AssertUtils.notNull(po, "字典项不存在");
         dictItemMapper.deleteById(id);
+
+        //anchor 刷新缓存
+        clearDictItemCache(po.getDictCode());
+    }
+
+    /**
+     * 清除字典项缓存
+     */
+    private void clearDictItemCache(String dictCode) {
+        if (StrUtil.isNotBlank(dictCode)) {
+            dictItemCache.remove(dictCode);
+        }
     }
 }

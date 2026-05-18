@@ -5,6 +5,8 @@ import io.aik.steins.grimoire.system.common.dto.SystemParamDto;
 import io.aik.steins.grimoire.system.common.dto.SystemParamQuery;
 import io.aik.steins.grimoire.system.common.vo.SystemParamVo;
 
+import java.util.List;
+
 /**
  * 系统参数 Service -anchor
  *
@@ -26,6 +28,11 @@ public interface SystemParamService {
      * 根据参数键获取参数值（从缓存读取）
      */
     String getParamValue(String paramKey);
+
+    /**
+     * 根据参数分组查询参数列表
+     */
+    List<SystemParamVo> findByGroup(String paramGroup);
 
     /**
      * 新增

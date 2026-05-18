@@ -5,10 +5,13 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.aik.steins.grimoire.core.utils.AssertUtils;
+import io.aik.steins.grimoire.system.common.constant.SystemConstant;
 import io.aik.steins.grimoire.system.common.dto.DictTypeDto;
 import io.aik.steins.grimoire.system.common.dto.DictTypeQuery;
 import io.aik.steins.grimoire.system.common.po.DictItemPo;
 import io.aik.steins.grimoire.system.common.po.DictTypePo;
+import io.aik.steins.grimoire.system.common.vo.DictItemVo;
+import io.aik.steins.grimoire.system.common.vo.DictTypeItemsVo;
 import io.aik.steins.grimoire.system.common.vo.DictTypeVo;
 import io.aik.steins.grimoire.system.dao.DictItemMapper;
 import io.aik.steins.grimoire.system.dao.DictTypeMapper;
@@ -16,6 +19,9 @@ import io.aik.steins.grimoire.system.service.DictTypeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 字典类型 Service 实现 -anchor
@@ -45,6 +51,27 @@ public class DictTypeServiceImpl implements DictTypeService {
     public DictTypeVo findById(Long id) {
         DictTypePo po = dictTypeMapper.selectById(id);
         return DictTypeVo.of(po);
+    }
+
+    @Override
+    public DictTypeItemsVo findTypeWithItems(String dictCode) {
+        AssertUtils.notEmpty(dictCode, "字典类型编码不能为空");
+        DictTypePo typePo = dictTypeMapper.selectOne(
+                new LambdaQueryWrapper<DictTypePo>()
+                        .eq(DictTypePo::getDictCode, dictCode));
+        AssertUtils.notNull(typePo, "字典类型不存在");
+
+        List<DictItemPo> itemPos = dictItemMapper.selectList(
+                new LambdaQueryWrapper<DictItemPo>()
+                        .eq(DictItemPo::getDictCode, dictCode)
+                        .eq(DictItemPo::getStatus, SystemConstant.STATUS_ENABLE)
+                        .orderByAsc(DictItemPo::getSortOrder));
+
+        DictTypeItemsVo vo = new DictTypeItemsVo();
+        vo.setDictCode(typePo.getDictCode());
+        vo.setDictName(typePo.getDictName());
+        vo.setItems(itemPos.stream().map(DictItemVo::of).collect(Collectors.toList()));
+        return vo;
     }
 
     @Override

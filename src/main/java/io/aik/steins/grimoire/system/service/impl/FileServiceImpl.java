@@ -134,6 +134,18 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
+    public void rename(Long id, String originalName) {
+        AssertUtils.notNull(id, "文件ID不能为空");
+        AssertUtils.notEmpty(originalName, "文件名不能为空");
+        FileRecordPo po = fileMapper.selectById(id);
+        AssertUtils.notNull(po, "文件不存在");
+
+        //anchor 只修改显示名称，磁盘存储名和路径不变
+        po.setOriginalName(originalName);
+        fileMapper.updateById(po);
+    }
+
+    @Override
     public void remove(Long id) {
         FileRecordPo po = fileMapper.selectById(id);
         AssertUtils.notNull(po, "文件不存在");

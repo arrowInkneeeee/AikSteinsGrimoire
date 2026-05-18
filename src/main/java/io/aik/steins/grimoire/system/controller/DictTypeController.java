@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.aik.steins.grimoire.core.dto.ApiResponse;
 import io.aik.steins.grimoire.system.common.dto.DictTypeDto;
 import io.aik.steins.grimoire.system.common.dto.DictTypeQuery;
+import io.aik.steins.grimoire.system.common.vo.DictTypeItemsVo;
 import io.aik.steins.grimoire.system.common.vo.DictTypeVo;
 import io.aik.steins.grimoire.system.service.DictTypeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,6 +43,12 @@ public class DictTypeController {
     @Operation(summary = "根据 ID 查询字典类型")
     public ApiResponse<DictTypeVo> findById(@RequestParam Long id) {
         return ApiResponse.success(dictTypeService.findById(id));
+    }
+
+    @GetMapping("/findTypeWithItems")
+    @Operation(summary = "根据字典编码查询类型及字典项列表")
+    public ApiResponse<DictTypeItemsVo> findTypeWithItems(@RequestParam String dictCode) {
+        return ApiResponse.success(dictTypeService.findTypeWithItems(dictCode));
     }
 
     @PostMapping("/add")

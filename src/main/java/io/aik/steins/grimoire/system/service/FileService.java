@@ -37,4 +37,9 @@ public interface FileService {
      * 删除文件
      */
     void remove(Long id);
+
+    /**
+     * 重命名文件（只修改显示名称，不影响磁盘存储）
+     */
+    void rename(Long id, String originalName);
 }

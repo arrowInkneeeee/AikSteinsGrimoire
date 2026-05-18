@@ -6,6 +6,7 @@ import io.aik.steins.grimoire.system.common.dto.DictItemQuery;
 import io.aik.steins.grimoire.system.common.vo.DictItemVo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 字典项 Service -anchor
@@ -38,4 +39,9 @@ public interface DictItemService {
      * 删除
      */
     void remove(Long id);
+
+    /**
+     * 根据多个字典类型编码批量查询字典项
+     */
+    Map<String, List<DictItemVo>> findMapByTypes(List<String> dictCodes);
 }

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * 系统参数 Service 实现 -anchor
@@ -56,6 +57,16 @@ public class SystemParamServiceImpl implements SystemParamService {
         SystemParamPo po = systemParamMapper.selectOne(
                 new LambdaQueryWrapper<SystemParamPo>().eq(SystemParamPo::getParamKey, paramKey));
         return SystemParamVo.of(po);
+    }
+
+    @Override
+    public List<SystemParamVo> findByGroup(String paramGroup) {
+        AssertUtils.notEmpty(paramGroup, "参数分组不能为空");
+        List<SystemParamPo> list = systemParamMapper.selectList(
+                new LambdaQueryWrapper<SystemParamPo>()
+                        .eq(SystemParamPo::getParamGroup, paramGroup)
+                        .orderByDesc(SystemParamPo::getCreateTime));
+        return list.stream().map(SystemParamVo::of).collect(Collectors.toList());
     }
 
     @Override

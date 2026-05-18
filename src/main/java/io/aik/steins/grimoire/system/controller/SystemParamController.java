@@ -7,6 +7,8 @@ import io.aik.steins.grimoire.system.common.dto.SystemParamQuery;
 import io.aik.steins.grimoire.system.common.vo.SystemParamVo;
 import io.aik.steins.grimoire.system.service.SystemParamService;
 import io.swagger.v3.oas.annotations.Operation;
+
+import java.util.List;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +44,12 @@ public class SystemParamController {
     @Operation(summary = "根据参数键查询")
     public ApiResponse<SystemParamVo> findByKey(@RequestParam String paramKey) {
         return ApiResponse.success(systemParamService.findByKey(paramKey));
+    }
+
+    @GetMapping("/findByGroup")
+    @Operation(summary = "根据参数分组查询参数列表")
+    public ApiResponse<List<SystemParamVo>> findByGroup(@RequestParam String group) {
+        return ApiResponse.success(systemParamService.findByGroup(group));
     }
 
     @PostMapping("/add")
