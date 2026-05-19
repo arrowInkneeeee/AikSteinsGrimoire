@@ -1,0 +1,32 @@
+# scrolls 模块
+
+> 卷轴内容存储层
+
+## 职责
+
+存放学习笔记、文章内容（Markdown 格式）。
+
+## 结构说明
+
+```
+scrolls/
+├── README.md              # 模块说明
+├── template/              # 卷轴模板骨架
+│   └── README.md
+└── {scroll-name}/         # 具体卷轴子包
+    └── README.md          # 卷轴正文（Markdown）
+```
+
+## 元数据管理
+
+卷轴元数据（标题、分类、标签、状态等）**不存放在此模块**，统一通过 `knowledge` 模块管理：
+- 数据库表：`aik_knowledge`，`type = 1`
+- `resource_path` 指向 `scrolls/{scroll-name}/`
+- 新增/修改/删除/查询全部调用 `KnowledgeController` 接口
+
+## 当前卷轴列表
+
+| 卷轴名称 | 路径 | 状态 |
+|---------|------|------|
+| template | `scrolls/template/` | 模板骨架 |
+| gitnexus-guide | `scrolls/gitnexus-guide/` | GitNexus 学习笔记 |
