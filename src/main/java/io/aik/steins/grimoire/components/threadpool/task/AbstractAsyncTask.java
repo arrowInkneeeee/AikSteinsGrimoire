@@ -1,6 +1,7 @@
 package io.aik.steins.grimoire.components.threadpool.task;
 
 import io.aik.steins.grimoire.components.threadpool.handler.TaskExceptionHandler;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -20,14 +21,11 @@ import lombok.extern.slf4j.Slf4j;
 public abstract class AbstractAsyncTask<T> implements Runnable {
 
     protected final T context;
+    @Setter
     private TaskExceptionHandler exceptionHandler;
 
     protected AbstractAsyncTask(T context) {
         this.context = context;
-    }
-
-    public void setExceptionHandler(TaskExceptionHandler exceptionHandler) {
-        this.exceptionHandler = exceptionHandler;
     }
 
     @Override

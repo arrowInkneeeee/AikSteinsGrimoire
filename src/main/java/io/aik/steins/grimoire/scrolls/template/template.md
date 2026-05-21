@@ -6,7 +6,7 @@
 
 ```
 {scroll-name}/
-└── README.md              # 卷轴正文（Markdown）
+└── {scroll-name}.md       # 卷轴正文（Markdown）
 ```
 
 ## 元数据关联

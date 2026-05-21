@@ -12,9 +12,9 @@
 scrolls/
 ├── README.md              # 模块说明
 ├── template/              # 卷轴模板骨架
-│   └── README.md
+│   └── template.md
 └── {scroll-name}/         # 具体卷轴子包
-    └── README.md          # 卷轴正文（Markdown）
+    └── {scroll-name}.md   # 卷轴正文（Markdown）
 ```
 
 ## 元数据管理
@@ -30,3 +30,4 @@ scrolls/
 |---------|------|------|
 | template | `scrolls/template/` | 模板骨架 |
 | gitnexus-guide | `scrolls/gitnexus-guide/` | GitNexus 学习笔记 |
+| skills-guide | `scrolls/skills-guide/` | Skills 从入门到精通学习笔记 |
