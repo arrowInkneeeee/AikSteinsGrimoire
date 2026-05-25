@@ -31,3 +31,4 @@ scrolls/
 | template | `scrolls/template/` | 模板骨架 |
 | gitnexus-guide | `scrolls/gitnexus-guide/` | GitNexus 学习笔记 |
 | skills-guide | `scrolls/skills-guide/` | Skills 从入门到精通学习笔记 |
+| git-guide | `scrolls/git-guide/` | Git 操作指南 |
