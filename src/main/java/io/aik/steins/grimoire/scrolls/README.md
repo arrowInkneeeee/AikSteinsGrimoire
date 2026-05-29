@@ -33,3 +33,4 @@ scrolls/
 | skills-guide | `scrolls/skills-guide/` | Skills 从入门到精通学习笔记 |
 | git-guide | `scrolls/git-guide/` | Git 操作指南 |
 | ssl-https-guide | `scrolls/ssl-https-guide/` | SSL/TLS 与 HTTPS 完全指南 |
+| claude-cli-guide | `scrolls/claude-cli-guide/` | Claude CLI（Claude Code）Windows 安装指南 |
