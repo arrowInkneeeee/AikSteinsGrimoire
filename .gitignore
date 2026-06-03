@@ -41,5 +41,5 @@ application-dev-local.yml
 .gitnexus/
 contracts.json
 
-# Skills library (independent git)
-aik-skills-lab/
+# 全局忽略git目录
+**/.git/
