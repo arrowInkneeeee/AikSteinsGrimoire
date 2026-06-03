@@ -43,3 +43,4 @@ contracts.json
 
 # 全局忽略git目录
 **/.git/
+/aik-skills-lab/.git.bck/

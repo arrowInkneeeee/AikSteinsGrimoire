@@ -1,0 +1,13 @@
+# IDE
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# GitNexus
+.gitnexus/
+CLAUDE.md
+AGENTS.md
+.claude/
