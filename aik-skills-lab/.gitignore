@@ -11,3 +11,6 @@ Thumbs.db
 CLAUDE.md
 AGENTS.md
 .claude/
+
+# 全局忽略git目录
+**/.git/
