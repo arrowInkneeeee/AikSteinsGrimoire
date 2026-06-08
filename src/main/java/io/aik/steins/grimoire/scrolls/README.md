@@ -34,3 +34,4 @@ scrolls/
 | git-guide | `scrolls/git-guide/` | Git 操作指南 |
 | ssl-https-guide | `scrolls/ssl-https-guide/` | SSL/TLS 与 HTTPS 完全指南 |
 | claude-cli-guide | `scrolls/claude-cli-guide/` | Claude CLI（Claude Code）Windows 安装指南 |
+| vmware-ubuntu-setup | `scrolls/vmware-ubuntu-setup/` | VMware 安装 Ubuntu 与初始化配置指南 |
