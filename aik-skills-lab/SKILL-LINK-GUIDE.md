@@ -15,6 +15,8 @@ d:\JeBrainsWorkSpace\AikSteinsGrimoire\aik-skills-lab\
 | Lingma | `C:\Users\arrowInknee\.lingma\skills` | 目录联接（Junction） |
 | Qoder | `C:\Users\arrowInknee\.qoder\skills` | 目录联接（Junction） |
 
+> **目录名称规范**：各 IDE 的技能目录标准名称固定为 `skills`，请勿使用 `skillslib` 或其他变体名称。
+
 ## 连接方法（Windows）
 
 推荐 **目录联接（Junction）**，实时同步且无需管理员权限。
@@ -82,6 +84,7 @@ git checkout v{新版本号}
 | Lingma | `C:\Users\arrowInknee\.lingma\skills` | Junction | a I k | 2026-05-15 |
 | Qoder | `C:\Users\arrowInknee\.qoder\skills` | Junction | a I k | 2026-05-15 |
 | Claude | `C:\Users\arrowInknee\.claude\skills` | Junction | a I k | 2026-05-15 |
+| QoderCN | `C:\Users\syLvate\.qoder-cn\skills` | Junction | a I k | 2026-07-08 |
 | {新IDE} | `{路径}` | Junction | {维护人} | {日期} |
 
 ## 注意事项
