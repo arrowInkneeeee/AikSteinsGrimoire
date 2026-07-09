@@ -10,9 +10,6 @@
 
 ```
 .skills/
-├── scripts/                              # 全局脚本（BOM检查、命名校验）
-├── learning-notes/                       # 学习心得与设计文档
-│
 ├── Pipeline 统一入口（2个技能）
 │   ├── java-sdlc-pipeline               # 5阶段SDLC流水线，含质量门禁与人工确认
 │   └── component-extraction-rewriting-workflow  # 组件萃取复写流水线（2阶段+人工确认）
@@ -419,7 +416,7 @@ AI：自动协调审查技能：
 - **新增**：`spec-component-extractor` 萃取协调者（gitnexus auto-index + 人工确认）
 - **新增**：`component-code-rewriter` 6大脱敏策略 + 代码风格审查（L3: 211行核心 + references）
 - **新增**：`spec-component-rewriter` 复写协调者（3层代码审查）
-- **新增**：`learning-notes/component-extraction-workflow-plan.md` 终稿设计方案
+- **新增**：`component-extraction-workflow` 组件萃取复写流水线设计方案（后归档至 `zero/learning-notes/`）
 - **集成**：gitnexus MCP 代码智能引擎，支持跨项目知识图谱分析
 - 技能总数：42 → 47
 

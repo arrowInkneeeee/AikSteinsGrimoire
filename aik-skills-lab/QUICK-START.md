@@ -222,7 +222,7 @@ REFACTOR阶段：
 | 自动加载 | L1 YAML 元数据 + L2 核心指令 | 所有技能 |
 | `参考`/`规范`/`模板` | L3 references/ | aIk-coding-style |
 | `模板`/`生成` | L3 assets/ | spec-requirement-analyser |
-| `脚本`/`检查` | scripts/ | scripts/naming-validator.sh |
+| `脚本`/`检查` | aIk-coding-style/scripts/ | aIk-coding-style/scripts/naming-validator.sh |
 
 ## 故障排除
 
