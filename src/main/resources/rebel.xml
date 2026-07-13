@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns="http://www.zeroturnaround.com"
+             xsi:schemaLocation="http://www.zeroturnaround.com http://www.zeroturnaround.com/alderaan/rebel-2_0.xsd">
+    <id>hussar-web</id>
+    <classpath>
+        <dir name="${rebel.project.path}/target/classes">
+            <!-- 排除前端静态资源，保留yml/properties/xml配置文件 -->
+            <exclude name="**/*.html"/>
+            <exclude name="**/*.js"/>
+            <exclude name="**/*.css"/>
+            <exclude name="**/*.vue"/>
+
+            <!--            &lt;!&ndash; 提速：排除几乎不会修改的Java类目录 &ndash;&gt;-->
+            <!--            <exclude name="**/enums/**"/>-->
+            <!--            <exclude name="**/constant/**"/>-->
+            <!--            <exclude name="**/generated/**"/>-->
+            <!--            <exclude name="**/mapper/auto/**"/>-->
+            <!--            <exclude name="**/util/**"/>-->
+            <!--            <exclude name="**/task/**"/>-->
+        </dir>
+    </classpath>
+
+    <web>
+        <exclude name="/static/**"/>
+        <exclude name="/templates/**"/>
+    </web>
+
+    <jvm>
+        <option>-Drebel.jar_scan.skip_third_party=true</option>
+        <option>-Drebel.reload.async=true</option>
+        <option>-Drebel.classpath.checksums=false</option>
+        <option>-Drebel.spring.properties.refresh=true</option>
+    </jvm>
+</application>
