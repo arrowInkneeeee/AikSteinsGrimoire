@@ -25,7 +25,7 @@ version: 1.1.0
 **NOTE 类型的特殊性**：
 - Phase 1 不需要 gitnexus 索引（非代码资料）
 - Phase 2 不需要脱敏和代码审查（非代码产物）
-- 产物直接保存为 `scrolls/{name}/README.md`
+- 产物直接保存为 `src/main/java/io/aik/steins/grimoire/scrolls/{name}/README.md`
 
 ---
 
@@ -43,7 +43,7 @@ version: 1.1.0
 │         或整理后的笔记/文章（Markdown）                      │
 │         含类型标记（NOTE/COMPONENT/SOLUTION/CODE）          │
 │   产物保存:                                               │
-│     NOTE    → scrolls/{name}/README.md                    │
+│     NOTE    → src/main/java/io/aik/steins/grimoire/scrolls/{name}/README.md
 │     其他    → doc/ComponentManual-{code}.md               │
 │   门禁:                                                   │
 │     NOTE    → 内容完整性审核 + 用户确认                     │
@@ -53,7 +53,7 @@ version: 1.1.0
 │   输入: Phase 1 产物（含类型标记）                          │
 │   输出: 标准化代码产物 或 卷轴内容                           │
 │   规则: 根据类型标记自动决定产物形式                         │
-│         NOTE      → scrolls/{name}/README.md   文件落盘   │
+│         NOTE      → src/main/java/io/aik/steins/grimoire/scrolls/{name}/README.md   文件落盘   │
 │         COMPONENT → components/{code}/         文件结构   │
 │         SOLUTION  → solutions/{code}/          文件结构   │
 │         CODE      → content 字段存储，不生成文件            │
@@ -112,7 +112,7 @@ version: 1.1.0
 ```
 Phase 1 已完成。产出物：整理后的笔记/文章
 类型标记：NOTE
-产物已保存至：scrolls/{name}/README.md
+产物已保存至：src/main/java/io/aik/steins/grimoire/scrolls/{name}/README.md
 内容结构：[章节数/字数]
 资料来源：[URL/文档/用户描述]
 质量检查：[通过/未通过]
@@ -136,7 +136,7 @@ Phase 1 已完成。产出物：Component Manual v1.0
 ```
 Phase 2 已完成。产出物：卷轴内容
 类型标记：NOTE
-产物路径：scrolls/{name}/README.md
+产物路径：src/main/java/io/aik/steins/grimoire/scrolls/{name}/README.md
 内容质量：[通过/未通过]
 格式规范：[通过/未通过]
 是否继续进入 Phase 3（元数据入库）？
@@ -166,7 +166,7 @@ Phase 3 元数据入库确认：
 - 编码：[code]
 - 类型：[NOTE(1)/COMPONENT(2)/SOLUTION(3)/CODE(4)]
 - 摘要：[用途描述]
-- 资源路径：[文件包路径，CODE类型为空，NOTE类型为scrolls/{name}/]
+- 资源路径：[文件包路径，CODE类型为空，NOTE类型为src/main/java/io/aik/steins/grimoire/scrolls/{name}/]
 - 正文/片段：[content预览，CODE类型显示代码片段]
 
 数据库表状态：[就绪/未创建（需先执行 sql/aik_knowledge_tables.sql）]
@@ -223,7 +223,7 @@ Phase 3 元数据入库确认：
 - **NOTE 类型特殊规则**：
   - Phase 1 不需要 gitnexus 索引（非代码资料）
   - Phase 2 不需要脱敏和代码审查
-  - 产物必须保存到 `scrolls/{name}/README.md`，并同步更新 `scrolls/README.md` 的卷轴列表
+  - 产物必须保存到 `src/main/java/io/aik/steins/grimoire/scrolls/{name}/README.md`，并同步更新 `src/main/java/io/aik/steins/grimoire/scrolls/README.md` 的卷轴列表
 - **COMPONENT/SOLUTION/CODE 类型规则**：
   - Phase 1 的 gitnexus 索引检查自动执行
   - Phase 1 产物（Component Manual v1.0）必须保存到本地文件：`源项目根目录/doc/ComponentManual-{code}.md`，其中 `{code}` 为组件编码（如 files-to-zip-utils）。若 doc 目录不存在则自动创建
