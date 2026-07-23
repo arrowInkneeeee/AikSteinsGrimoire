@@ -24,8 +24,6 @@ Thumbs.db
 *.log
 logs/
 
-# Local file storage (grimoire uploads)
-grimoire-files/
 
 # Environment configs with secrets
 application-local.yml
