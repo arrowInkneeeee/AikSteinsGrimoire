@@ -85,6 +85,7 @@ git checkout v{新版本号}
 | Qoder | `C:\Users\arrowInknee\.qoder\skills` | Junction | a I k | 2026-05-15 |
 | Claude | `C:\Users\arrowInknee\.claude\skills` | Junction | a I k | 2026-05-15 |
 | QoderCN | `C:\Users\syLvate\.qoder-cn\skills` | Junction | a I k | 2026-07-08 |
+| CcSwitch | `C:\Users\syLvate\.cc-switch\skills` | Junction | a I k | 2026-07-23 |
 | {新IDE} | `{路径}` | Junction | {维护人} | {日期} |
 
 ## 注意事项

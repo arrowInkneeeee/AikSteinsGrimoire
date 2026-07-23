@@ -1,6 +1,6 @@
-# 基于 aik-skills-lab 创建专属个人 Agent 方案
+# 01 — 主方案
 
-> 方案版本：v1.0 | 日期：2026-07-23 | 状态：待实施
+> 方案版本：v1.1 | 日期：2026-07-24 | 状态：待实施
 
 ## Context
 
@@ -49,7 +49,7 @@ CLAUDE.md                        ← 新增 "可用 Agent" 章节
 │                                              │
 │ 1. 理解需求 → 判断复杂度                       │
 │    ├── 简单任务 → 直接调用对应 Skill            │
-│    └── 复杂任务 → 启动 java-sdlc-pipeline       │
+│    └── 复杂任务 → 自编排 spec-* 协调者          │
 │                                              │
 │ 2. 按阶段执行                                 │
 │    Phase 1 需求 → spec-requirement-analyser   │
@@ -58,7 +58,7 @@ CLAUDE.md                        ← 新增 "可用 Agent" 章节
 │    Phase 4 测试 → spec-qa-analyser            │
 │    Phase 5 部署 → spec-devops                 │
 │                                              │
-│ 3. 质量门禁 + 人工确认（每阶段）                 │
+│ 3. 三级自主权门禁（详见 03-confirmation-gates）  │
 │                                              │
 │ 4. 输出完整交付物                              │
 └─────────────────────────────────────────────┘
@@ -68,7 +68,7 @@ CLAUDE.md                        ← 新增 "可用 Agent" 章节
 
 ### 1. 新建：`.claude/agents/aik-dev-agent.md`
 
-这是核心交付物。内容基于现有 `agent.md` 升级而来，包含两个部分：
+这是核心交付物。内容基于现有 `agent.md` 升级而来，包含 YAML frontmatter + 系统提示词正文。
 
 **YAML frontmatter**（新增）：
 ```yaml
@@ -78,7 +78,6 @@ description: aIk 的专属 Java 后端开发智能体 — 覆盖需求分析、�
 model: opus
 tools: *
 skills:
-  # 完整 47 技能列表（让 Agent 在 L1 层面感知所有可用技能）
   - java-sdlc-pipeline
   - component-extraction-rewriting-workflow
   - aIk-coding-style
@@ -129,52 +128,20 @@ skills:
 ---
 ```
 
-**正文**（基于 agent.md v2.0 升级）：
+**正文章节结构**（基于 agent.md v2.0 升级）：
 
-现有 `agent.md` 包含以下章节，全部保留并增强：
-- 角色定义 — 升级为"Agent 自述"
-- 技术栈 — 保持不变
-- 技能库 — 改为**技能调度规则**（新增：什么场景自动调用什么技能）
-- 核心编码规范 — 保持不变
-- 行为约束 — 新增 Agent 特有约束
-- 人机协作规则 — 保持不变
-- 输出标准 — 保持不变
-- 启动指令 — 升级为**触发场景速查**
-
-**新增章节**：
-
-```markdown
-## 技能调度规则（新增）
-
-当用户请求匹配以下场景时，自动调用对应技能：
-
-| 用户意图 | 调度策略 |
-|---------|---------|
-| "开发XX模块/系统" | → java-sdlc-pipeline（全流程） |
-| "从XX项目提取XX" | → component-extraction-rewriting-workflow |
-| "分析需求/澄清需求" | → spec-requirement-analyser |
-| "设计架构/数据库/API" | → spec-designer |
-| "生成代码/实现功能" | → spec-implementer |
-| "生成测试/测试覆盖率" | → spec-qa-analyser |
-| "打包/部署/Docker" | → spec-devops |
-| "审查/检查代码" | → code-style-reviewer → code-quality-reviewer → code-security-reviewer → bug-pattern-analyzer（四连审） |
-| "写周报/润色文档" | → doc-writing-helper |
-| "测试技能" | → skill-tester |
-
-## 子 Agent 调度（未来扩展）
-
-以下场景将委托给专项子 Agent（Phase 2+ 实施）：
-
-| 场景 | 委托目标 | 模型 |
-|------|---------|------|
-| 代码审查（四连审） | aik-review | Sonnet |
-| 系统设计 | aik-design | Sonnet |
-| 代码生成实施 | aik-implement | Sonnet |
-| 需求分析 | aik-requirement | Sonnet |
-| 部署运维 | aik-devops | Sonnet |
-
-当前版本由主 Agent 直接处理所有任务。
-```
+| 章节 | 来源 | 说明 |
+|------|------|------|
+| 角色定义 | agent.md 升级 | 增加 "你是 Claude Code 中的 aik-dev-agent" 身份声明 |
+| 性格画像 | **新增** | 详见 [02-personality-design.md](./02-personality-design.md) |
+| 技术栈 | agent.md 保留 | 不变 |
+| 技能调度规则 | agent.md 重构 | 场景 → 技能映射表 |
+| 确认门禁策略 | **新增** | 详见 [03-confirmation-gates.md](./03-confirmation-gates.md) |
+| 核心编码规范 | agent.md 保留 | 不变 |
+| 行为约束 | agent.md 升级 | 新增 Agent 特有约束 |
+| 人机协作规则 | agent.md 保留 | 不变 |
+| 输出标准 | agent.md 保留 | 不变 |
+| 子 Agent 调度 | **新增** | Phase 2+ 预留 |
 
 ### 2. 修改：`CLAUDE.md`
 
@@ -194,7 +161,7 @@ skills:
 
 ### 3. 保留不变：`aik-skills-lab/agent.md`
 
-此文件作为源文件保留，继续被 Lingma 和 Qoder IDE 使用。后续如果 Lingma/Qoder 也支持 Agent 机制，此文件是统一的入口点。
+此文件作为源文件保留，继续被 Lingma 和 Qoder IDE 使用。
 
 ### 4. 未来文件（Phase 2+，本次不实施）
 
@@ -208,28 +175,10 @@ skills:
 └── aik-devops.md             # Phase 3：部署运维子 Agent
 ```
 
-## agent.md → Agent 升级对照表
-
-| agent.md 章节 | Agent 处理方式 | 变更说明 |
-|--------------|---------------|---------|
-| 角色定义 | 保留 + 升级为 Agent 自述 | 增加"你是 Claude Code 中的 aik-dev-agent"身份声明 |
-| 技术栈 | 完全保留 | — |
-| 技能库 | 重构为"技能调度规则" | 从静态列表升级为场景→技能映射表 |
-| 核心编码规范 | 完全保留 | — |
-| 行为约束 | 保留 + 新增 Agent 特有约束 | 新增：不重复调用技能、优先使用已有组件 |
-| 人机协作规则 | 完全保留 | — |
-| 输出标准 | 完全保留 | — |
-| 启动指令 | 升级为"触发场景速查" | 更贴合 Agent 使用方式 |
-| — | **新增**：子 Agent 调度（未来） | 为 Phase 2 预留接口 |
-| — | **新增**：技能调用决策树 | Agent 如何判断该用哪个技能 |
-
 ## 验证方案
-
-创建完成后，通过以下场景验证 Agent 是否正常工作：
 
 ### 验证 1：Agent 能被识别
 ```bash
-# 检查 Agent 文件是否存在于正确位置
 ls -la .claude/agents/aik-dev-agent.md
 ```
 
@@ -237,13 +186,13 @@ ls -la .claude/agents/aik-dev-agent.md
 ```
 @aik-dev-agent 为 KnowledgeService 生成单元测试
 ```
-期望：Agent 自动调用 `unit-test-generator` 技能，生成符合 aIk-coding-style 的测试代码。
+期望：Agent 自动调用 `unit-test-generator`，生成符合 aIk-coding-style 的测试代码。
 
 ### 验证 3：全流程编排
 ```
 @aik-dev-agent 开发一个简单的标签管理模块（CRUD）
 ```
-期望：Agent 启动 `java-sdlc-pipeline`，按 Phase 1→5 执行，每阶段输出并请求确认。
+期望：Agent 自编排 spec-* 协调者，按 Phase 1→5 执行，按三级自主权模型处理门禁。
 
 ### 验证 4：规范遵循
 检查 Agent 生成的代码是否：
@@ -253,18 +202,16 @@ ls -la .claude/agents/aik-dev-agent.md
 - Controller 返回 VO（非 Map）
 - 无行尾注释
 
-### 验证 5：人机协作
-在 Pipeline 执行过程中，确认 Agent 会：
-- 每阶段完成后等待用户确认
-- 质量门禁不通过时返回修复
-- 模糊需求时主动澄清
+### 验证 5：三级自主权行为
+- 绿灯场景（命名/格式化）→ Agent 自主处理，不询问
+- 黄灯场景（API 设计）→ Agent 输出摘要，等待确认
+- 红灯场景（表结构变更）→ Agent 输出对比分析，强制等待
 
 ## 实施步骤
 
-1. 复制 `aik-skills-lab/agent.md` → `.claude/agents/aik-dev-agent.md`
-2. 在文件顶部添加 YAML frontmatter（含 47 技能列表）
-3. 升级"技能库"章节为"技能调度规则"
-4. 新增"子 Agent 调度（未来）"章节
-5. 升级"启动指令"章节为"触发场景速查"
-6. 在 CLAUDE.md 中添加"可用 Agent"章节
-7. 执行验证方案中的 5 个验证场景
+1. 完成 [04-clarification-questions.md](./04-clarification-questions.md) 中的问题澄清
+2. 根据澄清结果完善 [02-personality-design.md](./02-personality-design.md)
+3. 创建 `.claude/agents/` 目录
+4. 基于 agent.md + 本方案全部模块，编写 `.claude/agents/aik-dev-agent.md`
+5. 在 CLAUDE.md 中添加"可用 Agent"章节
+6. 执行验证方案中的 5 个验证场景
