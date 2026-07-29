@@ -6,6 +6,8 @@ target/
 
 # IDE
 .idea/
+.qoder/
+.claude/
 *.iml
 *.ipr
 *.iws
