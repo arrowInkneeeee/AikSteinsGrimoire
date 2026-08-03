@@ -27,7 +27,7 @@ core/
 ├── utils/            # 工具类（仅封装 Spring 上下文、业务断言、统一入口）
 │   ├── SpringUtils          # Spring 上下文工具
 │   ├── AssertUtils          # 业务断言（不满足抛 BusinessException）
-│   ├── JsonUtils            # JSON 统一入口（封装 Fastjson）
+│   ├── JsonUtils            # JSON 统一入口（封装 Fastjson2）
 │   ├── ServletUtils         # Web 请求上下文
 │   └── IpUtils              # 客户端真实 IP（处理代理头）
 └── config/           # 配置类
