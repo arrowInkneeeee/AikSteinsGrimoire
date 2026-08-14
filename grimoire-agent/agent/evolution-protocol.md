@@ -69,7 +69,7 @@
 
 **默认智能体做的事**：
 1. 根据描述理解信号内容
-2. Read `grimoire-agent/agent/decision-log.md`
+2. 先按 `aIk-agent.md` 自我定位协议定位基址（AIK_AGENT_HOME），再 Read `{基址}/decision-log.md`
 3. 追加具体决策（带日期、领域、结果）
 4. 检查里程碑是否达成（对照本文件的里程碑表）
 5. 如达成里程碑，提议信任进阶

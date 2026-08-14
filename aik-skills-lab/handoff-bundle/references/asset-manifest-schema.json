@@ -1,0 +1,173 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://aik-steins-grimoire/handoff-bundle/asset-manifest.schema.json",
+  "title": "Handoff Bundle Asset Manifest",
+  "description": "ASSET_MANIFEST.json 的 JSON Schema，由 handoff-bundle 技能生成和校验。任何 JSON Schema 校验器（如 ajv、python-jsonschema、Java everit-json-schema）均可用于校验清单合法性。",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "created_at",
+    "bundle_path",
+    "summary",
+    "assets",
+    "warnings"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0",
+      "description": "清单 schema 版本，当前固定 1.0"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "创建时间，ISO-8601 格式"
+    },
+    "source_workspace": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "源工作区绝对路径，对话模式下为 null"
+    },
+    "bundle_path": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "交接包绝对路径，对话模式下为 null"
+    },
+    "summary": {
+      "type": "object",
+      "description": "资产统计摘要",
+      "required": [
+        "total",
+        "required",
+        "reference",
+        "copied",
+        "problems"
+      ],
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "资产总数"
+        },
+        "required": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "required 优先级资产数"
+        },
+        "reference": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "reference 优先级资产数"
+        },
+        "copied": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "成功复制的资产数"
+        },
+        "problems": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "缺失/拒绝/错误/不可用的资产数"
+        }
+      },
+      "additionalProperties": false
+    },
+    "assets": {
+      "type": "array",
+      "description": "资产条目数组，目录输入展开成单文件记录",
+      "items": {
+        "type": "object",
+        "required": [
+          "source_path",
+          "destination_path",
+          "purpose",
+          "priority",
+          "category",
+          "status"
+        ],
+        "properties": {
+          "source_path": {
+            "type": "string",
+            "description": "原始绝对路径或相对工作区的路径"
+          },
+          "source_root": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "目录资产展开时保留的源根目录，单文件资产为 null"
+          },
+          "destination_path": {
+            "type": "string",
+            "pattern": "^assets/(images|documents|references)/[^/]+(/[^/]+)*$",
+            "description": "包内相对路径，必须以 assets/{images|documents|references}/ 开头，禁止目录穿越（.. 或绝对路径）"
+          },
+          "purpose": {
+            "type": "string",
+            "minLength": 1,
+            "description": "接收方为什么需要它，不能只写'附件'"
+          },
+          "priority": {
+            "enum": [
+              "required",
+              "reference"
+            ],
+            "description": "required=缺失则阻断交接；reference=缺失可交接但需警告"
+          },
+          "category": {
+            "enum": [
+              "images",
+              "documents",
+              "references"
+            ],
+            "description": "资产分类，决定存放子目录"
+          },
+          "media_type": {
+            "type": "string",
+            "description": "MIME 类型，如 image/png、application/pdf"
+          },
+          "size_bytes": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "文件字节数"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "64 位小写十六进制 SHA-256 哈希"
+          },
+          "status": {
+            "enum": [
+              "copied",
+              "missing",
+              "rejected",
+              "error",
+              "unavailable"
+            ],
+            "description": "copied=已复制可核验；missing=源文件不存在；rejected=被安全规则拒绝；error=复制或读取失败；unavailable=无文件工具无法处理"
+          },
+          "deduplicated_from": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "内容去重时指向首个副本的 destination_path，未去重为 null 或省略"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "警告信息列表，如敏感文件检测、补丁脱敏说明、缺失资产警告"
+    }
+  },
+  "additionalProperties": false
+}

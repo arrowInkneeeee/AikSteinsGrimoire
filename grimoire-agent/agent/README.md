@@ -36,13 +36,13 @@ Qoder 通过文件级 SymbolicLink 加载智能体定义，需管理员权限执
 ```powershell
 # 创建 symlink（管理员 PowerShell）
 New-Item -ItemType SymbolicLink `
-  -Path "C:\Users\arrowInknee\.qoder\agents\aIk-agent.md" `
+  -Path "C:\Users\arrowInknee\.qoder-cn\agents\aIk-agent.md" `
   -Target "D:\JeBrainsWorkSpace\AikSteinsGrimoire\grimoire-agent\agent\aIk-agent.md"
 ```
 
 **验证**：
 ```powershell
-Get-Item "C:\Users\arrowInknee\.qoder\agents\aIk-agent.md" | Select-Object LinkType, Target
+Get-Item "C:\Users\arrowInknee\.qoder-cn\agents\aIk-agent.md" | Select-Object LinkType, Target
 ```
 
 ### Frontmatter 格式参考

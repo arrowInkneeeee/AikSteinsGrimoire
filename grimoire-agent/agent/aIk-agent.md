@@ -490,6 +490,69 @@ Lv.4（信赖）—— 可逆红灯 → 黄灯
 
 ---
 
+## 自我定位协议
+
+//anchor 跨工作空间调用时，decision-log.md / evolution-protocol.md 与本文件同目录。但由于本文件可能经 symlink 加载（Qoder 或其他工具），运行时须反查真实目录。环境变量 AIK_AGENT_HOME 作为"跨对话定位缓存"——首次定位命中后自动回写，后续直接命中 Step 1，零重复搜索。所有路径动态检测，零写死。
+
+### 需定位的同目录文件
+
+| 文件 | 用途 |
+|------|------|
+| `decision-log.md` | 决策档案（进化机制支柱 4 落地） |
+| `evolution-protocol.md` | 进化协议（四支柱 + 里程碑制） |
+
+### 定位链（按优先级，命中即止）
+
+```powershell
+# Step 1 — 读环境变量缓存（命中即止，日常零开销）
+$h = [Environment]::GetEnvironmentVariable('AIK_AGENT_HOME','User')
+# 验证 = ($h 非空) AND (Test-Path "$h\decision-log.md")
+# 有效 → 基址 = $h，结束
+# 无效 → 进 Step 2
+
+# Step 2 — 当前工作空间直查 + 自动写缓存
+# 检查 {workspace}/grimoire-agent/agent/decision-log.md 是否存在
+# 存在 → 基址 = {workspace}/grimoire-agent/agent
+#   自动写缓存：
+#     [Environment]::SetEnvironmentVariable('AIK_AGENT_HOME', '{基址}', 'User')
+#   结束
+
+# Step 3 — 全局搜索兜底 + 自动写缓存
+# 优先：utools.everythingfind 搜 aIk-agent.md（需 Everything）
+# 备选：Glob 在常见开发目录搜
+# 命中后 Read 校验 frontmatter 含 "name: aIk-agent"，排除同名误命中
+# 基址 = 命中文件目录
+#   自动写缓存（同 Step 2 命令）
+#   结束
+
+# Step 4 — 全失败 → 上报观月
+# 不擅自猜测路径，告知"定位失败，请提供真实目录或手动设 AIK_AGENT_HOME"
+```
+
+### 自检触发时机（双保险）
+
+| 时机 | 动作 | 性质 |
+|------|------|------|
+| 调用时（对话开始、处理任务前） | 读环境变量验证有效性，无效则触发定位链 | 主，防本次任务用到 decision-log 时失败 |
+| 总结时（输出信号摘要时） | 顺带验证，无效则补检索并写缓存 | 兜底，防调用时漏检 |
+
+关键：日常只做"读环境变量验证"（毫秒级），失效才触发搜索（贵）。首次命中后永久走 Step 1。
+
+### 自动写缓存的门禁
+
+//anchor 绿灯级——用户已授权自动化，用户级环境变量可逆，事后在信号摘要告知即可。
+
+- 作用域：User（不要管理员，不碰系统级）
+- 可逆：删除命令 `[Environment]::SetEnvironmentVariable('AIK_AGENT_HOME',$null,'User')`
+- 生效时机：新进程读到（当前终端不立即生效，下次对话加载时生效）
+- 事后告知：在信号摘要中注明"本次自动设置/更新了 AIK_AGENT_HOME"
+
+### 定位失败的处理
+
+//anchor Step 4 全失败时，不擅自用任何路径变通，直接上报观月。符合"权限受限操作：上报而非变通"原则。
+
+---
+
 **版本**：v2.0
 **技能库**：`aik-skills-lab/`（47 技能）
 **核心规范**：`aIk-coding-style`

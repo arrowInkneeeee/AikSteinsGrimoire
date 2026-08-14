@@ -4,7 +4,7 @@
 
 一套完整的软件开发生命周期（SDLC）技能库，专为 Java 8 + Spring Boot + MyBatis-Plus + Lombok 技术栈设计。
 
-包含 8 大类别共 **47 个技能**，覆盖需求分析、系统设计、开发实施、测试质量、部署运维全流程。新增 `java-sdlc-pipeline` 统一流水线入口、`component-extraction-rewriting-workflow` 组件萃取复写工作流和 `skill-tester` 技能质量体系，遵循 Agent Skills L3 渐进式加载最佳实践。
+包含 8 大类别共 **48 个技能**，覆盖需求分析、系统设计、开发实施、测试质量、部署运维全流程。新增 `java-sdlc-pipeline` 统一流水线入口、`component-extraction-rewriting-workflow` 组件萃取复写工作流和 `skill-tester` 技能质量体系，遵循 Agent Skills L3 渐进式加载最佳实践。
 
 ## 技能库结构
 
@@ -64,8 +64,9 @@
 │   ├── bug-pattern-analyzer              # 缺陷模式分析
 │   └── spec-qa-analyser                  # 测试协调者
 │
-└── 部署运维与工具集成（8个技能）
+└── 部署运维与工具集成（9个技能）
     ├── gitnexus                          # GitNexus代码智能套件（探索/调试/影响分析/PR审查）
+    ├── handoff-bundle                    # 跨Agent任务交接包（HANDOFF.md+SHA-256校验+持久化资产）
     ├── package-builder                   # 打包构建
     ├── deploy-script-generator           # 部署脚本生成
     ├── config-manager                    # 配置管理
@@ -83,7 +84,7 @@
 | **Generator**（生成器） | 21 | unit-test-generator, code-generator, component-code-rewriter 等 |
 | **Reviewer**（审查者） | 9 | code-style-reviewer, code-quality-reviewer, code-security-reviewer 等 |
 | **Inversion**（反转控制/协调者） | 7 | spec-requirement-analyser, spec-designer, spec-component-extractor 等 |
-| **Tool Wrapper**（工具封装） | 8 | gitnexus, config-manager, log-configurator 等 |
+| **Tool Wrapper**（工具封装） | 9 | gitnexus, handoff-bundle, config-manager, log-configurator 等 |
 
 ### L3 渐进式加载架构
 
@@ -391,6 +392,7 @@ AI：自动协调审查技能：
    - 其他是原子技能，执行单一具体任务
    - `java-sdlc-pipeline` 是统一流水线入口，一键启动全流程
    - `skill-tester` 是技能质量体系，用于验证技能输出质量
+   - `handoff-bundle` 是技术栈无关的跨 Agent 交接工具，不参与 SDLC 流水线
 
 2. **配置复用**
    - 所有技能遵循"优先复用项目已有"原则
@@ -409,6 +411,14 @@ AI：自动协调审查技能：
    - L3（按需加载）：references/参考文档, assets/模板, scripts/脚本
 
 ## 更新日志
+
+### v1.2.0 (2026-08-12)
+- **新增**：`handoff-bundle` 跨 Agent 任务交接技能（Tool Wrapper 模式，技术栈无关）
+  - L3 拆分：SKILL.md 核心指令 + references/（handoff-template、asset-manifest-schema、bundle-structure、verification-protocol）
+  - 便携版：assets/handoff-skill-portable.md 单文件版，可外部分发给未安装 aik-skills-lab 的 GPT/Codex/Claude
+  - 工程化增益：asset-manifest-schema.json 用 JSON Schema draft-07 + enum 收紧目录穿越/优先级/状态字段
+  - 无关性声明：技术栈/模型族/宿主工具三不绑定，契约层只依赖文件系统/SHA-256/Git 三类跨平台标准
+- 技能总数：47 → 48
 
 ### v1.1.0 (2026-05-14)
 - **新增**：`component-extraction-rewriting-workflow` 组件萃取复写流水线（Pipeline 统一入口）
@@ -447,7 +457,7 @@ MIT License - 可自由使用和修改
 ---
 
 **更新日期：** 2026-05-14  
-**技能总数：** 47个（36个原子技能 + 7个协调者 + 2个流水线 + 1个质量体系 + 1个工具集成）  
+**技能总数：** 48个（37个原子技能 + 7个协调者 + 2个流水线 + 1个质量体系 + 1个工具集成）  
 **设计模式：** 5种（Pipeline / Generator / Reviewer / Inversion / Tool Wrapper）  
 **适用技术栈：** Java 8 + Spring Boot + MyBatis-Plus + Lombok  
 **架构标准：** Agent Skills L3 渐进式加载
