@@ -76,8 +76,11 @@ sudo apt install -y vim net-tools openssh-server curl wget git build-essential c
 Ubuntu 26.04 默认仓库包含 OpenJDK 25，你也可以安装其他版本：
 
 ```bash
-# 安装默认 JDK（OpenJDK 25）
-sudo apt install -y openjdk-25-jdk
+# 安装默认 JDK（OpenJDK 8）
+sudo apt install openjdk-8-jdk
+
+#或安装 java 25（最新）
+#sudo apt install -y openjdk-25-jdk
 
 # 或安装 Java 17（更稳定）
 # sudo apt install -y openjdk-17-jdk
