@@ -17,14 +17,16 @@
 
 ## 🚀 阶段一：安装 WSL2 + Ubuntu 26.04
 
+> **⚠️ 重要**：必须分步操作！如果 `wsl --install` 后不重启就直接安装 Ubuntu，会导致 Ubuntu 安装失败。
+
 ### 1.1 以管理员身份打开 PowerShell
 
 按 `Win + X`，选择 **"终端(管理员)"** 或 **"Windows PowerShell (管理员)"**。
 
-### 1.2 一键安装 WSL2 + Ubuntu 26.04
+### 1.2 第一步：安装并启用 WSL2
 
 ```powershell
-wsl --install -d Ubuntu-26.04
+wsl --install
 ```
 
 这条命令会自动完成：
@@ -32,17 +34,34 @@ wsl --install -d Ubuntu-26.04
 - 启用"虚拟机平台"
 - 下载并安装最新 Linux 内核
 - 将 WSL2 设为默认版本
-- 下载并安装 Ubuntu 26.04
 
-**安装完成后，按提示重启电脑。**
+**🔴 安装完成后，必须重启电脑！** 重启是为了让"虚拟机平台"等内核级变更生效。
 
-### 1.3 首次启动 Ubuntu 26.04
+### 1.3 第二步：（可选）验证 WSL 状态
+
+重启后，重新以管理员身份打开 PowerShell，确认 WSL 2 已成为默认版本：
+
+```powershell
+wsl --set-default-version 2
+```
+
+### 1.4 第三步：安装 Ubuntu 26.04 LTS
+
+系统已经准备好安装具体的发行版了。运行以下命令来安装 Ubuntu 26.04：
+
+```powershell
+wsl --install -d Ubuntu-26.04
+```
+
+这次安装应该会顺利进行。
+
+### 1.5 首次启动 Ubuntu 26.04
 
 - 在开始菜单搜索 **"Ubuntu 26.04 LTS"** 并打开
 - 等待初始化（约 1-2 分钟）
 - 设置你的 **用户名** 和 **密码**（记住它，后面要用）
 
-### 1.4 验证安装
+### 1.6 验证安装
 
 在 PowerShell 中运行：
 ```powershell
