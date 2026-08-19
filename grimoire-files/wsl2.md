@@ -1,4 +1,4 @@
-好的，既然你已决定使用 **Ubuntu 26.04 LTS**，下面是你从零开始在 WSL2 上搭建开发环境的**最终完整方案**。整个过程分为六个阶段，按顺序操作即可。
+﻿好的，既然你已决定使用 **Ubuntu 26.04 LTS**，下面是你从零开始在 WSL2 上搭建开发环境的**最终完整方案**。整个过程分为六个阶段，按顺序操作即可。
 
 ---
 
@@ -226,18 +226,18 @@ echo 'sudo service docker start 2>/dev/null || true' >> ~/.bashrc
 
 ## 📸 阶段四：导出黄金镜像（快照）
 
-### 4.1 关闭所有 WSL 实例
+### 4.1 创建快照目录
 
 在 **PowerShell** 中运行：
 ```powershell
-wsl --shutdown
+New-Item -ItemType Directory -Force D:\WSL-Snapshots
 ```
 
-### 4.2 导出干净镜像
+### 4.2 导出黄金镜像
 
 ```powershell
-# 找个空间充裕的盘，比如 D 盘
-wsl --export Ubuntu-26.04 D:\backup\ubuntu-26.04-init-backup.tar
+wsl --shutdown
+wsl --export Ubuntu-26.04 D:\WSL-Snapshots\Ubuntu-26.04-init-2026-08-19.tar
 ```
 
 这个 `.tar` 文件就是你的**黄金镜像**，包含了：
@@ -252,17 +252,7 @@ wsl --export Ubuntu-26.04 D:\backup\ubuntu-26.04-init-backup.tar
 ### 4.3 恢复方法（如果以后搞崩了）
 
 ```powershell
-# 删除坏掉的系统
-wsl --unregister Ubuntu-26.04
-
-# 从备份恢复
-wsl --import Ubuntu-26.04 C:\WSL\Ubuntu-26.04 D:\backup\ubuntu-26.04-init-backup.tar --version 2
-
-# 设置默认用户（恢复后默认是 root）
-wsl -d Ubuntu-26.04 -u root
-echo "[user]" > /etc/wsl.conf
-echo "default=你的用户名" >> /etc/wsl.conf
-exit
+wsl --import Ubuntu-26.04-Restore D:\WSL-Restore D:\WSL-Snapshots\Ubuntu-26.04-init-2026-08-19.tar
 ```
 
 ---
@@ -353,15 +343,12 @@ echo 'export http_proxy="http://${hostip}:7890"' >> ~/.bashrc
 echo 'export https_proxy="http://${hostip}:7890"' >> ~/.bashrc
 
 ## 快照
-# wsl --export Ubuntu-26.04 D:\backup\ubuntu-26.04-init-backup.tar
+# New-Item -ItemType Directory -Force D:\WSL-Snapshots
+# wsl --shutdown
+# wsl --export Ubuntu-26.04 D:\WSL-Snapshots\Ubuntu-26.04-init-2026-08-19.tar
 
 ## 恢复
-# wsl --unregister Ubuntu-26.04
-# wsl --import Ubuntu-26.04 C:\WSL\Ubuntu-26.04 D:\backup\ubuntu-26.04-init-backup.tar --version 2
-# wsl -d Ubuntu-26.04 -u root
-# echo "[user]" > /etc/wsl.conf
-# echo "default=你的用户名" >> /etc/wsl.conf
-# exit
+# wsl --import Ubuntu-26.04-Restore D:\WSL-Restore D:\WSL-Snapshots\Ubuntu-26.04-init-2026-08-19.tar
 ```
 
 ---
