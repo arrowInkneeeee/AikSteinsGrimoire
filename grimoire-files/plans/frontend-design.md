@@ -12,13 +12,13 @@
 
 | 模块 | 路径前缀 | 接口 |
 |------|----------|------|
-| Knowledge | `/api/knowledge` | add, update, remove, page, findById, toggleStatus |
+| Knowledge | `/grimoire/knowledge` | add, update, remove, page, findById, toggleStatus |
 | DictType | `/grimoire/dictType` | findPage, findById, add, modify, remove |
 | DictItem | `/grimoire/dictItem` | findListByType, findPage, add, modify, remove |
 | SystemParam | `/grimoire/systemParam` | findPage, findByKey, add, modify, remove, refreshCache |
 | File | `/grimoire/file` | upload, download, findPage, remove |
 
-**注意**: Knowledge 使用 `/api/` 前缀，其他模块使用 `/grimoire/` 前缀。前端需在 Vite proxy 中同时代理两个前缀。
+**注意**: 所有模块统一使用 `/grimoire/` 前缀，Vite proxy 只需代理 `/grimoire` 即可。
 
 ### 知识数据模型
 
@@ -502,7 +502,7 @@ Grimoire 魔典
 
 ## 注意事项
 
-1. **API 前缀不一致**: Knowledge 用 `/api/`，其他用 `/grimoire/`。Vite proxy 需同时代理两个前缀，建议后续统一后端为 `/grimoire/knowledge`
-2. **雪花 ID 精度**: JS Number 上限 2^53，雪花 ID 为 64 位。后端 JSON 序列化需将 Long 转为 String，或前端使用 BigInt 处理
+1. **API 前缀已统一**: 所有模块均使用 `/grimoire/` 前缀，Vite proxy 只需配置 `/grimoire` 代理。
+2. **雪花 ID 精度**: 已通过 Jackson 全局配置将 Long 序列化为 String，前端所有 ID 字段按 `string` 类型处理
 3. **Markdown XSS**: 渲染时需使用 DOMPurify 过滤，防止注入
 4. **附件下载**: 后端返回文件流，前端需用 blob 方式处理

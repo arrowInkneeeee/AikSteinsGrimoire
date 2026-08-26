@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/knowledge")
+@RequestMapping("/grimoire/knowledge")
 @Tag(name = "知识条目管理")
 public class KnowledgeController {
 

@@ -1,9 +1,9 @@
 -- system 模块建表脚本
--- 数据库: aik_grimoire
+-- 数据库: aik_steins_grimoire
 -- 字符集: utf8mb4
 
 -- 字典类型表
-CREATE TABLE IF NOT EXISTS aik_dict_type (
+CREATE TABLE IF NOT EXISTS aik_sys_dict_type (
     id BIGINT NOT NULL COMMENT '主键',
     dict_code VARCHAR(64) NOT NULL COMMENT '字典编码',
     dict_name VARCHAR(128) NOT NULL COMMENT '字典名称',
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS aik_dict_type (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='字典类型表';
 
 -- 字典项表
-CREATE TABLE IF NOT EXISTS aik_dict_item (
+CREATE TABLE IF NOT EXISTS aik_sys_dict_item (
     id BIGINT NOT NULL COMMENT '主键',
     dict_code VARCHAR(64) NOT NULL COMMENT '字典类型编码',
     item_code VARCHAR(64) NOT NULL COMMENT '字典项编码',
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS aik_dict_item (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='字典项表';
 
 -- 系统参数表
-CREATE TABLE IF NOT EXISTS aik_system_param (
+CREATE TABLE IF NOT EXISTS aik_sys_param (
     id BIGINT NOT NULL COMMENT '主键',
     param_key VARCHAR(128) NOT NULL COMMENT '参数键',
     param_value VARCHAR(2048) NOT NULL COMMENT '参数值',
@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS aik_system_param (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统参数表';
 
 -- 文件记录表
-CREATE TABLE IF NOT EXISTS aik_file_record (
+CREATE TABLE IF NOT EXISTS aik_sys_file (
     id BIGINT NOT NULL COMMENT '主键',
     original_name VARCHAR(255) NOT NULL COMMENT '原始文件名',
     stored_name VARCHAR(255) NOT NULL COMMENT '存储文件名（UUID）',

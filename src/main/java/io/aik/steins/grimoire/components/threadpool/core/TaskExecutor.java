@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
  * -
  */
 @Slf4j
-@Component
+@Component("aikTaskExecutor")
 @RequiredArgsConstructor
 public class TaskExecutor {
 

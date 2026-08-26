@@ -11,18 +11,18 @@ import io.aik.steins.grimoire.knowledge.common.constant.KnowledgeConstant;
 import io.aik.steins.grimoire.knowledge.common.dto.KnowledgeDto;
 import io.aik.steins.grimoire.knowledge.common.dto.KnowledgeQuery;
 import io.aik.steins.grimoire.knowledge.common.enums.KnowledgeTypeEnum;
-import io.aik.steins.grimoire.knowledge.common.mapper.CategoryMapper;
-import io.aik.steins.grimoire.knowledge.common.mapper.KnowledgeAttachmentMapper;
-import io.aik.steins.grimoire.knowledge.common.mapper.KnowledgeTagMapper;
-import io.aik.steins.grimoire.knowledge.common.mapper.KnowledgeTagRelationMapper;
-import io.aik.steins.grimoire.knowledge.common.po.CategoryPo;
-import io.aik.steins.grimoire.knowledge.common.po.KnowledgeAttachmentPo;
+import io.aik.steins.grimoire.knowledge.dao.KnowledgeCategoryMapper;
+import io.aik.steins.grimoire.system.attachment.dao.SysAttachmentMapper;
+import io.aik.steins.grimoire.knowledge.dao.KnowledgeTagMapper;
+import io.aik.steins.grimoire.knowledge.dao.KnowledgeTagRelationMapper;
+import io.aik.steins.grimoire.knowledge.common.po.KnowledgeCategoryPo;
+import io.aik.steins.grimoire.system.attachment.po.SysAttachmentPo;
 import io.aik.steins.grimoire.knowledge.common.po.KnowledgePo;
 import io.aik.steins.grimoire.knowledge.common.po.KnowledgeTagPo;
 import io.aik.steins.grimoire.knowledge.common.po.KnowledgeTagRelationPo;
 import io.aik.steins.grimoire.knowledge.common.vo.KnowledgeListVo;
 import io.aik.steins.grimoire.knowledge.common.vo.KnowledgeVo;
-import io.aik.steins.grimoire.knowledge.mapper.KnowledgeMapper;
+import io.aik.steins.grimoire.knowledge.dao.KnowledgeMapper;
 import io.aik.steins.grimoire.knowledge.service.KnowledgeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -46,10 +46,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class KnowledgeServiceImpl extends ServiceImpl<KnowledgeMapper, KnowledgePo> implements KnowledgeService {
 
-    private final CategoryMapper categoryMapper;
+    private final KnowledgeCategoryMapper knowledgeCategoryMapper;
     private final KnowledgeTagMapper knowledgeTagMapper;
     private final KnowledgeTagRelationMapper knowledgeTagRelationMapper;
-    private final KnowledgeAttachmentMapper knowledgeAttachmentMapper;
+    private final SysAttachmentMapper sysAttachmentMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -118,8 +118,8 @@ public class KnowledgeServiceImpl extends ServiceImpl<KnowledgeMapper, Knowledge
                 .eq(KnowledgeTagRelationPo::getKnowledgeId, id));
 
         //anchor 删除附件
-        knowledgeAttachmentMapper.delete(new LambdaQueryWrapper<KnowledgeAttachmentPo>()
-                .eq(KnowledgeAttachmentPo::getKnowledgeId, id));
+        sysAttachmentMapper.delete(new LambdaQueryWrapper<SysAttachmentPo>()
+                .eq(SysAttachmentPo::getKnowledgeId, id));
 
         //anchor 删除主表
         baseMapper.deleteById(id);
@@ -149,7 +149,7 @@ public class KnowledgeServiceImpl extends ServiceImpl<KnowledgeMapper, Knowledge
 
             //anchor 查询分类名称
             if (po.getCategoryId() != null) {
-                CategoryPo category = categoryMapper.selectById(po.getCategoryId());
+                KnowledgeCategoryPo category = knowledgeCategoryMapper.selectById(po.getCategoryId());
                 vo.setCategoryName(category != null ? category.getCategoryName() : "");
             }
 
@@ -187,10 +187,10 @@ public class KnowledgeServiceImpl extends ServiceImpl<KnowledgeMapper, Knowledge
         }
 
         //anchor 查询附件列表
-        List<KnowledgeAttachmentPo> attachments = knowledgeAttachmentMapper.selectList(
-                new LambdaQueryWrapper<KnowledgeAttachmentPo>()
-                        .eq(KnowledgeAttachmentPo::getKnowledgeId, id)
-                        .orderByAsc(KnowledgeAttachmentPo::getSortOrder));
+        List<SysAttachmentPo> attachments = sysAttachmentMapper.selectList(
+                new LambdaQueryWrapper<SysAttachmentPo>()
+                        .eq(SysAttachmentPo::getKnowledgeId, id)
+                        .orderByAsc(SysAttachmentPo::getSortOrder));
         vo.setAttachments(attachments);
 
         return vo;

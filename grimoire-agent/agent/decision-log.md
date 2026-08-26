@@ -10,6 +10,9 @@
 | 日期 | 决策 | 结果 |
 |------|------|------|
 | 2026-07-30 | 订单状态机用枚举管理，不用状态字段 | confirmed |
+| 2026-08-26 | KnowledgeController 路径前缀 `/api` → `/grimoire` 统一 | confirmed |
+| 2026-08-26 | JacksonConfig 全局 Long 序列化为 String（雪花ID精度保护） | confirmed |
+| 2026-08-26 | scrolls 从 `src/main/java/` 迁移到根目录 `grimoire-scrolls/` | confirmed |
 
 ---
 
@@ -32,6 +35,8 @@
 | 2026-07-31 | 权限受限操作：上报而非变通（不擅自替换方案） | confirmed |
 | 2026-07-31 | AikSteinsGrimoire 项目：文件存入后必须 git add 暂存保护 | confirmed |
 | 2026-07-31 | 严格按用户指令执行，不擅自扩大改动范围 | confirmed |
+| 2026-08-26 | 项目简称体系扩展：asl / gf / ga / gs | confirmed |
+| 2026-08-26 | 修改后自动 git add 暂存（执行遗漏被纠正，规则不变） | corrected |
 
 ---
 

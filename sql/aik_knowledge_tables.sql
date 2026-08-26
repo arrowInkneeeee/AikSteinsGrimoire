@@ -1,5 +1,5 @@
 -- knowledge 模块建表脚本
--- 数据库: aik_grimoire
+-- 数据库: aik_steins_grimoire
 -- 字符集: utf8mb4
 
 -- 知识分类表
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS aik_knowledge (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='知识条目主表';
 
 -- 知识附件表
-CREATE TABLE IF NOT EXISTS aik_knowledge_attachment (
+CREATE TABLE IF NOT EXISTS aik_sys_attachment (
     id BIGINT NOT NULL COMMENT '主键',
     knowledge_id BIGINT NOT NULL COMMENT '知识条目ID',
     attach_name VARCHAR(256) NOT NULL COMMENT '附件名称',
@@ -86,4 +86,4 @@ CREATE TABLE IF NOT EXISTS aik_knowledge_attachment (
     modify_by VARCHAR(64) COMMENT '修改人',
     PRIMARY KEY (id),
     KEY idx_knowledge_id (knowledge_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='知识附件表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统附件表';

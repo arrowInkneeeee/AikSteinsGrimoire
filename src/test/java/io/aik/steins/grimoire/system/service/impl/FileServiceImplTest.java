@@ -1,10 +1,10 @@
-package io.aik.steins.grimoire.system.service.impl;
+package io.aik.steins.grimoire.system.file.service.impl;
 
 import io.aik.steins.grimoire.core.config.FileStorageConfig;
 import io.aik.steins.grimoire.core.exception.BusinessException;
-import io.aik.steins.grimoire.system.common.po.FileRecordPo;
-import io.aik.steins.grimoire.system.common.vo.FileVo;
-import io.aik.steins.grimoire.system.dao.FileMapper;
+import io.aik.steins.grimoire.system.file.po.FileRecordPo;
+import io.aik.steins.grimoire.system.file.vo.FileVo;
+import io.aik.steins.grimoire.system.file.dao.FileMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

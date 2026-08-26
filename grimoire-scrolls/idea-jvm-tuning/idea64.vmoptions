@@ -1,0 +1,70 @@
+# ------------------------------------------------------------------
+# IntelliJ IDEA JVM Options (针对 32G 内存高配机优化)
+# ------------------------------------------------------------------
+
+# 【核心内存】初始堆内存 (建议设为最大值的 1/3 到 1/2，减少动态扩容开销)
+-Xms8g
+
+# 【核心内存】最大堆内存 (32G 物理机分配 12G 给 IDEA，保证索引和缓存不频繁 GC)
+-Xmx12g
+
+# 【代码缓存】JIT 编译后的本地代码存储区 (微服务项目必须调大，防止 JIT 停止优化)
+-XX:ReservedCodeCacheSize=2g
+
+# 【元空间】类元数据区域 (防止大型项目类加载过多导致扩容抖动)
+-XX:MaxMetaspaceSize=2g
+
+# 【垃圾回收】启用 G1 收集器，适合大堆内存，停顿时间更可控
+-XX:+UseG1GC
+
+# 【G1 GC 优化】设置 G1 的最大暂停时间目标 (毫秒)
+-XX:MaxGCPauseMillis=200
+
+# 【G1 GC 优化】设置 G1 并发 GC 线程数 (接近 JBR 自动计算值，减少后台标记开销)
+-XX:ConcGCThreads=6
+
+# 【G1 GC 优化】设置 G1 并行 GC 线程数 (i9-14900HX 32核)
+-XX:ParallelGCThreads=16
+
+# 【G1 GC 优化】启用字符串去重，节省堆内存 (可选，对字符串密集型项目有效)
+-XX:+UseStringDeduplication
+
+# 【软引用策略】每 MB 堆内存保留 100ms 的软引用存活时间
+# 让 IDEA 更长时间保留 PSI 缓存，提升代码提示和跳转速度
+-XX:SoftRefLRUPolicyMSPerMB=100
+
+# 【JIT 编译线程】8 线程足够暖机，避免启动期抢占 UI 线程
+-XX:CICompilerCount=8
+
+# 【调试辅助】忽略未识别的选项，防止版本升级报错
+-XX:+IgnoreUnrecognizedVMOptions
+
+# 【异常处理】OOM 时生成 Dump 文件，方便排查 IDE 自身崩溃
+-XX:+HeapDumpOnOutOfMemoryError
+-XX:HeapDumpPath=$USER_HOME/java_error_in_idea.hprof
+-XX:ErrorFile=$USER_HOME/java_error_in_idea_%p.log
+
+# 【性能微调】省略快速抛出异常时的堆栈跟踪
+-XX:-OmitStackTraceInFastThrow
+
+# 【JDK 模块开放】新版 JDK 必需，防止反射访问受限
+--add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED
+--add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED
+--add-opens=java.base/sun.nio.ch=ALL-UNNAMED
+--add-opens=java.management/sun.management=ALL-UNNAMED
+
+# 【系统属性】禁用规范路径缓存，避免某些文件系统问题
+-Dsun.io.useCanonCaches=false
+
+# 【网络】允许所有隧道认证方案 (解决部分代理问题)
+-Djdk.http.auth.tunneling.disabledSchemes=""
+
+# 【Kotlin】关闭协程调试模式，提升运行速度
+-Dkotlinx.coroutines.debug=off
+
+# 【关键】这里开启 GPU 加速，利用你的 4060
+-Dsun.java2d.opengl=true
+
+# 【重要】保留你原有的激活/增强插件配置 (路径请根据你实际安装位置确认，不要删除此行)
+# 如果你的 ja-netfilter.jar 路径不同，请修改为实际路径
+-javaagent:D:\JeBrainsWorkSpace\unlock\jetbra\ja-netfilter.jar=jetbrains

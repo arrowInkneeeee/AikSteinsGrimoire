@@ -45,3 +45,22 @@ contracts.json
 **/.git/
 
 # 个人文档（独立私有仓库管理）
+
+# AI 工具生成文件
+.ccgui/
+.codex/
+.qoder-backup/
+AGENTS.md
+CLAUDE.md
+
+# 临时导入脚本
+ImportKnowledge.java
+ImportKnowledge.class
+ImportKnowledge$Item.class
+_import_temp.sql
+
+# 系统服务文件
+nacos-wsl.service
+
+# 其他
+绫波丽.jpg

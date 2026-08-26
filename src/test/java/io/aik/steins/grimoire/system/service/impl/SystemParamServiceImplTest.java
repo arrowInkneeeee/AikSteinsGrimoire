@@ -1,10 +1,10 @@
-package io.aik.steins.grimoire.system.service.impl;
+package io.aik.steins.grimoire.system.param.service.impl;
 
 import io.aik.steins.grimoire.core.exception.BusinessException;
-import io.aik.steins.grimoire.system.common.dto.SystemParamDto;
-import io.aik.steins.grimoire.system.common.po.SystemParamPo;
-import io.aik.steins.grimoire.system.common.vo.SystemParamVo;
-import io.aik.steins.grimoire.system.dao.SystemParamMapper;
+import io.aik.steins.grimoire.system.param.dto.SystemParamDto;
+import io.aik.steins.grimoire.system.param.po.SystemParamPo;
+import io.aik.steins.grimoire.system.param.vo.SystemParamVo;
+import io.aik.steins.grimoire.system.param.dao.SystemParamMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

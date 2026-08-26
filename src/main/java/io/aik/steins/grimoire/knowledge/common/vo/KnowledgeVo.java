@@ -1,6 +1,6 @@
 package io.aik.steins.grimoire.knowledge.common.vo;
 
-import io.aik.steins.grimoire.knowledge.common.po.KnowledgeAttachmentPo;
+import io.aik.steins.grimoire.system.attachment.po.SysAttachmentPo;
 import io.aik.steins.grimoire.knowledge.common.po.KnowledgePo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -30,5 +30,5 @@ public class KnowledgeVo {
     private List<String> tags;
 
     @Schema(description = "附件列表")
-    private List<KnowledgeAttachmentPo> attachments;
+    private List<SysAttachmentPo> attachments;
 }
