@@ -7,25 +7,20 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.aik.steins.grimoire.core.config.FileStorageConfig;
 import io.aik.steins.grimoire.core.exception.BusinessException;
+import io.aik.steins.grimoire.core.storage.FileStorageStrategy;
 import io.aik.steins.grimoire.core.utils.AssertUtils;
 import io.aik.steins.grimoire.system.file.dto.FileQuery;
 import io.aik.steins.grimoire.system.file.po.FileRecordPo;
-import io.aik.steins.grimoire.system.file.vo.FileDownloadResult;
 import io.aik.steins.grimoire.system.file.vo.FileVo;
 import io.aik.steins.grimoire.system.file.dao.FileMapper;
 import io.aik.steins.grimoire.system.file.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 /**
  * 文件 Service 实现 -anchor
@@ -39,6 +34,7 @@ public class FileServiceImpl implements FileService {
 
     private final FileMapper fileMapper;
     private final FileStorageConfig fileStorageConfig;
+    private final FileStorageStrategy fileStorageStrategy;
 
     @Override
     public FileVo upload(MultipartFile file) {
@@ -59,61 +55,56 @@ public class FileServiceImpl implements FileService {
 
         String originalName = file.getOriginalFilename();
         AssertUtils.notEmpty(originalName, "文件名不能为空");
-        String ext = FileUtil.extName(originalName);
-        String storedName = IdUtil.simpleUUID() + (StrUtil.isNotBlank(ext) ? "." + ext : "");
-        String relativePath = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
-        String basePath = fileStorageConfig.getEffectiveBasePath();
-        String fullDir = basePath + File.separator + relativePath;
-        String fullPath = fullDir + File.separator + storedName;
 
-        //anchor 创建目录
-        FileUtil.mkdir(fullDir);
-
-        //anchor 写入文件
         try {
-            file.transferTo(new File(fullPath));
+            //anchor 计算MD5
+            String md5 = cn.hutool.crypto.digest.DigestUtil.md5Hex(file.getInputStream());
+
+            //anchor 使用策略上传
+            String storedPath = fileStorageStrategy.upload(file.getInputStream(), originalName);
+            String url = fileStorageStrategy.getUrl(storedPath);
+
+            //anchor 保存记录
+            FileRecordPo po = new FileRecordPo();
+            po.setId(IdUtil.getSnowflakeNextId());
+            po.setOriginalName(originalName);
+            po.setStoredName(FileUtil.getName(storedPath));
+            po.setFilePath(storedPath);
+            po.setFileSize(file.getSize());
+            po.setFileType(file.getContentType());
+            po.setStorageType(fileStorageConfig.getUse());
+            po.setMd5(md5);
+            po.setUrl(url);
+            po.setDownloadCount(0);
+            fileMapper.insert(po);
+
+            return FileVo.of(po);
         } catch (IOException e) {
             log.error("文件上传失败", e);
             throw new BusinessException("文件上传失败");
+        } catch (Exception e) {
+            log.error("文件存储失败", e);
+            throw new BusinessException("文件存储失败：" + e.getMessage());
         }
-
-        //anchor 保存记录
-        FileRecordPo po = new FileRecordPo();
-        po.setId(IdUtil.getSnowflakeNextId());
-        po.setOriginalName(originalName);
-        po.setStoredName(storedName);
-        po.setFilePath(relativePath);
-        po.setFileSize(file.getSize());
-        po.setFileType(file.getContentType());
-        po.setDownloadCount(0);
-        fileMapper.insert(po);
-
-        return FileVo.of(po);
     }
 
     @Override
-    public FileDownloadResult download(Long id) {
+    public void download(Long id, HttpServletResponse response, boolean preview) {
         FileRecordPo po = fileMapper.selectById(id);
         AssertUtils.notNull(po, "文件不存在");
 
-        String fullPath = fileStorageConfig.getEffectiveBasePath() + File.separator + po.getFilePath() + File.separator + po.getStoredName();
-        File file = new File(fullPath);
-        AssertUtils.isTrue(FileUtil.exist(file), "文件不存在");
-
-        //anchor 更新下载次数
-        fileMapper.update(null,
-                new com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper<FileRecordPo>()
-                        .eq(FileRecordPo::getId, id)
-                        .set(FileRecordPo::getDownloadCount, po.getDownloadCount() + 1));
-
         try {
-            FileDownloadResult result = new FileDownloadResult();
-            result.setResource(new InputStreamResource(new FileInputStream(file)));
-            result.setOriginalName(po.getOriginalName());
-            return result;
-        } catch (IOException e) {
-            log.error("文件读取失败", e);
-            throw new BusinessException("文件读取失败");
+            //anchor 使用策略下载（传入原始文件名用于Content-Disposition）
+            fileStorageStrategy.download(response, po.getFilePath(), po.getOriginalName(), preview);
+
+            //anchor 更新下载次数
+            fileMapper.update(null,
+                    new com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper<FileRecordPo>()
+                            .eq(FileRecordPo::getId, id)
+                            .set(FileRecordPo::getDownloadCount, po.getDownloadCount() + 1));
+        } catch (Exception e) {
+            log.error("文件下载失败", e);
+            throw new BusinessException("文件下载失败");
         }
     }
 
@@ -150,13 +141,7 @@ public class FileServiceImpl implements FileService {
         FileRecordPo po = fileMapper.selectById(id);
         AssertUtils.notNull(po, "文件不存在");
 
-        //anchor 删除磁盘文件（如果存在）
-        String fullPath = fileStorageConfig.getEffectiveBasePath() + File.separator + po.getFilePath() + File.separator + po.getStoredName();
-        if (FileUtil.exist(fullPath)) {
-            FileUtil.del(fullPath);
-        }
-
-        //anchor 删除数据库记录
+        //anchor 逻辑删除（@TableLogic 自动处理）
         fileMapper.deleteById(id);
     }
 }

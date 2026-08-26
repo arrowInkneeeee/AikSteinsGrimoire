@@ -2,6 +2,7 @@ package io.aik.steins.grimoire.system.file.service.impl;
 
 import io.aik.steins.grimoire.core.config.FileStorageConfig;
 import io.aik.steins.grimoire.core.exception.BusinessException;
+import io.aik.steins.grimoire.core.storage.FileStorageStrategy;
 import io.aik.steins.grimoire.system.file.po.FileRecordPo;
 import io.aik.steins.grimoire.system.file.vo.FileVo;
 import io.aik.steins.grimoire.system.file.dao.FileMapper;
@@ -13,6 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -50,6 +53,12 @@ class FileServiceImplTest {
 
     @Mock
     private MultipartFile multipartFile;
+
+    @Mock
+    private HttpServletResponse httpServletResponse;
+
+    @Mock
+    private FileStorageStrategy fileStorageStrategy;
 
     @InjectMocks
     private FileServiceImpl fileService;
@@ -211,7 +220,7 @@ class FileServiceImplTest {
             when(fileMapper.selectById(TEST_FILE_ID)).thenReturn(null);
 
             // -anchor when & then
-            assertThatThrownBy(() -> fileService.download(TEST_FILE_ID))
+            assertThatThrownBy(() -> fileService.download(TEST_FILE_ID, httpServletResponse, false))
                     .isInstanceOf(BusinessException.class)
                     .hasMessageContaining("文件不存在");
         }

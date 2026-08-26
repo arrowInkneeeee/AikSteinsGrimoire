@@ -2,9 +2,10 @@ package io.aik.steins.grimoire.system.file.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.aik.steins.grimoire.system.file.dto.FileQuery;
-import io.aik.steins.grimoire.system.file.vo.FileDownloadResult;
 import io.aik.steins.grimoire.system.file.vo.FileVo;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 文件 Service -anchor
@@ -20,8 +21,12 @@ public interface FileService {
 
     /**
      * 下载文件
+     *
+     * @param id       文件ID
+     * @param response HTTP响应对象
+     * @param preview  是否预览模式
      */
-    FileDownloadResult download(Long id);
+    void download(Long id, HttpServletResponse response, boolean preview);
 
     /**
      * 分页查询
@@ -34,7 +39,7 @@ public interface FileService {
     FileVo findById(Long id);
 
     /**
-     * 删除文件
+     * 删除文件（逻辑删除）
      */
     void remove(Long id);
 

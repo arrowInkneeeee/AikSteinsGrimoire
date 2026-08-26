@@ -34,6 +34,15 @@ public class FileVo {
     @Schema(description = "MIME类型")
     private String fileType;
 
+    @Schema(description = "存储类型")
+    private String storageType;
+
+    @Schema(description = "文件MD5")
+    private String md5;
+
+    @Schema(description = "访问URL")
+    private String url;
+
     @Schema(description = "下载次数")
     private Integer downloadCount;
 

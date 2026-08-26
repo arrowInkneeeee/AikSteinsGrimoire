@@ -59,10 +59,14 @@ CREATE TABLE IF NOT EXISTS aik_sys_param (
 CREATE TABLE IF NOT EXISTS aik_sys_file (
     id BIGINT NOT NULL COMMENT '主键',
     original_name VARCHAR(255) NOT NULL COMMENT '原始文件名',
-    stored_name VARCHAR(255) NOT NULL COMMENT '存储文件名（UUID）',
+    stored_name VARCHAR(255) NOT NULL COMMENT '存储文件名（Snowflake ID）',
     file_path VARCHAR(512) NOT NULL COMMENT '相对存储路径',
     file_size BIGINT NOT NULL COMMENT '文件大小（字节）',
     file_type VARCHAR(128) COMMENT 'MIME类型',
+    storage_type VARCHAR(16) NOT NULL DEFAULT 'local' COMMENT '存储类型：local/oss/sftp',
+    md5 VARCHAR(32) COMMENT '文件MD5哈希',
+    url VARCHAR(512) COMMENT '访问URL',
+    del_flag TINYINT NOT NULL DEFAULT 0 COMMENT '删除标记：0-正常，1-已删除',
     download_count INT NOT NULL DEFAULT 0 COMMENT '下载次数',
     create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     modify_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
@@ -70,5 +74,8 @@ CREATE TABLE IF NOT EXISTS aik_sys_file (
     modify_by VARCHAR(64) COMMENT '修改人',
     PRIMARY KEY (id),
     KEY idx_original_name (original_name),
-    KEY idx_create_time (create_time)
+    KEY idx_create_time (create_time),
+    KEY idx_storage_type (storage_type),
+    KEY idx_md5 (md5),
+    KEY idx_del_flag (del_flag)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='文件记录表';

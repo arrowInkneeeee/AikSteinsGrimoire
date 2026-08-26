@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 /**
  * 文件存储配置 -anchor
+ * <p>支持多存储策略切换：local / oss / sftp</p>
  *
  * @author a I k .
  */
@@ -21,12 +22,17 @@ import java.util.stream.Collectors;
 public class FileStorageConfig {
 
     /**
-     * 文件存储根路径（通用回退）
+     * 存储策略：local | oss | sftp
      */
-    private String basePath = "./grimoire-files";
+    private String use = "local";
 
     /**
-     * 单个文件最大大小（字节）
+     * 临时文件目录
+     */
+    private String localTmp = "./grimoire-files/tmp";
+
+    /**
+     * 单个文件最大大小（字节），默认 10MB
      */
     private Long maxSize = 10 * 1024 * 1024L;
 
@@ -41,7 +47,19 @@ public class FileStorageConfig {
     private String allowTypes;
 
     /**
-     * 获取文件存储根路径
+     * 兼容旧配置：文件存储根路径（通用回退）
+     */
+    private String basePath = "./grimoire-files";
+
+    /**
+     * 策略专属配置
+     */
+    private MethodConfig method;
+
+    // ==================== 便捷方法 ====================
+
+    /**
+     * 获取文件存储根路径（兼容旧配置）
      */
     public String getEffectiveBasePath() {
         return basePath;
@@ -59,5 +77,38 @@ public class FileStorageConfig {
                 .filter(StrUtil::isNotBlank)
                 .map(String::toLowerCase)
                 .collect(Collectors.toSet());
+    }
+
+    // ==================== 嵌套配置类 ====================
+
+    @Data
+    public static class MethodConfig {
+        private LocalConfig local;
+        private OssConfig oss;
+        private SftpConfig sftp;
+    }
+
+    @Data
+    public static class LocalConfig {
+        private String basePath;
+    }
+
+    @Data
+    public static class OssConfig {
+        private String endpoint;
+        private String accessKeyId;
+        private String accessKeySecret;
+        private String bucketName;
+        private String basePath;
+    }
+
+    @Data
+    public static class SftpConfig {
+        private String host;
+        private Integer port = 22;
+        private String username;
+        private String password;
+        private String privateKey;
+        private String basePath;
     }
 }
