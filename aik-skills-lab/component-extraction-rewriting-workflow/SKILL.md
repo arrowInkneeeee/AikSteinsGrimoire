@@ -29,6 +29,77 @@ version: 1.1.0
 
 ---
 
+
+## 产物目标定位（AIK_GRIMOIRE_HOME 定位链）
+
+> 所有产物必须落地到魔典（AikSteinsGrimoire）项目，而非当前工作空间。通过定位链解析目标路径。
+
+### 定位链（按优先级，命中即止）
+
+```powershell
+# Step 1 — 读环境变量缓存（命中即止，日常零开销）
+$g = [Environment]::GetEnvironmentVariable('AIK_GRIMOIRE_HOME','User')
+# 验证 = ($g 非空) AND (Test-Path "$g\grimoire-files\component-manuals")
+# 有效 → 基址 = $g，结束
+# 无效 → 进 Step 2
+
+# Step 2 — 当前工作空间直查 + 自动写缓存
+# 检查 {workspace} 的父级目录中是否存在 AikSteinsGrimoire
+# 或检查 {workspace} 自身是否是 AikSteinsGrimoire
+# 存在 → 基址 = 命中路径
+#   自动写缓存：[Environment]::SetEnvironmentVariable('AIK_GRIMOIRE_HOME', '{基址}', 'User')
+#   结束
+
+# Step 3 — 全局搜索兜底 + 自动写缓存
+# 优先：utools.everythingfind 搜 "grimoire-files" 目录名（需 Everything）
+# 备选：在常见开发目录搜（D:\JeBrainsWorkSpace\ 等）
+# 命中后验证 $g\grimoire-files\component-manuals 存在
+# 基址 = 命中目录
+#   自动写缓存（同 Step 2）
+#   结束
+
+# Step 4 — 全失败 → 上报觀月
+# 不擅自猜测路径，告知"定位失败，请提供真实目录或手动设 AIK_GRIMOIRE_HOME"
+```
+
+### 产物路径解析表
+
+定位成功后，所有产物路径基于 `$GRIMOIRE` 解析：
+
+| 阶段 | 类型 | 产物路径 |
+|------|------|---------|
+| Phase 1 | NOTE | `$GRIMOIRE/src/main/java/io/aik/steins/grimoire/scrolls/{name}/README.md` |
+| Phase 1 | COMPONENT/SOLUTION/CODE | `$GRIMOIRE/grimoire-files/component-manuals/{code}.md` |
+| Phase 2 | NOTE | 同 Phase 1（NOTE 类型 Phase 2 仅做元数据补充） |
+| Phase 2 | COMPONENT | `$GRIMOIRE/src/main/java/io/aik/steins/grimoire/components/{code}/` |
+| Phase 2 | SOLUTION | `$GRIMOIRE/src/main/java/io/aik/steins/grimoire/solutions/{code}/` |
+| Phase 2 | CODE | 存入 `aik_knowledge.content` 字段，不生成文件 |
+| Phase 3 | 全部 | `$GRIMOIRE/sql/insert_{code}.sql` |
+
+### 索引更新
+
+产物落地后，同步更新以下索引文件（均在 `$GRIMOIRE` 下）：
+
+| 索引文件 | 更新内容 |
+|---------|---------|
+| `grimoire-files/README.md` | component-manuals 目录树追加新条目 |
+| `src/.../solutions/README.md` | 当前方案列表追加新条目 |
+| `src/.../scrolls/README.md` | 卷轴列表追加新条目（NOTE 类型） |
+
+### 定位失败的处理
+
+Step 4 全失败时，产物临时保存在当前工作空间 `doc/_grimoire_pending/` 下，并告知觀月：
+- "AIK_GRIMOIRE_HOME 定位失败，产物暂存在 doc/_grimoire_pending/，请提供真实目录或设置环境变量"
+
+### 自动写缓存的门禁
+
+- 作用域：User（不要管理员，不碰系统级）
+- 可逆：`[Environment]::SetEnvironmentVariable('AIK_GRIMOIRE_HOME',$null,'User')`
+- 生效时机：新进程读到（当前终端不立即生效）
+- 事后告知：在阶段完成报告中注明"本次自动设置/更新了 AIK_GRIMOIRE_HOME"
+
+---
+
 ## 流水线架构
 
 ```
@@ -43,8 +114,8 @@ version: 1.1.0
 │         或整理后的笔记/文章（Markdown）                      │
 │         含类型标记（NOTE/COMPONENT/SOLUTION/CODE）          │
 │   产物保存:                                               │
-│     NOTE    → src/main/java/io/aik/steins/grimoire/scrolls/{name}/README.md
-│     其他    → doc/ComponentManual-{code}.md               │
+│     NOTE    → $GRIMOIRE/src/.../scrolls/{name}/README.md
+│     其他    → $GRIMOIRE/grimoire-files/component-manuals/{code}.md               │
 │   门禁:                                                   │
 │     NOTE    → 内容完整性审核 + 用户确认                     │
 │     其他    → 手册覆盖10章 + design-review-checker通过 + 用户确认 │
@@ -54,8 +125,8 @@ version: 1.1.0
 │   输出: 标准化代码产物 或 卷轴内容                           │
 │   规则: 根据类型标记自动决定产物形式                         │
 │         NOTE      → src/main/java/io/aik/steins/grimoire/scrolls/{name}/README.md   文件落盘   │
-│         COMPONENT → components/{code}/         文件结构   │
-│         SOLUTION  → solutions/{code}/          文件结构   │
+│         COMPONENT → $GRIMOIRE/src/.../components/{code}/  文件结构   │
+│         SOLUTION  → $GRIMOIRE/src/.../solutions/{code}/   文件结构   │
 │         CODE      → content 字段存储，不生成文件            │
 │   门禁:                                                   │
 │     NOTE    → 内容质量检查 + 用户确认                       │
@@ -112,7 +183,7 @@ version: 1.1.0
 ```
 Phase 1 已完成。产出物：整理后的笔记/文章
 类型标记：NOTE
-产物已保存至：src/main/java/io/aik/steins/grimoire/scrolls/{name}/README.md
+产物已保存至：$GRIMOIRE/src/.../scrolls/{name}/README.md
 内容结构：[章节数/字数]
 资料来源：[URL/文档/用户描述]
 质量检查：[通过/未通过]
@@ -124,7 +195,7 @@ Phase 1 已完成。产出物：整理后的笔记/文章
 
 ```
 Phase 1 已完成。产出物：Component Manual v1.0
-产物已保存至：doc/ComponentManual-{code}.md
+产物已保存至：$GRIMOIRE/grimoire-files/component-manuals/{code}.md
 关键指标：[耦合点数/敏感数据数/类清单/类型标记]
 质量检查：[通过/未通过]
 是否继续进入 Phase 2？
@@ -136,7 +207,7 @@ Phase 1 已完成。产出物：Component Manual v1.0
 ```
 Phase 2 已完成。产出物：卷轴内容
 类型标记：NOTE
-产物路径：src/main/java/io/aik/steins/grimoire/scrolls/{name}/README.md
+产物路径：$GRIMOIRE/src/.../scrolls/{name}/README.md
 内容质量：[通过/未通过]
 格式规范：[通过/未通过]
 是否继续进入 Phase 3（元数据入库）？
@@ -226,6 +297,6 @@ Phase 3 元数据入库确认：
   - 产物必须保存到 `src/main/java/io/aik/steins/grimoire/scrolls/{name}/README.md`，并同步更新 `src/main/java/io/aik/steins/grimoire/scrolls/README.md` 的卷轴列表
 - **COMPONENT/SOLUTION/CODE 类型规则**：
   - Phase 1 的 gitnexus 索引检查自动执行
-  - Phase 1 产物（Component Manual v1.0）必须保存到本地文件：`源项目根目录/doc/ComponentManual-{code}.md`，其中 `{code}` 为组件编码（如 files-to-zip-utils）。若 doc 目录不存在则自动创建
+  - Phase 1 产物（Component Manual v1.0）必须保存到本地文件：`源项目根目录/$GRIMOIRE/grimoire-files/component-manuals/{code}.md`，其中 `{code}` 为组件编码（如 files-to-zip-utils）。定位链详见“产物目标定位”章节
 - Phase 2 的目标项目检查自动执行，代码生成路径由类型标记自动决定
 - Phase 3 数据库表就绪性自动检查，入库前必须用户明确确认

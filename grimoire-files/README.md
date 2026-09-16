@@ -1,4 +1,4 @@
-# Grimoire Files — 项目文档资料库
+﻿# Grimoire Files — 项目文档资料库
 
 > 存放 AikSteinsGrimoire 项目的所有规划、设计、组件手册及学习笔记。
 
@@ -17,7 +17,8 @@ grimoire-files/
 ├── component-manuals/              # 组件手册（萃取产物）
 │   ├── threadpool-executor.md      # 自定义线程池封装组件
 │   ├── word-template-export.md     # Word 模板导出引擎
-│   └── scene-factory-router.md     # 场景服务工厂路由组件
+│   ├── scene-factory-router.md     # 场景服务工厂路由组件
+│   └── eventbus-listener-architecture.md  # EventBus 事件驱动监听器架构
 └── learning-notes/                 # 学习笔记 & 研究总结
     ├── component-extraction-workflow.md  # 组件知识萃取工作流实施计划
     └── skills-design-study.md            # Agent Skills 设计理念深度学习

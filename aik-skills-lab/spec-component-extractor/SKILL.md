@@ -67,7 +67,7 @@ version: 1.0.0
     选项：A) 批准保存  B) 修订内容  C) 仅保存暂不复写
     │
     ▼
-产出：Component Manual v1.0
+产出：Component Manual v1.0 → `$GRIMOIRE/grimoire-files/component-manuals/{code}.md
 ```
 
 ## 调用的技能
@@ -133,3 +133,4 @@ Component Manual 10 章结构：
 - 耦合清单必须精确到方法级别，脱敏建议必须具体可操作
 - 敏感数据检测零容忍，全部标注
 - 手册产出前必须通过 design-review-checker 审核
+- **产物路径必须通过 AIK_GRIMOIRE_HOME 定位链解析**：Phase 1 产物保存到 `$GRIMOIRE/grimoire-files/component-manuals/{code}.md`（定位链详见 component-extraction-rewriting-workflow/SKILL.md）。定位失败时临时保存在 `doc/_grimoire_pending/` 并上报觀月

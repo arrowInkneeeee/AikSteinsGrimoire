@@ -89,7 +89,7 @@ Component Manual 输入
     选项：A) 确认交付  B) 修正特定文件  C) 补充遗漏
     │
     ▼
-完整交付物：代码 + 配置 + 测试 + 文档
+完整交付物：代码 + 配置 + 测试 + 文档 → `$GRIMOIRE/src/.../components/{code}/ 或 solutions/{code}/
 ```
 
 ## 调用的技能
@@ -155,3 +155,4 @@ accumulation-component-{name}/
 - 复写代码不得包含源项目的任何业务名称
 - 配置中的敏感项必须使用环境变量占位符
 - 所有类 100% 符合 aIk-coding-style
+- **产物路径必须通过 AIK_GRIMOIRE_HOME 定位链解析**：COMPONENT 保存到 `$GRIMOIRE/src/.../components/{code}/`，SOLUTION 保存到 `$GRIMOIRE/src/.../solutions/{code}/`（定位链详见 component-extraction-rewriting-workflow/SKILL.md）。定位失败时临时保存在 `doc/_grimoire_pending/` 并上报觀月

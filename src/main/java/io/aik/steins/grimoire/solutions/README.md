@@ -1,4 +1,4 @@
-# solutions 模块
+﻿# solutions 模块
 
 > 解决方案内容存储层
 
@@ -32,3 +32,4 @@ solutions/
 | 方案名称 | 路径 | 状态 |
 |---------|------|------|
 | template | `solutions/template/` | 模板骨架 |
+| eventbus-listener-architecture | `solutions/eventbus-listener-architecture/` | EventBus 事件驱动监听器架构 |
