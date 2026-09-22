@@ -20,9 +20,12 @@
 <script setup lang="ts">
 import { useWindowScroll } from '@vueuse/core'
 import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
 const { y } = useWindowScroll()
-const isScrolled = computed(() => y.value > 60)
+// 首页：滚动后才变毛玻璃；其他页面：始终毛玻璃
+const isScrolled = computed(() => route.path === '/' ? y.value > 60 : true)
 </script>
 
 <style scoped lang="scss">
@@ -34,12 +37,11 @@ const isScrolled = computed(() => y.value > 60)
   z-index: 100;
   height: 60px;
   transition: all 0.3s ease;
-  background: transparent;
+  background: rgba(248, 246, 241, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-color);
 
   &.is-scrolled {
-    background: rgba(248, 246, 241, 0.85);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border-color);
     box-shadow: 0 1px 8px rgba(0, 0, 0, 0.04);
   }
 }
@@ -61,10 +63,6 @@ const isScrolled = computed(() => y.value > 60)
   color: var(--color-theme);
   letter-spacing: 1px;
 
-  .is-scrolled & {
-    color: var(--color-theme);
-  }
-
   // Hero 区域白色
   .grimoire-nav:not(.is-scrolled) & {
     color: #fff;
@@ -79,6 +77,7 @@ const isScrolled = computed(() => y.value > 60)
   a {
     font-size: 14px;
     font-weight: 500;
+    color: var(--text-secondary);
     transition: color 0.2s;
 
     // Hero 区域白色
@@ -92,13 +91,9 @@ const isScrolled = computed(() => y.value > 60)
       }
     }
 
-    .is-scrolled & {
-      color: var(--text-secondary);
-
-      &:hover,
-      &.router-link-active {
-        color: var(--color-theme);
-      }
+    &:hover,
+    &.router-link-active {
+      color: var(--color-theme);
     }
   }
 
