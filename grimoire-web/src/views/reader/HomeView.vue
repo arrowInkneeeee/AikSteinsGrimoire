@@ -160,25 +160,27 @@ function formatDate(dateStr: string): string {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #2d6a4f 0%, #1a365d 100%);
+  background: url('/images/rei-bg.jpg') center right / cover no-repeat;
   overflow: hidden;
 
   &::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.08) 0%, transparent 60%);
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.45) 40%, rgba(0, 0, 0, 0.15) 70%, transparent 100%);
   }
 }
 
 .hero-content {
   position: relative;
   z-index: 1;
-  text-align: center;
+  text-align: left;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: 20px;
+  padding-left: 10vw;
+  max-width: 600px;
 }
 
 .hero-title {
@@ -186,8 +188,8 @@ function formatDate(dateStr: string): string {
   font-size: 48px;
   font-weight: 700;
   color: #fff;
-  letter-spacing: 4px;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  letter-spacing: 2px;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
 }
 
 .hero-subtitle {
