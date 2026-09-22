@@ -118,6 +118,12 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- surefire 2.22.2 发现 JUnit 5 测试所需的 launcher（Spring Boot 2.7.x 不自动传递） -->
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <!-- Guava：EventBus 事件总线依赖（萃取组件 EventBusManager 所需） -->
         <dependency>

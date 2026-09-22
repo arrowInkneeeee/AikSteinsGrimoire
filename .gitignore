@@ -53,6 +53,13 @@ contracts.json
 AGENTS.md
 CLAUDE.md
 
+# AgentTeams 团队运行时状态（非源码，勿入库）
+.agent-teams/
+
+# 附件存储根与临时目录（运行时产物，勿入库）
+grimoire-files/storage/
+grimoire-files/tmp/
+
 # 临时导入脚本
 ImportKnowledge.java
 ImportKnowledge.class

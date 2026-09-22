@@ -12,11 +12,13 @@ import io.aik.steins.grimoire.knowledge.common.dto.KnowledgeDto;
 import io.aik.steins.grimoire.knowledge.common.dto.KnowledgeQuery;
 import io.aik.steins.grimoire.knowledge.common.enums.KnowledgeTypeEnum;
 import io.aik.steins.grimoire.knowledge.dao.KnowledgeCategoryMapper;
-import io.aik.steins.grimoire.system.attachment.dao.SysAttachmentMapper;
 import io.aik.steins.grimoire.knowledge.dao.KnowledgeTagMapper;
 import io.aik.steins.grimoire.knowledge.dao.KnowledgeTagRelationMapper;
 import io.aik.steins.grimoire.knowledge.common.po.KnowledgeCategoryPo;
-import io.aik.steins.grimoire.system.attachment.po.SysAttachmentPo;
+import io.aik.steins.grimoire.system.attachment.constant.AttachmentBizType;
+import io.aik.steins.grimoire.system.attachment.dto.AttachmentDto;
+import io.aik.steins.grimoire.system.attachment.service.AttachmentService;
+import io.aik.steins.grimoire.system.attachment.vo.AttachmentVo;
 import io.aik.steins.grimoire.knowledge.common.po.KnowledgePo;
 import io.aik.steins.grimoire.knowledge.common.po.KnowledgeTagPo;
 import io.aik.steins.grimoire.knowledge.common.po.KnowledgeTagRelationPo;
@@ -49,7 +51,8 @@ public class KnowledgeServiceImpl extends ServiceImpl<KnowledgeMapper, Knowledge
     private final KnowledgeCategoryMapper knowledgeCategoryMapper;
     private final KnowledgeTagMapper knowledgeTagMapper;
     private final KnowledgeTagRelationMapper knowledgeTagRelationMapper;
-    private final SysAttachmentMapper sysAttachmentMapper;
+    /** 附件挂载的唯一读写入口——本模块不得直连 SysAttachmentMapper（SDD §2.5.7） */
+    private final AttachmentService attachmentService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -75,6 +78,10 @@ public class KnowledgeServiceImpl extends ServiceImpl<KnowledgeMapper, Knowledge
 
         //anchor 保存标签关联
         saveTagRelations(po.getId(), dto.getTagIds());
+
+        //anchor 保存附件挂载（差量语义；bizType 固定为 KNOWLEDGE，不由前端传）
+        //       attachments 为 null 表示"本次不涉及附件"，空列表才是"卸载全部"
+        saveAttachments(po.getId(), dto.getAttachments());
     }
 
     @Override
@@ -104,6 +111,10 @@ public class KnowledgeServiceImpl extends ServiceImpl<KnowledgeMapper, Knowledge
         knowledgeTagRelationMapper.delete(new LambdaQueryWrapper<KnowledgeTagRelationPo>()
                 .eq(KnowledgeTagRelationPo::getKnowledgeId, dto.getId()));
         saveTagRelations(dto.getId(), dto.getTagIds());
+
+        //anchor 更新附件挂载（差量语义；禁止全删再全插——uk_biz_file 不含 del_flag，
+        //       全删产生的卸载行仍占键值，会让紧接着的全插撞唯一键）
+        saveAttachments(dto.getId(), dto.getAttachments());
     }
 
     @Override
@@ -117,9 +128,12 @@ public class KnowledgeServiceImpl extends ServiceImpl<KnowledgeMapper, Knowledge
         knowledgeTagRelationMapper.delete(new LambdaQueryWrapper<KnowledgeTagRelationPo>()
                 .eq(KnowledgeTagRelationPo::getKnowledgeId, id));
 
-        //anchor 删除附件
-        sysAttachmentMapper.delete(new LambdaQueryWrapper<SysAttachmentPo>()
-                .eq(SysAttachmentPo::getKnowledgeId, id));
+        //anchor 删除附件挂载：逐条走统一删除入口（删挂载行 → 查引用计数 → 无则删文件记录 + 提交后删盘）
+        //       禁止用一条 delete(wrapper) 批量删挂载：它会绕开统一入口，
+        //       留下"挂载行没了、文件记录和磁盘文件都还在"的文件层墓碑
+        for (AttachmentVo attachment : attachmentService.listByBiz(AttachmentBizType.KNOWLEDGE, id)) {
+            attachmentService.remove(attachment.getId());
+        }
 
         //anchor 删除主表
         baseMapper.deleteById(id);
@@ -186,12 +200,9 @@ public class KnowledgeServiceImpl extends ServiceImpl<KnowledgeMapper, Knowledge
             vo.setTags(tags.stream().map(KnowledgeTagPo::getTagName).collect(Collectors.toList()));
         }
 
-        //anchor 查询附件列表
-        List<SysAttachmentPo> attachments = sysAttachmentMapper.selectList(
-                new LambdaQueryWrapper<SysAttachmentPo>()
-                        .eq(SysAttachmentPo::getKnowledgeId, id)
-                        .orderByAsc(SysAttachmentPo::getSortOrder));
-        vo.setAttachments(attachments);
+        //anchor 查询附件列表（经统一挂载服务：只返回 del_flag = 0、按 sort_order ASC, id ASC 排序、
+        //       文件元数据按 fileId 批量取，禁 N+1）
+        vo.setAttachments(attachmentService.listByBiz(AttachmentBizType.KNOWLEDGE, id));
 
         return vo;
     }
@@ -231,5 +242,22 @@ public class KnowledgeServiceImpl extends ServiceImpl<KnowledgeMapper, Knowledge
         for (KnowledgeTagRelationPo relation : relations) {
             knowledgeTagRelationMapper.insert(relation);
         }
+    }
+
+    /**
+     * 保存附件挂载（差量语义）-anchor
+     *
+     * <p>{@code attachments} 为 {@code null} 表示"本次不涉及附件"（不动作）；
+     * <b>空列表</b>表示"卸载该业务全部挂载"。{@code bizType} 固定为
+     * {@link AttachmentBizType#KNOWLEDGE}，<b>不由前端传</b>。</p>
+     *
+     * @param knowledgeId 知识条目ID
+     * @param attachments 附件列表；{@code null} = 本次不涉及
+     */
+    private void saveAttachments(Long knowledgeId, List<AttachmentDto> attachments) {
+        if (attachments == null) {
+            return;
+        }
+        attachmentService.save(AttachmentBizType.KNOWLEDGE, knowledgeId, attachments);
     }
 }

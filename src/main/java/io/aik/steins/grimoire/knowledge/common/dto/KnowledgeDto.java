@@ -1,5 +1,6 @@
 package io.aik.steins.grimoire.knowledge.common.dto;
 
+import io.aik.steins.grimoire.system.attachment.dto.AttachmentDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -57,4 +58,7 @@ public class KnowledgeDto {
 
     @Schema(description = "标签ID列表")
     private List<Long> tagIds;
+
+    @Schema(description = "附件列表（差量语义）：null = 本次不涉及附件；空列表 = 卸载该条目全部附件")
+    private List<AttachmentDto> attachments;
 }
