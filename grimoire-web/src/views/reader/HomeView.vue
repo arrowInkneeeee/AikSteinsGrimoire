@@ -158,27 +158,27 @@ function formatDate(dateStr: string): string {
   height: 100vh;
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
-  background: url('/images/rei-bg.jpg') center right / cover no-repeat;
+  background: url('/images/rei-bg.jpg') 115% center / cover no-repeat;
   overflow: hidden;
 
   &::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.5) 35%, rgba(0, 0, 0, 0.1) 65%, transparent 100%);
+    background: radial-gradient(ellipse at 70% 50%, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.55) 50%, rgba(0, 0, 0, 0.8) 100%);
   }
 }
 
 .hero-content {
   position: relative;
   z-index: 1;
-  text-align: left;
+  text-align: center;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 20px;
-  margin-left: 8vw;
   max-width: 720px;
 }
 
