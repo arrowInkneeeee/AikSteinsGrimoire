@@ -167,7 +167,17 @@ function formatDate(dateStr: string): string {
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse at 70% 50%, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.55) 50%, rgba(0, 0, 0, 0.8) 100%);
+    background: #3d1f55;
+    mix-blend-mode: overlay;
+    opacity: 0.3;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 6, 22, 0.2);
+    pointer-events: none;
   }
 }
 
@@ -194,7 +204,7 @@ function formatDate(dateStr: string): string {
 .hero-subtitle {
   font-size: 18px;
   color: rgba(255, 255, 255, 0.8);
-  letter-spacing: 3px;
+  letter-spacing: 12px;
   margin-bottom: 12px;
 }
 
