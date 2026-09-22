@@ -69,5 +69,14 @@ _import_temp.sql
 # 系统服务文件
 nacos-wsl.service
 
+# --- 前端项目 (grimoire-web/) ---
+node_modules/
+grimoire-web/node_modules/
+grimoire-web/dist/
+grimoire-web/src/auto-imports.d.ts
+grimoire-web/src/components.d.ts
+.env.local
+.env.*.local
+
 # 其他
 绫波丽.jpg

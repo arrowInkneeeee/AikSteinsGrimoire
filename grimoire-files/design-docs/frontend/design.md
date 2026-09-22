@@ -4,6 +4,7 @@
 > v2 → v2.1：路径迁移（`plans/` → `design-docs/frontend/`）、补权威边界、登记 15 项待修订
 > v2.1 → v2.2：**附件交互定稿**——附件数据模型改两层映射（去 `knowledge_id` / `attach_url`）、新增 §附件交互（零 URL 拼接，下载/预览统一走 `/grimoire/file/download`）、消清全部 `url` 字段引用；处置 R01（附件子集）/ R02 / R16，新登记 R17–R18
 > v2.2 → v2.3：**R18 解决**——`AttachmentVo` 由 6 字段扩为 **8 字段**（补 `fileSize` / `fileType`，随附件列表返回、**无需**额外请求），对齐 api-contract **v1.2.2** §2.5.3；§附件交互 字段表、§知识数据模型 Attachment 行、§知识详情页 附件区同步
+> v2.3 → v2.4：**R06 + R09 裁决落地**——R06 统一 Vite 代理为仅 `/grimoire`（后端无 `/api` 前缀）；R09 首页形态定为「沉浸式封面 + 滚动知识全景」，§首页详细设计 重写
 >
 > 接口契约权威：[`../system-module/api-contract.md`](../system-module/api-contract.md)（本文档不定义接口，§后端 API 现状仅为索引）
 > 附件域设计权威：[`../system-module/SDD.md`](../system-module/SDD.md) §2.5《附件两层模型与归属边界》
@@ -236,7 +237,7 @@ Grimoire 魔典
 ### API 封装要点
 
 - 响应拦截器：`code===200 && success===true` 时解包返回 `data`，否则 `ElMessage.error(msg)`
-- Vite 代理：`/api` 和 `/grimoire` 两个前缀均代理到 `http://localhost:18900`
+- Vite 代理：仅代理 `/grimoire` 到 `http://localhost:18900`（后端无 `/api` 前缀端点，R06 裁决 v2.4）
 - 雪花 ID 精度：后端返回 JSON 时 Long 需序列化为 String（或使用 BigInt），避免 JS Number 精度丢失
 
 ### 状态管理（轻量）
@@ -426,12 +427,26 @@ export function downloadFile(params: { id: string; attachId?: string; preview?: 
 +-------------------------------------------------------------------+
 ```
 
-设计要点：
-- 页面进入时只有背景 + 标题 + 搜索框 + 三个入口图标
-- 搜索框居中，宽度约 600px，回车或点击跳转 `/search?q=xxx`
-- 三个入口图标是导航锚点，点击分别跳转到 /archive、/categories、/tags
-- 向下滚动时淡入显示统计摘要（如「已沉淀 42 条知识 · 9 个分类 · 51 个标签」）
-- 背景风格可自定义：渐变色 / 静态插画 / 粒子动画（契合魔典主题）
+设计要点（v2.4 R09 裁决：沉浸式封面 + 滚动知识全景）：
+
+**第一屏（Hero，100vh）**：
+- 沉浸式背景（CSS 渐变 / 纹理 / 自定义插画，三选一后定）
+- 透明导航栏悬浮在上，滚动后变半透明毛玻璃 + fixed
+- 居中：标题 + 副标题 + 搜索框 + 三入口按钮
+- 底部：向下箭头动画引导
+- **不放任何知识条目**——保持「封面」感
+
+**第二屏（知识全景，滚动淡入）**：
+- 数据来源：`GET /knowledge/stats` 一个接口全搞定
+- **统计卡片行**：4 个数字卡（知识/分类/标签/附件），数字从 0 滚动到实际值（动画）
+- **类型分布条**：水平进度条，按笔记(绿)/组件(蓝)/方案(紫)/片段(橙)着色
+- **最近编辑列表**：5 条，点击跳转 `/knowledge/:id`
+- 这屏高度约 600-800px，不需要无限滚动
+
+**与其他页面的关系**：
+- 搜索框回车跳转 `/search?q=xxx`
+- 三入口按钮跳转 `/archive`、`/categories`、`/tags`
+- 参考灵感：Linzy 知识库（Hexo Butterfly）的 Hero 全屏 + 信息密度，但改为魔典式单栏沉浸体验（不要侧边栏）
 
 ### 时间树 (ArchiveView) — 「知识年轮」
 
@@ -660,10 +675,10 @@ export function downloadFile(params: { id: string; attachId?: string; preview?: 
 | R03 | §API 封装要点 | 只说"ID 字段按 string" | 补：分页元数据 `total`/`size`/`current`/`pages` 也是字符串 | 待修订 |
 | R04 | §API 封装要点 | 未提错误模型 | 补：所有错误均 HTTP 200，判定依据是 `code` | 待修订 |
 | R05 | §API 封装要点 | 未提 null 语义 | 补：`NON_NULL` 序列化，字段全可选 | 待修订 |
-| R06 | §API 封装要点 vs §注意事项 1 | **自相矛盾**（`/api` + `/grimoire` vs 仅 `/grimoire`） | 统一为仅代理 `/grimoire` | 待修订 |
+| R06 | §API 封装要点 vs §注意事项 1 | **自相矛盾**（`/api` + `/grimoire` vs 仅 `/grimoire`） | 统一为仅代理 `/grimoire` | ✅ 已修订（v2.4） |
 | R07 | §视觉风格 色板 | `#8a8a8a`(3.20:1)、`#b8860b`(3.01:1)、`#d4a574`(2.06:1) 均不达 WCAG AA | 次文字降至约 `#6b6b6b`；金色降至 `#8a6209` 以下或限定为装饰 | 待修订 |
 | R08 | §暗色模式 | 卡片 `#121a2b` 对页面 `#0a0e17` 仅 1.11:1，"轻微阴影"不可见 | 暗色改用可见边框替代阴影 | 待修订 |
-| R09 | §首页设计要点 | **自相矛盾**："不展示任何知识条目列表" vs "向下滚动淡入统计" | 单屏封面 或 滚动落地页，二选一 | ⚠️ 需决策 |
+| R09 | §首页设计要点 | **自相矛盾**："不展示任何知识条目列表" vs "向下滚动淡入统计" | 单屏封面 或 滚动落地页，二选一 | ✅ 已修订（v2.4：沉浸式封面 + 滚动知识全景） |
 | R10 | §类型标签配色 | 只有"绿/蓝/紫/橙"，无色值 | 补亮/暗两套具体 hex | 待修订 |
 | R11 | §分阶段实施 | 5 个 Phase 无后端前置，Phase 1 交付三个死链 | 插入契约 §4 的 Phase 0-6 为前置，重排前端 Phase | 待修订 |
 | R12 | §注意事项 3 | 只说用 DOMPurify | 补：或在 markdown-it 禁 `html`（更省的防线） | 待修订 |
@@ -674,8 +689,9 @@ export function downloadFile(params: { id: string; attachId?: string; preview?: 
 | R17 | §目录结构 | 附件链路**缺文件**：`api/attachment.ts`、`api/types/attachment.ts`、附件列表组件（如 `components/attachment/AttachmentList.vue` / `AttachmentUploader.vue`） | 补入 `api/`（按 R14 用 `.ts`）与 `components/attachment/`，并在 §附件交互 的约定下实现 | 待修订 |
 | R18 | §核心页面详细设计 › 知识详情页 附件区 | 条目展示"名称 (2.3MB) + 类型图标"，但 v1.2 / v2.2 时 `AttachmentVo` **不含 `fileSize` / `fileType`** → **无数据来源** | 三选一（裁决与理由见 api-contract **v1.2.2** §2.5.3）：① 附件区不展示大小/类型；② 前端按 `fileId` 走 `/grimoire/file/findPage` 补取；③ 后端补字段 | ✅ **已解决（v2.3）**：采用 **③ 后端补字段** —— api-contract §2.5.3 把 `AttachmentVo` 6 → **8 字段**（补 `fileSize` / `fileType`，由 `aik_sys_file` 关联带出、**不新增挂载表列**）。**否决 ①**（砍掉先于契约已定的前端设计）、**否决 ②**（**N+1 请求**，且 `/file/findPage` 语义是管理端分页而非按 id 批量取元数据）。前端侧**无需额外请求**，字段随附件列表一并返回 |
 
-**执行前置**：R01–R05 依赖契约定稿（已定稿），R11 依赖契约 §4 的 Phase 划分；**R09（首页形态）需用户决策**。
-R18 已于 v2.3 由船长裁决解决（采用"后端补字段"，契约 api-contract v1.2.2 §2.5.3 已落地）。
+**执行前置**：R01–R05 依赖契约定稿（已定稿），R11 依赖契约 §4 的 Phase 划分。
+R06 / R09 已于 v2.4 由船长裁决解决（R06 = 仅代理 `/grimoire`；R09 = 沉浸式封面 + 滚动知识全景）。
+R18 已于 v2.3 由船长裁决解决（采用“后端补字段”，契约 api-contract v1.2.2 §2.5.3 已落地）。
 R17 只依赖本文档 §附件交互，可随时执行。
 
 ## 变更历史
@@ -685,4 +701,5 @@ R17 只依赖本文档 §附件交互，可随时执行。
 | v2 | — | 初版（含现状核实） |
 | v2.1 | 2026-09-20 | 迁移至 `design-docs/frontend/`；补标准头与权威边界；登记 15 项待修订 |
 | v2.2 | 2026-09-20 | **附件交互定稿**（对应 api-contract v1.2 / v1.2.1 §2.5 / §2.6、SDD v1.3 §2.5）：§知识数据模型 `Attachment` 行由 `knowledge_id` / `attach_name` / `attach_url` 改为两层映射（后端列 `file_id` / `biz_type` / `biz_id` / `attach_name` / `description` / `sort_order`，前端字段 `id` / `fileId` / `attachName` / `description` / `sortOrder` / `createTime`），并补 `File` 行；§后端 API 现状 补 Attachment 行与下载入参；**新增 §附件交互**（零 URL 拼接、`attachId` 必带、blob 6 条约定、卸载/删除契约）；§知识详情页 附件区补预览与数据来源告警；**消清全部 `url` 字段引用**；§待修订项 增状态列并登记 R16–R18（R02 / R16 已修订，R01 部分修订）；同步 api-contract §2.5.2 / §2.5.3 的 `findByBiz` 过滤与排序口径 |
-| v2.3 | 2026-09-20 | **R18 解决（`AttachmentVo` 6 → 8 字段，对齐 api-contract v1.2.2）**：§附件交互 的字段表补 `fileSize`（bytes 的字符串形式，`Number()` 换算展示）与 `fileType`（MIME，用于类型图标与可预览性判定），并写明二者属**文件层**、由服务端按 `fileId` 关联 `aik_sys_file` 带出；§知识数据模型 `Attachment` 行的前端可见字段由 6 项改 **8 项**；§知识详情页 附件区去掉"无数据来源"告警、改为直接取自响应；§待修订项 R18 状态改 **✅ 已解决**（采用"后端补字段"，并写明否决 N+1 补取与砍设计两项的理由）；「执行前置」同步。**未改接口定义、未改 SDD（由 t15 跟随）、未改代码** |
+| v2.3 | 2026-09-20 | **R18 解决**（略，见 git log） |
+| v2.4 | 2026-09-22 | **R06 + R09 裁决落地**：R06 §API 封装要点 Vite 代理统一为仅 `/grimoire`；R09 §首页设计要点 定为「沉浸式封面 + 滚动知识全景」——第一屏 100vh Hero，第二屏知识全景面板（统计卡片 + 类型分布 + 最近编辑，数据来源 `GET /knowledge/stats`）；§首页详细设计重写；§待修订项 R06/R09 改 ✅；「执行前置」同步 |

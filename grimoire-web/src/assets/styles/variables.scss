@@ -1,0 +1,25 @@
+// 魔典主题 CSS 变量 — 亮色模式
+
+// 色板
+$bg-page: #f8f6f1;        // 羊皮纸暖白
+$bg-card: #ffffff;          // 卡片纯白
+$text-primary: #2c2c2c;     // 深灰近黑
+$text-secondary: #8a8a8a;   // 辅助信息
+$color-theme: #2d6a4f;      // 古典墨绿
+$color-accent: #b8860b;     // 金色点缀
+$border-color: #e8e4dc;     // 柔和分割
+
+// 类型色
+$type-note: #2d6a4f;        // 笔记 = 绿
+$type-component: #1565c0;   // 组件 = 蓝
+$type-solution: #7b1fa2;    // 方案 = 紫
+$type-snippet: #e65100;     // 片段 = 橙
+
+// Element Plus 主题覆盖变量（仅供 SCSS 编译时引用，不直接输出到 CSS）
+$--el-color-primary: $color-theme;
+$--el-color-warning: $color-accent;
+$--el-bg-color: $bg-page;
+$--el-fill-color-blank: $bg-card;
+$--el-border-color: $border-color;
+$--el-text-color-primary: $text-primary;
+$--el-text-color-regular: $text-secondary;

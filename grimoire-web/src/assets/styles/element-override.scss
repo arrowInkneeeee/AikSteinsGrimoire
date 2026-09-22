@@ -1,0 +1,24 @@
+// Element Plus 主题覆盖
+@forward 'element-plus/theme-chalk/src/common/var.scss' with (
+  $colors: (
+    'primary': (
+      'base': #2d6a4f,
+    ),
+    'warning': (
+      'base': #b8860b,
+    ),
+  ),
+  $bg-color: (
+    'page': #f8f6f1,
+  ),
+  $fill-color: (
+    'blank': #ffffff,
+  ),
+  $border-color: (
+    '': #e8e4dc,
+  ),
+  $text-color: (
+    'primary': #2c2c2c,
+    'regular': #8a8a8a,
+  ),
+);
