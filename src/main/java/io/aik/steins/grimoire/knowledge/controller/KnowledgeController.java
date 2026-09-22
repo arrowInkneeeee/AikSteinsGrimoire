@@ -7,6 +7,7 @@ import io.aik.steins.grimoire.knowledge.common.dto.KnowledgeDto;
 import io.aik.steins.grimoire.knowledge.common.dto.KnowledgeQuery;
 import io.aik.steins.grimoire.knowledge.common.dto.ToggleStatusDto;
 import io.aik.steins.grimoire.knowledge.common.vo.KnowledgeListVo;
+import io.aik.steins.grimoire.knowledge.common.vo.KnowledgeStatsVo;
 import io.aik.steins.grimoire.knowledge.common.vo.KnowledgeVo;
 import io.aik.steins.grimoire.knowledge.service.KnowledgeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -80,5 +81,11 @@ public class KnowledgeController {
     public ApiResponse<Void> toggleStatus(@RequestBody @Validated ToggleStatusDto dto) {
         knowledgeService.toggleStatus(dto.getId(), dto.getStatus());
         return ApiResponse.success();
+    }
+
+    @GetMapping("/stats")
+    @Operation(summary = "知识库统计")
+    public ApiResponse<KnowledgeStatsVo> stats() {
+        return ApiResponse.success(knowledgeService.stats());
     }
 }

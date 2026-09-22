@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.aik.steins.grimoire.core.po.BaseEntity;
-import io.aik.steins.grimoire.knowledge.common.constant.KnowledgeConstant;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,7 +30,7 @@ import lombok.experimental.SuperBuilder;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "知识条目")
-@TableName(KnowledgeConstant.TABLE_PREFIX + "knowledge")
+@TableName("aik_knowledge")
 public class KnowledgePo extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

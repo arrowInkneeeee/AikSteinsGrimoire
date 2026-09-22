@@ -38,11 +38,17 @@ public class KnowledgeListVo {
     @Schema(description = "摘要")
     private String summary;
 
+    @Schema(description = "分类ID")
+    private Long categoryId;
+
     @Schema(description = "分类名称")
     private String categoryName;
 
+    @Schema(description = "分类路径（根到当前，如 'Java > Spring'）")
+    private String categoryPath;
+
     @Schema(description = "标签列表")
-    private List<String> tags;
+    private List<TagBriefVo> tags;
 
     @Schema(description = "状态：1-启用 0-禁用")
     private Integer status;

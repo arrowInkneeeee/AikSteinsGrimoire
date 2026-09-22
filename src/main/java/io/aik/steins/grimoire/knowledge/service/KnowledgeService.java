@@ -5,6 +5,7 @@ import io.aik.steins.grimoire.knowledge.common.dto.KnowledgeDto;
 import io.aik.steins.grimoire.knowledge.common.dto.KnowledgeQuery;
 import io.aik.steins.grimoire.knowledge.common.po.KnowledgePo;
 import io.aik.steins.grimoire.knowledge.common.vo.KnowledgeListVo;
+import io.aik.steins.grimoire.knowledge.common.vo.KnowledgeStatsVo;
 import io.aik.steins.grimoire.knowledge.common.vo.KnowledgeVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -64,4 +65,11 @@ public interface KnowledgeService extends IService<KnowledgePo> {
      * @param status 状态：1-启用 0-禁用
      */
     void toggleStatus(Long id, Integer status);
+
+    /**
+     * 知识库统计（知识数 / 分类数 / 标签数 / 附件数 / 类型分布 / 最近编辑）
+     *
+     * @return 统计 VO
+     */
+    KnowledgeStatsVo stats();
 }
