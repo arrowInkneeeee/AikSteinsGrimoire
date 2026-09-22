@@ -39,7 +39,9 @@ public class JacksonConfig {
         mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
-        //anchor 忽略 null 值字段
+        //anchor 忽略 null 值字段（仅影响序列化输出；反序列化不受影响，前端可正常发送 null 值字段）
+        //       X2 裁决：保留 NON_NULL 以清洁响应体；KnowledgeQuery.status 默认 1，
+        //       管理端显式传 null 查全部——该 null 在请求体中可正常送达（NON_NULL 不拦截入站）
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
         //anchor 遇到未知字段不报错

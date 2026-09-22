@@ -116,6 +116,9 @@ public class DictItemServiceImpl implements DictItemService {
             AssertUtils.isTrue(count == 0, "该字典类型下字典项编码已存在");
         }
 
+        //anchor X7 修复：在修改前先保存旧 dictCode，否则 set 后比较恒为 true
+        String oldDictCode = existing.getDictCode();
+
         existing.setDictCode(dto.getDictCode());
         existing.setItemCode(dto.getItemCode());
         existing.setItemName(dto.getItemName());
@@ -124,9 +127,9 @@ public class DictItemServiceImpl implements DictItemService {
         existing.setRemark(dto.getRemark());
         dictItemMapper.updateById(existing);
 
-        //anchor 刷新缓存
-        clearDictItemCache(existing.getDictCode());
-        if (!existing.getDictCode().equals(dto.getDictCode())) {
+        //anchor 刷新缓存：先清旧 dictCode 缓存，若 dictCode 变更再清新 dictCode 缓存
+        clearDictItemCache(oldDictCode);
+        if (!oldDictCode.equals(dto.getDictCode())) {
             clearDictItemCache(dto.getDictCode());
         }
     }

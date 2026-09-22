@@ -34,7 +34,9 @@ spring:
       max-request-size: 50MB
 
 mybatis-plus:
-  mapper-locations: classpath:io/aik/steins/grimoire/**/dao/mapping/*.xml
+  #anchor X23：当前项目全量使用 MyBatis-Plus 注解 API，无 XML mapper 文件；
+  #       保留此配置作为将来新增 XML mapper 时的占位，路径匹配 resources 下任意深层目录
+  mapper-locations: classpath*:mapper/**/*.xml
   global-config:
     db-config:
       id-type: input
