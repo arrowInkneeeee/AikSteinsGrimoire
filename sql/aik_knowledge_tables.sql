@@ -71,19 +71,3 @@ CREATE TABLE IF NOT EXISTS aik_knowledge (
     KEY idx_category_id (category_id),
     KEY idx_status (status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='知识条目主表';
-
--- 知识附件表
-CREATE TABLE IF NOT EXISTS aik_sys_attachment (
-    id BIGINT NOT NULL COMMENT '主键',
-    knowledge_id BIGINT NOT NULL COMMENT '知识条目ID',
-    attach_name VARCHAR(256) NOT NULL COMMENT '附件名称',
-    attach_url VARCHAR(512) NOT NULL COMMENT '附件URL/存储路径',
-    description VARCHAR(512) COMMENT '描述',
-    sort_order INT NOT NULL DEFAULT 0 COMMENT '排序号',
-    create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    modify_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-    create_by VARCHAR(64) COMMENT '创建人',
-    modify_by VARCHAR(64) COMMENT '修改人',
-    PRIMARY KEY (id),
-    KEY idx_knowledge_id (knowledge_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统附件表';

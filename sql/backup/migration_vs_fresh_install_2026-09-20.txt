@@ -1,0 +1,50 @@
+=== 迁移路径（真库 aik_steins_grimoire）vs 全新安装路径（scratch aik_grimoire_verify_tmp） ===
+=== 全新安装 DDL 来源: sql/aik_system_tables.sql ===
+=== 采集时间: 2026-09-20T16:09:25+08:00 ===
+
+--- diff（空 = 逐字节等价）---
+(IDENTICAL)
+
+--- 迁移后真库 SHOW CREATE TABLE ---
+*************************** 1. row ***************************
+aik_sys_file
+CREATE TABLE `aik_sys_file` (
+  `id` bigint NOT NULL COMMENT '主键',
+  `original_name` varchar(255) NOT NULL COMMENT '原始文件名（首次上传者）',
+  `stored_name` varchar(255) NOT NULL COMMENT '存储文件名（Snowflake ID）',
+  `file_path` varchar(512) NOT NULL COMMENT '相对存储路径（存储层内部标识，不对外暴露）',
+  `file_size` bigint NOT NULL COMMENT '文件大小（字节）',
+  `file_type` varchar(128) DEFAULT NULL COMMENT 'MIME类型',
+  `storage_type` varchar(16) NOT NULL DEFAULT 'local' COMMENT '存储类型：local/oss/sftp',
+  `md5` varchar(32) DEFAULT NULL COMMENT '文件MD5哈希（内容寻址锚点）',
+  `download_count` int NOT NULL DEFAULT '0' COMMENT '下载次数',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `modify_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `create_by` varchar(64) DEFAULT NULL COMMENT '创建人',
+  `modify_by` varchar(64) DEFAULT NULL COMMENT '修改人',
+  PRIMARY KEY (`id`),
+  KEY `idx_original_name` (`original_name`),
+  KEY `idx_create_time` (`create_time`),
+  KEY `idx_storage_type` (`storage_type`),
+  KEY `idx_md5` (`md5`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='文件记录表'
+*************************** 1. row ***************************
+aik_sys_attachment
+CREATE TABLE `aik_sys_attachment` (
+  `id` bigint NOT NULL COMMENT '主键',
+  `file_id` bigint NOT NULL COMMENT '被挂载的文件对象ID，逻辑关联 aik_sys_file.id',
+  `biz_type` varchar(32) NOT NULL COMMENT '业务类型：knowledge（取值登记见 SDD §2.5.5）',
+  `biz_id` bigint NOT NULL COMMENT '业务主键：biz_type=knowledge 时为 aik_knowledge.id',
+  `attach_name` varchar(256) NOT NULL COMMENT '用户可见文件名（权威）',
+  `description` varchar(512) DEFAULT NULL COMMENT '描述',
+  `sort_order` int NOT NULL DEFAULT '0' COMMENT '排序号',
+  `del_flag` tinyint NOT NULL DEFAULT '0' COMMENT '卸载标记：0-有效挂载，1-已卸载',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `modify_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `create_by` varchar(64) DEFAULT NULL COMMENT '创建人',
+  `modify_by` varchar(64) DEFAULT NULL COMMENT '修改人',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_biz_file` (`biz_type`,`biz_id`,`file_id`),
+  KEY `idx_biz` (`biz_type`,`biz_id`,`del_flag`,`sort_order`),
+  KEY `idx_file_id` (`file_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='通用附件挂载表'
