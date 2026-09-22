@@ -2,41 +2,31 @@ import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import ReaderLayout from '@/layouts/ReaderLayout.vue'
 import AdminLayout from '@/layouts/AdminLayout.vue'
+import readerRoutes from './reader'
+import adminRoutes from './admin'
 
-const readerRoutes: RouteRecordRaw[] = [
+// 为阅读端路由包裹 ReaderLayout
+const readerWithLayout: RouteRecordRaw[] = [
   {
     path: '/',
     component: ReaderLayout,
-    children: [
-      { path: '', name: 'Home', component: () => import('@/views/reader/HomeView.vue') },
-      { path: 'archive', name: 'Archive', component: () => import('@/views/reader/PlaceholderView.vue'), meta: { title: '时间树' } },
-      { path: 'categories', name: 'Categories', component: () => import('@/views/reader/PlaceholderView.vue'), meta: { title: '分类' } },
-      { path: 'categories/:id', name: 'CategoryDetail', component: () => import('@/views/reader/PlaceholderView.vue'), meta: { title: '分类详情' } },
-      { path: 'tags', name: 'Tags', component: () => import('@/views/reader/PlaceholderView.vue'), meta: { title: '标签' } },
-      { path: 'tags/:id', name: 'TagDetail', component: () => import('@/views/reader/PlaceholderView.vue'), meta: { title: '标签详情' } },
-      { path: 'knowledge/:id', name: 'KnowledgeDetail', component: () => import('@/views/reader/KnowledgeDetail.vue') },
-      { path: 'search', name: 'Search', component: () => import('@/views/reader/PlaceholderView.vue'), meta: { title: '搜索' } },
-    ],
+    children: readerRoutes[0].children!,
   },
 ]
 
-const adminRoutes: RouteRecordRaw[] = [
+// 为管理端路由包裹 AdminLayout
+const adminWithLayout: RouteRecordRaw[] = [
   {
     path: '/admin',
     component: AdminLayout,
-    redirect: '/admin/dashboard',
-    children: [
-      { path: 'dashboard', name: 'Dashboard', component: () => import('@/views/admin/PlaceholderView.vue'), meta: { title: '仪表盘' } },
-      { path: 'knowledge', name: 'KnowledgeAdmin', component: () => import('@/views/admin/PlaceholderView.vue'), meta: { title: '知识管理' } },
-      { path: 'category', name: 'CategoryAdmin', component: () => import('@/views/admin/PlaceholderView.vue'), meta: { title: '分类管理' } },
-      { path: 'tag', name: 'TagAdmin', component: () => import('@/views/admin/PlaceholderView.vue'), meta: { title: '标签管理' } },
-    ],
+    redirect: adminRoutes[0].redirect,
+    children: adminRoutes[0].children!,
   },
 ]
 
 const router = createRouter({
   history: createWebHistory(),
-  routes: [...readerRoutes, ...adminRoutes],
+  routes: [...readerWithLayout, ...adminWithLayout],
   scrollBehavior: () => ({ top: 0 }),
 })
 

@@ -7,6 +7,10 @@
         <router-link to="/archive">时间树</router-link>
         <router-link to="/categories">分类</router-link>
         <router-link to="/tags">标签</router-link>
+        <router-link to="/search" class="nav-search">
+          <el-icon :size="16"><Search /></el-icon>
+          <span>搜索</span>
+        </router-link>
         <router-link to="/admin" class="nav-admin">管理</router-link>
       </div>
     </div>
@@ -104,6 +108,12 @@ const isScrolled = computed(() => y.value > 60)
     &:hover {
       opacity: 1;
     }
+  }
+
+  .nav-search {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
   }
 }
 </style>
