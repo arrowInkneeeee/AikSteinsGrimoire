@@ -37,11 +37,12 @@ const isScrolled = computed(() => route.path === '/' ? y.value > 60 : true)
   z-index: 100;
   height: 60px;
   transition: all 0.3s ease;
-  background: rgba(248, 246, 241, 0.85);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border-color);
+  background: transparent;
 
   &.is-scrolled {
+    background: rgba(248, 246, 241, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-color);
     box-shadow: 0 1px 8px rgba(0, 0, 0, 0.04);
   }
 }
