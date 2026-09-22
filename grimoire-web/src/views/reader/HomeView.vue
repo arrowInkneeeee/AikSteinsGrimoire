@@ -4,7 +4,7 @@
     <section class="hero">
       <div class="hero-content">
         <h1 class="hero-title">AikSteins Grimoire</h1>
-        <p class="hero-subtitle">个 人 知 识 魔 典</p>
+        <p class="hero-subtitle">aIk知识魔典</p>
         <SearchBox mode="hero" />
         <div class="hero-entries">
           <router-link to="/archive" class="hero-entry">
@@ -158,7 +158,6 @@ function formatDate(dateStr: string): string {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
   background: url('/images/rei-bg.jpg') center right / cover no-repeat;
   overflow: hidden;
@@ -167,7 +166,7 @@ function formatDate(dateStr: string): string {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.45) 40%, rgba(0, 0, 0, 0.15) 70%, transparent 100%);
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.5) 35%, rgba(0, 0, 0, 0.1) 65%, transparent 100%);
   }
 }
 
@@ -179,8 +178,8 @@ function formatDate(dateStr: string): string {
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
-  padding-left: 10vw;
-  max-width: 600px;
+  margin-left: 8vw;
+  max-width: 720px;
 }
 
 .hero-title {
@@ -195,7 +194,7 @@ function formatDate(dateStr: string): string {
 .hero-subtitle {
   font-size: 18px;
   color: rgba(255, 255, 255, 0.8);
-  letter-spacing: 8px;
+  letter-spacing: 3px;
   margin-bottom: 12px;
 }
 
