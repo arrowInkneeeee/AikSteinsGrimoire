@@ -1,5 +1,21 @@
 # AikSteinsGrimoire — Personal Knowledge Grimoire Architecture Plan
 
+> ## ⚠️ 已取代（SUPERSEDED）— 2026-09-20
+>
+> **本文档整份基于已被取代的模型，勿作为实施或引用依据。**
+>
+> | 本文档中的内容 | 实际 / 权威来源 |
+> |---|---|
+> | 表名 `aik_article` / `aik_category` / `aik_tag` / `aik_article_tag` / `aik_code_snippet` / `aik_attachment` | 全部不存在。实际为 `aik_knowledge` / `aik_knowledge_category` / `aik_knowledge_tag` / `aik_knowledge_tag_relation` / `aik_sys_attachment` |
+> | 接口 `/grimoire/article` | 不存在。实际为 `/grimoire/knowledge` |
+> | 包结构 | 见 [`../design-docs/knowledge-module/design.md`](../design-docs/knowledge-module/design.md) |
+> | HTTP 契约 | 见 [`../design-docs/system-module/api-contract.md`](../design-docs/system-module/api-contract.md) |
+>
+> **保留原因**：决策溯源。本文档记录了项目早期的整体架构取舍，
+> 其结论被后续的统一化重构取代，但取舍理由仍有参考价值。
+>
+> 文档体系总入口：[`../README.md`](../README.md)
+
 ## Context
 
 开发者已有一套成熟的 Agent Skills Library（47个技能），现在需要构建配套的**个人知识魔典** — AikSteinsGrimoire。Aik（署名）+ Steins（命运石之门，知识在时间线上的收束）+ Grimoire（魔典，代码即咒语）。
