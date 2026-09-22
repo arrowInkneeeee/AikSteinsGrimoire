@@ -16,3 +16,8 @@ export function findById(id: string) {
 export function stats() {
   return get<KnowledgeStatsVo>('/knowledge/stats')
 }
+
+/** 全量查询（不分页，返回全部已启用知识条目） */
+export function findAll() {
+  return get<KnowledgeListVo[]>('/knowledge/findAll')
+}

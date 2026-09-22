@@ -9,6 +9,8 @@ import io.aik.steins.grimoire.knowledge.common.vo.KnowledgeStatsVo;
 import io.aik.steins.grimoire.knowledge.common.vo.KnowledgeVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * -anchor 知识条目 Service
  *
@@ -72,4 +74,11 @@ public interface KnowledgeService extends IService<KnowledgePo> {
      * @return 统计 VO
      */
     KnowledgeStatsVo stats();
+
+    /**
+     * 查询全部已启用知识条目（不分页，按创建时间降序）
+     *
+     * @return 知识列表 VO
+     */
+    List<KnowledgeListVo> findAll();
 }

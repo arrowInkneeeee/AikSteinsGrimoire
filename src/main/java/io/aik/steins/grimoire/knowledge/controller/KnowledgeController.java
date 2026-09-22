@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * -anchor 知识条目管理
  *
@@ -87,5 +89,11 @@ public class KnowledgeController {
     @Operation(summary = "知识库统计")
     public ApiResponse<KnowledgeStatsVo> stats() {
         return ApiResponse.success(knowledgeService.stats());
+    }
+
+    @GetMapping("/findAll")
+    @Operation(summary = "查询全部已启用知识条目（不分页）")
+    public ApiResponse<List<KnowledgeListVo>> findAll() {
+        return ApiResponse.success(knowledgeService.findAll());
     }
 }

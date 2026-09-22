@@ -355,6 +355,48 @@ public class KnowledgeServiceImpl extends ServiceImpl<KnowledgeMapper, Knowledge
         return stats;
     }
 
+    @Override
+    public List<KnowledgeListVo> findAll() {
+        LambdaQueryWrapper<KnowledgePo> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(KnowledgePo::getStatus, KnowledgeConstant.STATUS_ENABLE);
+        wrapper.orderByDesc(KnowledgePo::getCreateTime);
+
+        List<KnowledgePo> allPos = baseMapper.selectList(wrapper);
+
+        //anchor 批量预加载分类、标签关联——与 findPage 同一套 N+1 修复逻辑
+        Map<Long, KnowledgeCategoryPo> categoryMap = loadCategoryMap();
+        List<Long> knowledgeIds = allPos.stream()
+                .map(KnowledgePo::getId).collect(Collectors.toList());
+        Map<Long, List<KnowledgeTagPo>> tagsByKnowledge = batchLoadTags(knowledgeIds);
+
+        return allPos.stream().map(po -> {
+            KnowledgeListVo vo = new KnowledgeListVo();
+            vo.setId(po.getId());
+            vo.setTitle(po.getTitle());
+            vo.setCode(po.getCode());
+            vo.setType(po.getType());
+            vo.setTypeDesc(KnowledgeTypeEnum.of(po.getType()) != null
+                    ? KnowledgeTypeEnum.of(po.getType()).getDesc() : "");
+            vo.setSummary(po.getSummary());
+            vo.setCategoryId(po.getCategoryId());
+            vo.setStatus(po.getStatus());
+            vo.setCreateTime(po.getCreateTime());
+
+            if (po.getCategoryId() != null) {
+                KnowledgeCategoryPo category = categoryMap.get(po.getCategoryId());
+                if (category != null) {
+                    vo.setCategoryName(category.getCategoryName());
+                    vo.setCategoryPath(buildCategoryPath(po.getCategoryId(), categoryMap));
+                }
+            }
+
+            vo.setTags(convertToTagBriefVoList(tagsByKnowledge.getOrDefault(
+                    po.getId(), Collections.emptyList())));
+
+            return vo;
+        }).collect(Collectors.toList());
+    }
+
     //anchor ========== 私有辅助方法 ==========
 
     /**
