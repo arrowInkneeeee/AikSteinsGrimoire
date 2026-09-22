@@ -92,11 +92,4 @@ public class OssFileStorage extends AbstractFileStorage {
     public boolean exists(String storedPath) throws Exception {
         return ossClient.doesObjectExist(bucketName, storedPath);
     }
-
-    @Override
-    public String getUrl(String storedPath) {
-        // 生成临时访问 URL（1小时有效）
-        java.util.Date expiration = new java.util.Date(System.currentTimeMillis() + 3600 * 1000L);
-        return ossClient.generatePresignedUrl(bucketName, storedPath, expiration).toString();
-    }
 }

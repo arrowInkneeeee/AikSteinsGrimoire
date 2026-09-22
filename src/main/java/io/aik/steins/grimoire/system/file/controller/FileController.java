@@ -46,9 +46,10 @@ public class FileController {
     @GetMapping("/download")
     @Operation(summary = "下载文件")
     public void download(@RequestParam Long id,
+                         @RequestParam(required = false) Long attachId,
                          @RequestParam(required = false, defaultValue = "false") boolean preview,
                          HttpServletResponse response) {
-        fileService.download(id, response, preview);
+        fileService.download(id, attachId, response, preview);
     }
 
     @PostMapping("/findPage")

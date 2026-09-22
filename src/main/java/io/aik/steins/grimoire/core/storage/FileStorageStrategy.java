@@ -81,12 +81,4 @@ public interface FileStorageStrategy {
      * @throws Exception 检查异常
      */
     boolean exists(String storedPath) throws Exception;
-
-    /**
-     * 获取文件访问 URL
-     *
-     * @param storedPath 存储路径标识
-     * @return 访问 URL（本地返回相对路径，OSS 返回公网地址）
-     */
-    String getUrl(String storedPath);
 }

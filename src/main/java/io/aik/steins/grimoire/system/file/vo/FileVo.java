@@ -22,12 +22,6 @@ public class FileVo {
     @Schema(description = "原始文件名")
     private String originalName;
 
-    @Schema(description = "存储文件名")
-    private String storedName;
-
-    @Schema(description = "文件路径")
-    private String filePath;
-
     @Schema(description = "文件大小（字节）")
     private Long fileSize;
 
@@ -36,12 +30,6 @@ public class FileVo {
 
     @Schema(description = "存储类型")
     private String storageType;
-
-    @Schema(description = "文件MD5")
-    private String md5;
-
-    @Schema(description = "访问URL")
-    private String url;
 
     @Schema(description = "下载次数")
     private Integer downloadCount;

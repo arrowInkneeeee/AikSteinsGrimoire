@@ -47,23 +47,11 @@ public class FileStorageConfig {
     private String allowTypes;
 
     /**
-     * 兼容旧配置：文件存储根路径（通用回退）
-     */
-    private String basePath = "./grimoire-files";
-
-    /**
      * 策略专属配置
      */
     private MethodConfig method;
 
     // ==================== 便捷方法 ====================
-
-    /**
-     * 获取文件存储根路径（兼容旧配置）
-     */
-    public String getEffectiveBasePath() {
-        return basePath;
-    }
 
     /**
      * 解析允许的文件类型集合

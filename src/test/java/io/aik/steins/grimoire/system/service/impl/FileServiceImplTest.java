@@ -1,5 +1,6 @@
 package io.aik.steins.grimoire.system.file.service.impl;
 
+import cn.hutool.crypto.digest.DigestUtil;
 import io.aik.steins.grimoire.core.config.FileStorageConfig;
 import io.aik.steins.grimoire.core.exception.BusinessException;
 import io.aik.steins.grimoire.core.storage.FileStorageStrategy;
@@ -17,12 +18,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashSet;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -42,6 +49,7 @@ import static org.mockito.Mockito.when;
 class FileServiceImplTest {
 
     private static final Long TEST_FILE_ID = 2001L;
+    private static final Long TEST_ATTACH_ID = 3001L;
     private static final String TEST_FILE_NAME = "魔典封面.png";
     private static final Long TEST_MAX_SIZE = 10L;
 
@@ -119,6 +127,68 @@ class FileServiceImplTest {
             assertThatThrownBy(() -> fileService.upload(multipartFile))
                     .isInstanceOf(BusinessException.class)
                     .hasMessageContaining("不支持的文件类型");
+        }
+    }
+
+    @Nested
+    @DisplayName("md5 秒传")
+    class UploadDedupTest {
+
+        @Test
+        @DisplayName("md5 命中：跳过写盘且不插入新记录，复用既有 fileId")
+        void upload_md5Hit_skipsDiskWriteAndInsert() throws Exception {
+            // -anchor given
+            byte[] content = "abc".getBytes(StandardCharsets.UTF_8);
+            String md5 = DigestUtil.md5Hex(content);
+            FileRecordPo existing = buildPo(TEST_FILE_ID, "首次上传者.png");
+            existing.setMd5(md5);
+
+            when(multipartFile.isEmpty()).thenReturn(false);
+            when(multipartFile.getSize()).thenReturn((long) content.length);
+            when(multipartFile.getOriginalFilename()).thenReturn(TEST_FILE_NAME);
+            when(fileStorageConfig.getMaxSize()).thenReturn(TEST_MAX_SIZE);
+            when(multipartFile.getBytes()).thenReturn(content);
+            when(fileMapper.selectLatestByMd5(md5)).thenReturn(existing);
+
+            // -anchor when
+            FileVo vo = fileService.upload(multipartFile);
+
+            // -anchor then
+            assertThat(vo.getId()).isEqualTo(TEST_FILE_ID);
+            assertThat(vo.getOriginalName()).isEqualTo("首次上传者.png");
+            // 两个 upload 重载都不得被调用：命中查重时【磁盘零写入】
+            verify(fileStorageStrategy, never()).upload(any(InputStream.class), anyString());
+            verify(fileStorageStrategy, never()).upload(any(MultipartFile.class));
+            verify(fileMapper, never()).insert(any(FileRecordPo.class));
+        }
+
+        @Test
+        @DisplayName("md5 未命中：写盘并插入新记录")
+        void upload_md5Miss_writesDiskAndInserts() throws Exception {
+            // -anchor given
+            byte[] content = "xyz".getBytes(StandardCharsets.UTF_8);
+            String md5 = DigestUtil.md5Hex(content);
+            String storedPath = "2026/09/20/new.png";
+
+            when(multipartFile.isEmpty()).thenReturn(false);
+            when(multipartFile.getSize()).thenReturn((long) content.length);
+            when(multipartFile.getOriginalFilename()).thenReturn(TEST_FILE_NAME);
+            when(fileStorageConfig.getMaxSize()).thenReturn(TEST_MAX_SIZE);
+            when(multipartFile.getBytes()).thenReturn(content);
+            when(fileMapper.selectLatestByMd5(md5)).thenReturn(null);
+            when(fileStorageStrategy.upload(any(InputStream.class), eq(TEST_FILE_NAME))).thenReturn(storedPath);
+            when(fileStorageConfig.getUse()).thenReturn("local");
+            when(multipartFile.getContentType()).thenReturn("image/png");
+
+            // -anchor when
+            FileVo vo = fileService.upload(multipartFile);
+
+            // -anchor then
+            assertThat(vo.getOriginalName()).isEqualTo(TEST_FILE_NAME);
+            assertThat(vo.getStorageType()).isEqualTo("local");
+            verify(fileStorageStrategy).upload(any(InputStream.class), eq(TEST_FILE_NAME));
+            verify(fileStorageStrategy, never()).upload(any(MultipartFile.class));
+            verify(fileMapper).insert(any(FileRecordPo.class));
         }
     }
 
@@ -201,16 +271,15 @@ class FileServiceImplTest {
     class GuardTest {
 
         @Test
-        @DisplayName("删除不存在文件时抛出 BusinessException")
-        void remove_notExists_throwsBusinessException() {
+        @DisplayName("删除不存在文件时按幂等 no-op 处理：不抛异常、不发 DELETE、不删盘")
+        void remove_notExists_isIdempotentNoOp() throws Exception {
             // -anchor given
-            when(fileMapper.selectById(TEST_FILE_ID)).thenReturn(null);
+            when(fileMapper.selectByIdForUpdate(TEST_FILE_ID)).thenReturn(null);
 
             // -anchor when & then
-            assertThatThrownBy(() -> fileService.remove(TEST_FILE_ID))
-                    .isInstanceOf(BusinessException.class)
-                    .hasMessageContaining("文件不存在");
+            assertThatCode(() -> fileService.remove(TEST_FILE_ID)).doesNotThrowAnyException();
             verify(fileMapper, never()).deleteById(any(Long.class));
+            verify(fileStorageStrategy, never()).remove(anyString());
         }
 
         @Test
@@ -220,9 +289,96 @@ class FileServiceImplTest {
             when(fileMapper.selectById(TEST_FILE_ID)).thenReturn(null);
 
             // -anchor when & then
-            assertThatThrownBy(() -> fileService.download(TEST_FILE_ID, httpServletResponse, false))
+            assertThatThrownBy(() -> fileService.download(TEST_FILE_ID, null, httpServletResponse, false))
                     .isInstanceOf(BusinessException.class)
                     .hasMessageContaining("文件不存在");
+        }
+    }
+
+    @Nested
+    @DisplayName("管理端删除（引用计数）")
+    class RemoveTest {
+
+        @Test
+        @DisplayName("无有效挂载：物理删除记录并删盘")
+        void remove_noMount_physicallyDeletesAndRemovesDisk() throws Exception {
+            // -anchor given
+            FileRecordPo po = buildPo(TEST_FILE_ID, TEST_FILE_NAME);
+            when(fileMapper.selectByIdForUpdate(TEST_FILE_ID)).thenReturn(po);
+            when(fileMapper.countEffectiveMounts(TEST_FILE_ID)).thenReturn(0L);
+
+            // -anchor when
+            fileService.remove(TEST_FILE_ID);
+
+            // -anchor then
+            verify(fileMapper).deleteById(TEST_FILE_ID);
+            verify(fileStorageStrategy).remove(po.getFilePath());
+        }
+
+        @Test
+        @DisplayName("仍有其它有效挂载：抛 BusinessException 且不删记录、不删盘")
+        void remove_stillMounted_throwsAndKeepsDisk() throws Exception {
+            // -anchor given
+            FileRecordPo po = buildPo(TEST_FILE_ID, TEST_FILE_NAME);
+            when(fileMapper.selectByIdForUpdate(TEST_FILE_ID)).thenReturn(po);
+            when(fileMapper.countEffectiveMounts(TEST_FILE_ID)).thenReturn(1L);
+
+            // -anchor when & then
+            assertThatThrownBy(() -> fileService.remove(TEST_FILE_ID))
+                    .isInstanceOf(BusinessException.class)
+                    .hasMessageContaining("仍被其它挂载点引用");
+            verify(fileMapper, never()).deleteById(any(Long.class));
+            verify(fileStorageStrategy, never()).remove(anyString());
+        }
+    }
+
+    @Nested
+    @DisplayName("下载响应文件名来源")
+    class DownloadNameTest {
+
+        @Test
+        @DisplayName("挂载模式：带 attachId，响应文件名取挂载层 attachName")
+        void download_withAttachId_usesAttachNameFromMount() throws Exception {
+            // -anchor given
+            FileRecordPo po = buildPo(TEST_FILE_ID, "首次上传者.png");
+            when(fileMapper.selectById(TEST_FILE_ID)).thenReturn(po);
+            when(fileMapper.selectAttachNameForDownload(TEST_ATTACH_ID, TEST_FILE_ID)).thenReturn("会议记录.pdf");
+
+            // -anchor when
+            fileService.download(TEST_FILE_ID, TEST_ATTACH_ID, httpServletResponse, false);
+
+            // -anchor then
+            verify(fileStorageStrategy).download(httpServletResponse, po.getFilePath(), "会议记录.pdf", false);
+        }
+
+        @Test
+        @DisplayName("台账模式：不带 attachId，响应文件名取 originalName")
+        void download_withoutAttachId_usesLedgerName() throws Exception {
+            // -anchor given
+            FileRecordPo po = buildPo(TEST_FILE_ID, TEST_FILE_NAME);
+            when(fileMapper.selectById(TEST_FILE_ID)).thenReturn(po);
+
+            // -anchor when
+            fileService.download(TEST_FILE_ID, null, httpServletResponse, false);
+
+            // -anchor then
+            verify(fileStorageStrategy).download(httpServletResponse, po.getFilePath(), TEST_FILE_NAME, false);
+            verify(fileMapper, never()).selectAttachNameForDownload(any(), any());
+        }
+
+        @Test
+        @DisplayName("挂载行与文件不匹配（查询返回 null）时拒绝下载")
+        void download_attachIdNotMatchingFile_throws() throws Exception {
+            // -anchor given
+            FileRecordPo po = buildPo(TEST_FILE_ID, TEST_FILE_NAME);
+            when(fileMapper.selectById(TEST_FILE_ID)).thenReturn(po);
+            when(fileMapper.selectAttachNameForDownload(TEST_ATTACH_ID, TEST_FILE_ID)).thenReturn(null);
+
+            // -anchor when & then
+            assertThatThrownBy(() -> fileService.download(TEST_FILE_ID, TEST_ATTACH_ID, httpServletResponse, false))
+                    .isInstanceOf(BusinessException.class)
+                    .hasMessageContaining("附件挂载不存在或与文件不匹配");
+            verify(fileStorageStrategy, never()).download(any(), anyString(), anyString(), anyBoolean());
         }
     }
 

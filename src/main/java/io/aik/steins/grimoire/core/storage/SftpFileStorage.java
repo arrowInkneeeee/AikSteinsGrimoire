@@ -109,12 +109,6 @@ public class SftpFileStorage extends AbstractFileStorage {
         }
     }
 
-    @Override
-    public String getUrl(String storedPath) {
-        FileStorageConfig.SftpConfig config = fileStorageConfig.getMethod().getSftp();
-        return "sftp://" + config.getHost() + ":" + config.getPort() + storedPath;
-    }
-
     private Session createSession(FileStorageConfig.SftpConfig config) throws Exception {
         JSch jsch = new JSch();
         if (StrUtil.isNotBlank(config.getPrivateKey())) {

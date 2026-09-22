@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import io.aik.steins.grimoire.core.po.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -93,21 +92,6 @@ public class FileRecordPo extends BaseEntity {
     @Schema(description = "文件MD5")
     @TableField("md5")
     private String md5;
-
-    /**
-     * 访问URL
-     */
-    @Schema(description = "访问URL")
-    @TableField("url")
-    private String url;
-
-    /**
-     * 删除标记：0=正常，1=已删除
-     */
-    @Schema(description = "删除标记")
-    @TableField("del_flag")
-    @TableLogic
-    private Integer delFlag;
 
     /**
      * 下载次数
