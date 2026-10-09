@@ -1,7 +1,8 @@
 # 月見里扩展计划 — 从 Java 搭档到全场景助手
 
-> 版本：v0.3 | 日期：2026-09-20 | 状态：Phase 1 部分完成（进化机制 ✅ / 技能建设 待推进）
+> 版本：v0.4 | 日期：2026-10-09 | 状态：Phase 1 部分完成（进化机制 ✅ / 智能体 v3.0 改造 ✅ / 技能建设 待推进）
 >
+> v0.3 → v0.4：智能体 v3.0 改造完成（核心精简 + 进化机制独立 + 历史存档归档）
 > v0.2 → v0.3：合并 `grimoire-files/plans/agent-expansion-plan.md`（v0.1）的独有内容，消除双份分叉
 > v0.1 → v0.2：进化机制重构完成，Phase 2/3 降级为愿景备忘，路径引用更新
 >
@@ -95,7 +96,7 @@
 ### ~~1.3 进化协议扩展~~（已完成，v0.2 标注）
 
 > 本节内容已在进化机制重构中完成，保留此处仅作历史记录。
-> 详见 `grimoire-agent/plan/evolution-mechanism-redesign.md`
+> 详见 `grimoire-agent/archive/v1-evolution-redesign.md`
 
 **已完成的改造**：
 
@@ -140,6 +141,13 @@ aik-skills-lab/aik-python-script-style/
 ├─ ✅ 更新 agent-expansion-plan.md（本文件）
 └─ ✅ 新建 agent/README.md（目录说明）
 
+✅ Step 1.5: 智能体 v3.0 改造（已完成 2026-10-09）
+├─ ✅ aIk-agent.md 560→351 行（编码规范→10 条底线 + 技能引用 aIk-coding-style）
+├─ ✅ 进化机制独立为 evolution/（可选启用，不再强制）
+├─ ✅ 技能调度更新为 10 技能映射
+├─ ✅ agent-zero/ → archive/（历史存档 + v1- 前缀）
+└─ ✅ 已完成设计文档移入 archive/
+
 ⏳ Step 2: 建立前端编码规范（待推进，随前端项目启动）
 ├─ 确定 Vue 3 + Element Plus 技术栈细节
 ├─ 在 aik-skills-lab/ 下创建 aik-frontend-style/ 技能
@@ -154,11 +162,6 @@ aik-skills-lab/aik-python-script-style/
 │  ├─ SKILL.md（技能入口）
 │  └─ references/（轻量规范）
 └─ 在 aIk-agent.md 中注册 Python 技能调度
-
-✅ Step 4: 进化协议 + 门禁模型（已在 Step 1 中合并完成）
-├─ ✅ evolution-protocol.md 四支柱架构
-├─ ✅ decision-log.md 按领域分表
-└─ ✅ 各领域起始信任等级设定
 ```
 
 ---
@@ -225,6 +228,7 @@ v0.1 共提出 4 项待确认，现全部有结论（v0.2 的清单只保留了�
 | v0.1 | 2026-07-30 | 初版：三阶段演进 + Phase 1 四项计划（前端规范 / Python 规范 / 身份扩展 / 进化协议扩展） |
 | v0.2 | 2026-07-31 | 进化机制重构完成（身份多角色化、场景路由、四支柱 + 里程碑制、按领域信任等级）；Phase 2/3 降级为愿景备忘；1.3 完成归档；新增"为什么放弃 G1/G2/G3" |
 | v0.3 | 2026-09-20 | **合并 v0.1 独有内容**以消除双份分叉：恢复两套技能目录结构、恢复 v0.1 的四项待确认并给出处置结论；补权威声明（本文件为唯一副本）；v0.1 副本已删除，git 历史保留 |
+| v0.4 | 2026-10-09 | **智能体 v3.0 改造**：aIk-agent.md 560→351 行（编码底线 10 条 + 技能引用技能库）；进化机制独立为 evolution/（可选启用）；技能调度更新为 10 技能映射；agent-zero/ → archive/；已完成设计文档移入 archive/ |
 
 ---
 

@@ -1,7 +1,8 @@
 # grimoire-agent — 綾雾彌奈智能体管理目录
 
-> 版本：v1.0 | 日期：2026-07-31
-> 本目录独立管理綾雾彌奈（aIk-agent）的智能体定义、进化协议和扩展计划。
+> 版本：v2.0 | 日期：2026-10-09
+> 本目录独立管理綾雾彌奈（aIk-agent）的智能体定义、进化机制和扩展计划。
+> v2.0：配合智能体 v3.0 改造，目录结构重组为 4 目录各司其职。
 
 ---
 
@@ -10,19 +11,21 @@
 ```
 grimoire-agent/
 ├── agent/                          # 智能体运行时文件（Qoder 通过 symlink 引用）
-│   ├── aIk-agent.md                # 智能体本体（v2.0，symlink 源文件）
-│   ├── evolution-protocol.md       # 进化协议（四支柱 + 里程碑制）
+│   ├── aIk-agent.md                # 智能体本体（v3.0，symlink 源文件，~300 行）
 │   ├── decision-log.md             # 具体决策档案（按领域分表）
 │   └── README.md                   # 本文件
-├── agent-zero/                     # 初始企划存档（只读，历史参考）
-│   ├── 01-agent-plan.md
-│   ├── 02-personality-design.md
-│   ├── 03-confirmation-gates.md
-│   ├── 04-clarification-questions.md
-│   └── README.md
-└── plan/                           # 计划与设计文档
-    ├── agent-expansion-plan.md     # 扩展计划（Phase 1 进行中）
-    └── evolution-mechanism-redesign.md  # 进化机制重构设计文档
+├── evolution/                      # 进化机制（独立，可选启用）
+│   ├── protocol.md                 # 进化协议（四支柱 + 里程碑制）
+│   └── README.md                   # 启用说明 + 信号摘要模板（唯一一份）
+├── archive/                        # 历史存档（v1.0 时代，内容已过时）
+│   ├── README.md                   # 存档说明 + 关键设计决策摘要
+│   ├── v1-agent-plan.md
+│   ├── v1-personality-design.md
+│   ├── v1-confirmation-gates.md
+│   ├── v1-clarification-questions.md
+│   └── v1-evolution-redesign.md    # 原 plan/evolution-mechanism-redesign.md
+└── plan/                           # 活跃计划
+    └── agent-expansion-plan.md     # 扩展计划（Phase 1 进行中）
 ```
 
 ---
@@ -70,19 +73,28 @@ tools: Read, Glob, Grep, Bash, Write, SearchReplace, SearchCodebase, LSP, Skill,
 
 ## 进化机制说明
 
-### 四支柱架构（v2.0）
+### 可选启用（v3.0 起）
+
+进化机制从"每次任务强制输出"改为"需要时手动启用"：
+- 启用：用户说"开启进化模式"
+- 关闭：用户说"关闭进化模式"
+- 默认状态：关闭
+
+详细操作说明见 `evolution/README.md`。
+
+### 四支柱架构
 
 | 支柱 | 作用 | 落地位置 |
 |------|------|---------|
-| 支柱 1：强制对话结论 | 每个任务单元结束时输出信号摘要 | `aIk-agent.md` 硬性规则 |
+| 支柱 1：强制对话结论 | 每个任务单元结束时输出信号摘要 | `aIk-agent.md` 硬性规则（启用时） |
 | 支柱 2：用户驱动归档 | 用户说"记录一下"触发归档 | 默认智能体执行 |
-| 支柱 3：里程碑制信任进阶 | 可验证的能力里程碑替代计数制 | `evolution-protocol.md` |
+| 支柱 3：里程碑制信任进阶 | 可验证的能力里程碑替代计数制 | `evolution/protocol.md` |
 | 支柱 4：具体决策档案 | 只记实际决策，不做抽象推断 | `decision-log.md` |
 
 ### 归档工作流
 
 ```
-綾雾彌奈（任务结束）
+綾雾彌奈（任务结束，进化模式启用时）
   → 输出信号摘要（对话末尾）
   → UpdateMemory 暂存（兜底）
 
@@ -120,8 +132,10 @@ tools: Read, Glob, Grep, Bash, Write, SearchReplace, SearchCodebase, LSP, Skill,
 | Move-Item 迁移文件后 Git 不识别 | Git 需要 `git add` 才能识别 rename | 迁移后立即 `git add` |
 | IDE 文件树不显示新目录 | 文件树缓存未刷新 | 重启 IDE 或手动刷新 |
 | Symlink 创建失败 | 非管理员权限 | 用管理员 PowerShell 执行 |
-| D1-D6/G1-G3 维度从未真正生效 | LLM 无法可靠执行抽象偏好推断 | 改用具体决策档案 |
-| 对话隔离导致跨对话计数失效 | Qoder 每次对话是全新实例 | 改用里程碑制 + UpdateMemory 兜底 |
+| 抽象偏好维度（D1-D6/G1-G3）从未生效 | LLM 无法可靠执行抽象偏好推断 | v2.0 已删除，改用具体决策档案 |
+| 对话隔离导致跨对话计数失效 | Qoder 每次对话是全新实例 | v2.0 改用里程碑制 + UpdateMemory 兜底 |
+| 智能体定义过长导致规则遵循度下降 | 单文件承载 6 个职责，注意力稀释 | v3.0 拆分为 4 目录，核心精简至 ~300 行 |
+| 进化机制强制输出从未被触发 | 每次任务必须输出信号摘要，用户无感 | v3.0 改为可选启用，用户说"开启进化模式"时触发 |
 
 ---
 
@@ -131,8 +145,9 @@ tools: Read, Glob, Grep, Bash, Write, SearchReplace, SearchCodebase, LSP, Skill,
 |------|------|
 | **更新智能体内容** | 直接编辑 `agent/aIk-agent.md` → Qoder 实时生效（symlink） |
 | **记录新决策** | 编辑 `agent/decision-log.md` → 在对应领域表中追加行 |
-| **更新进化协议** | 编辑 `agent/evolution-protocol.md` → 同步检查里程碑表 |
+| **更新进化协议** | 编辑 `evolution/protocol.md` → 同步检查里程碑表 |
+| **启用/关闭进化模式** | 用户说"开启进化模式"或"关闭进化模式"，详见 `evolution/README.md` |
 | **重建 symlink** | 管理员 PowerShell 执行 `New-Item -ItemType SymbolicLink`（见上方命令） |
 | **新增智能体** | 在 `agent/` 下创建 `.md` 文件 + 创建 symlink + 配置 frontmatter |
-| **信任进阶** | 检查 `evolution-protocol.md` 里程碑 → 提议 → 用户确认后更新 `aIk-agent.md` 等级字段 |
+| **信任进阶** | 检查 `evolution/protocol.md` 里程碑 → 提议 → 用户确认后更新 `aIk-agent.md` 等级字段 |
 | **文件保护** | 修改后执行 `git add grimoire-agent/` 暂存到本地 |
