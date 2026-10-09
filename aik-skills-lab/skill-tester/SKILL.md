@@ -46,10 +46,10 @@ version: 1.0.0
 
 | 类型 | 测试方法 | 适用技能 |
 |------|---------|---------|
-| **纪律型** | 时间 + 疲劳双重施压，验证服从性 | code-style-reviewer, aIk-coding-style |
-| **技术型** | 新场景迁移能力测试 | code-generator, api-designer, database-designer |
-| **思维型** | 评估模式适用边界 | tech-solution-selector, architecture-designer |
-| **资料型** | 信息检索与落地准确度 | api-doc-generator, troubleshooting-guide |
+| **纪律型** | 时间 + 疲劳双重施压，验证服从性 | code-review, aIk-coding-style |
+| **技术型** | 新场景迁移能力测试 | code-implementation, system-design |
+| **思维型** | 评估模式适用边界 | requirement-engineering |
+| **资料型** | 信息检索与落地准确度 | devops, testing |
 
 ---
 
@@ -58,7 +58,7 @@ version: 1.0.0
 ### 步骤 1: 定义测试目标
 
 ```
-技能名称: code-style-reviewer
+技能名称: code-review
 测试目标: 验证代码风格规范是否被有效执行
 测试场景: 5 个（含正确代码和违规代码）
 ```
@@ -66,7 +66,7 @@ version: 1.0.0
 ### 步骤 2: RED 阶段 —— 建立基线
 
 ```bash
-# 不加载 code-style-reviewer 技能
+# 不加载 code-review 技能
 # 让模型审查以下代码片段
 ```
 
@@ -95,7 +95,7 @@ RED 阶段结果:
 ### 步骤 3: GREEN 阶段 —— 验证阻止
 
 ```bash
-# 加载 code-style-reviewer 技能
+# 加载 code-review 技能
 # 重新审查相同代码片段
 ```
 
@@ -174,15 +174,15 @@ GREEN 阶段结果:
 
 建议优先测试以下 10 个关键技能：
 
-1. **code-style-reviewer** — 纪律型测试
-2. **code-quality-reviewer** — 技术型 + 纪律型
-3. **code-security-reviewer** — 技术型测试
-4. **database-designer** — 技术型测试
-5. **code-generator** — 技术型测试
-6. **api-designer** — 技术型测试
-7. **requirement-clarifier** — 思维型测试
-8. **spec-requirement-analyser** — 思维型测试
-9. **unit-test-generator** — 技术型测试
-10. **aIk-coding-style** — 纪律型测试
+1. **aIk-coding-style** — 纪律型测试（编码规范基础）
+2. **code-review** — 纪律型 + 技术型（四维审查）
+3. **code-implementation** — 技术型测试（代码生成）
+4. **system-design** — 技术型测试（架构/数据库/API 设计）
+5. **requirement-engineering** — 思维型测试（需求分析）
+6. **testing** — 技术型测试（测试生成）
+7. **devops** — 资料型测试（部署运维）
+8. **component-extract-rewrite** — 技术型测试（组件萃取）
+9. **handoff-bundle** — 纪律型测试（交接协议）
+10. **skill-tester** — 元测试（测试框架自身）
 
 详细的测试场景定义参见 `references/` 目录。

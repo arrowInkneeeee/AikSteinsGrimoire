@@ -64,7 +64,7 @@ mklink /J "{IDE_USER_SKILLS_PATH}" "d:\JeBrainsWorkSpace\AikSteinsGrimoire\aik-s
 2. 进入技能库目录，切换到对应 tag
    ```bash
    cd AikSteinsGrimoire/aik-skills-lab
-   git checkout v1.0.0
+   git checkout v3.0.0
    ```
 3. 按上述 **连接方法** 创建 Junction
 
