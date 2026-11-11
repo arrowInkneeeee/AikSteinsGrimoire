@@ -143,7 +143,7 @@ else 库存不足
 end
 deactivate Service
 
-Controller --> User: Result<OrderVO>
+Controller --> User: ApiResponse<OrderVO>
 @enduml
 ```
 

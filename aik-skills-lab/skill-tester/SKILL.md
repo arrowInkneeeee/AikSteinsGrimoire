@@ -1,6 +1,7 @@
 ---
 name: skill-tester
-description: 当需要测试一个Skill是否能有效约束模型行为时使用。提供RED-GREEN-REFACTOR框架：暴露无技能时的模型违规(RED)，验证技能是否阻止违规(GREEN)，迭代收紧指令以封堵漏洞(REFACTOR)。适用于技能开发者和库维护者。
+description: '维护技能库时使用：用 RED-GREEN-REFACTOR 验证某个技能是否真的约束住模型行为（无技能基线违规、加载后是否拦截、收紧指令回归），输出检测率/误报率与改进项。用户说"测试技能 / 验证技能有效性"时加载。'
+disable-model-invocation: true
 type: Skill
 version: 1.0.0
 ---
@@ -12,6 +13,9 @@ version: 1.0.0
 `skill-tester` 将 TDD（测试驱动开发）理念引入技能开发。通过系统的 RED → GREEN → REFACTOR 循环，确保每个技能不仅"写得好"，更"起作用"。
 
 **设计模式**: Reviewer（测试技能的质量，而非测试代码）
+
+> **DSH 适配**：本技能为维护态工具（`disable-model-invocation: true`），只在用户菜单可见，不占模型 catalog。
+> **历史报告已归档**：`test-results/archive/2026-05-13-comprehensive-report.md`（过期，仅溯源；其中"大写表名"等断言与现行小写规范冲突，勿引用）。
 
 ---
 
@@ -91,6 +95,17 @@ RED 阶段结果:
 - 违规发现率: 20% (模型仅检测到 1/5 违规)
 - 漏检率: 80%
 ```
+
+### DSH 中的 RED 基线（新增）
+
+DSH 的技能是会话级 catalog，单会话内无法"卸载"技能。RED 基线按以下步骤做：
+
+1. 临时把目标技能链接移出技能根：`mv ~/.dsh/skills/<skill> /tmp/skills-park/<skill>`；
+2. 新开一个 DSH 会话（catalog 重新扫描），在无技能状态下跑基线场景，记录违规；
+3. 把链接移回：`mv /tmp/skills-park/<skill> ~/.dsh/skills/<skill>`；
+4. 再新开会话跑 GREEN，对比违规检测率/误报率。
+
+> 注意：移出期间**所有** DSH 会话都看不到该技能；操作前确认。也可用独立 profile 规避。
 
 ### 步骤 3: GREEN 阶段 —— 验证阻止
 
@@ -172,9 +187,9 @@ GREEN 阶段结果:
 
 ## 首次测试目标
 
-建议优先测试以下 10 个关键技能：
+建议优先测试以下 11 个关键技能：
 
-1. **aIk-coding-style** — 纪律型测试（编码规范基础）
+1. **aik-coding-style** — 纪律型测试（编码规范基础）
 2. **code-review** — 纪律型 + 技术型（四维审查）
 3. **code-implementation** — 技术型测试（代码生成）
 4. **system-design** — 技术型测试（架构/数据库/API 设计）
@@ -184,5 +199,6 @@ GREEN 阶段结果:
 8. **component-extract-rewrite** — 技术型测试（组件萃取）
 9. **handoff-bundle** — 纪律型测试（交接协议）
 10. **skill-tester** — 元测试（测试框架自身）
+11. **ccgui-plugin-creator** — 资料型测试（CC GUI 插件 SDK；不属 DSH 迁移范围）
 
 详细的测试场景定义参见 `references/` 目录。

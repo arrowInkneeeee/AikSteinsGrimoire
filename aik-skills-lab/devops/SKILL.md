@@ -1,6 +1,6 @@
 ---
 name: devops
-description: 部署运维全流程技能——多环境配置管理、构建部署包、生成部署脚本、健康检查配置、日志系统配置、故障排查手册，覆盖部署运维全生命周期。适用于"部署方案"、"运维手册"、"配置管理"、"构建部署包"、"健康检查"、"日志配置"、"故障排查"、"上线方案"等场景。
+description: '准备 Java 应用部署上线时使用：多环境配置、jar/tar 打包、systemd/Docker/Compose 脚本、Actuator 健康检查、Logback 日志轮转、故障排查与回滚方案，产出部署计划与运维手册。'
 type: Skill
 version: 1.0.0
 trigger:
@@ -24,6 +24,8 @@ trigger:
 ---
 
 # devops
+
+> **落盘确认门禁（DSH workspace-write）**：本技能会创建或修改工作区文件。每次写入前先列出将创建/修改的文件路径与摘要，等用户确认后再写；一次流程结束给出变更清单。
 
 部署运维全流程技能，覆盖配置管理、构建打包、部署脚本、健康检查、日志系统和故障排查，最终产出部署计划 + 运维手册。
 
@@ -129,7 +131,7 @@ trigger:
 
 **执行步骤**：
 1. 检查pom.xml是否有spring-boot-starter-actuator依赖
-2. 如无，添加依赖
+2. 如无，建议添加依赖并等待用户确认后再修改 pom.xml
 3. 配置application.yml：
    - 暴露端点：health, info, metrics
    - 健康检查路径：/actuator/health

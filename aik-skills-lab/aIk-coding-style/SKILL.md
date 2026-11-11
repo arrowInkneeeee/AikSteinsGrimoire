@@ -1,6 +1,6 @@
 ---
-name: aIk-coding-style
-description: 当编写基于Spring Boot和MyBatis-Plus的Java后端代码时使用，确保模块间编码风格统一——涵盖目录结构、命名规范、分层架构、API设计、DTO/VO/PO定义和数据库设计标准。参考references/目录获取各主题的详细规范。
+name: aik-coding-style
+description: '编写或修改 Java 后端代码（Spring Boot 2.7 + MyBatis-Plus + Lombok）时使用：统一模块目录、命名、分层、DTO/VO/PO 注解、注释与日志、Mapper 与建表规范，并提供提交前检查清单。动手写代码或新建模块前加载。'
 type: Reference
 version: 1.0.0
 ---
@@ -171,11 +171,12 @@ private final EntityMapper entityMapper;
 - [ ] 依赖注入使用 `private final` + `@RequiredArgsConstructor`
 
 ### DTO/VO 规范
-- [ ] **DTO（独立）**：`@Data + @ApiModel`
-- [ ] **DTO（继承 PO）**：`@Data + @EqualsAndHashCode(callSuper) + @ApiModel`
-- [ ] **VO（默认）**：`@Data + @ApiModel`，包含 `of()` 转换方法
-- [ ] **VO（复杂）**：`@Data + @Builder + @NoArgsConstructor + @AllArgsConstructor + @ApiModel`
-- [ ] **QueryDto**：`@Data + @EqualsAndHashCode(callSuper) + @ApiModel`，继承分页基类
+- [ ] **注解方案**：按 `references/01-api-doc-annotations.md` 选择 Swagger（`@ApiModel`）或 SpringDoc（`@Schema`）；本仓库使用 SpringDoc `@Schema`
+- [ ] **DTO（独立）**：`@Data` + 上述 DTO 注解
+- [ ] **DTO（继承 PO）**：`@Data + @EqualsAndHashCode(callSuper)` + 上述 DTO 注解
+- [ ] **VO（默认）**：`@Data` + 上述 VO 注解，包含 `of()` 转换方法
+- [ ] **VO（复杂）**：`@Data + @Builder + @NoArgsConstructor + @AllArgsConstructor` + 上述 VO 注解
+- [ ] **QueryDto**：`@Data + @EqualsAndHashCode(callSuper)` + 上述 DTO 注解，继承分页基类
 
 ### 数据操作
 - [ ] 使用项目统一的ID生成方式
@@ -208,3 +209,5 @@ private final EntityMapper entityMapper;
 - [ ] SQL文件放在模块包下的 `sql/` 目录
 - [ ] 图片字段 IDs + Names 成对出现（如有）
 - [ ] 模块根目录包含 `README.md` 文件
+
+> 可选自检：`bash scripts/bom-checker.sh`、`bash scripts/naming-validator.sh`（检查 BOM 与命名规范；DSH 下用 bash 工具执行）。

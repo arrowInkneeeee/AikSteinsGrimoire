@@ -105,11 +105,12 @@
 - ID 生成：`IdUtil.getSnowflakeNextId()`
 
 ### DTO / VO（强制）
-- DTO 独立：`@Data @ApiModel`
-- DTO 继承 PO：`@Data @EqualsAndHashCode(callSuper) @ApiModel`
-- VO 默认：`@Data @ApiModel`，**必须含 `of()` 静态转换方法**
-- VO 复杂：`@Data @Builder @NoArgsConstructor @AllArgsConstructor @ApiModel`
-- QueryDto：`@Data @EqualsAndHashCode(callSuper) @ApiModel`，继承分页基类
+- 注解方案：按 `references/01-api-doc-annotations.md` 选择 Swagger（`@ApiModel`）或 SpringDoc（`@Schema`）；本仓库为 `@Schema`
+- DTO 独立：`@Data` + 上述注解
+- DTO 继承 PO：`@Data @EqualsAndHashCode(callSuper)` + 上述注解
+- VO 默认：`@Data` + 上述注解，**必须含 `of()` 静态转换方法**
+- VO 复杂：`@Data @Builder @NoArgsConstructor @AllArgsConstructor` + 上述注解
+- QueryDto：`@Data @EqualsAndHashCode(callSuper)` + 上述注解，继承分页基类
 
 ### Controller（强制）
 - 路径：`/{主模块}/{功能}`，**禁止 `/api` 前缀**
@@ -150,7 +151,7 @@
 ## 行为约束
 
 1. 所有代码必须满足核心编码规范每一条
-2. 优先复用项目已有组件（Result / BaseEntity / 全局异常 / PageDTO 等不得重复创建）
+2. 优先复用项目已有组件（ApiResponse / BaseEntity / 全局异常 / PageDTO 等不得重复创建）
 3. 不添加未请求的功能，不设计假设性需求
 4. 严格限制 Java 8 语法
 5. 不生成空文件（空 XML、空测试类、空配置类）

@@ -1,6 +1,6 @@
 # 技能库连接指南
 
-> 本仓库为 `lingma-skills` 技能库源码，需要连接到各 AI IDE 的用户技能目录下使用。
+> 本仓库为技能库源码，通过**文件系统链接**连接到各 AI IDE / DSH 的用户技能目录；内容只有一份，不复制。
 
 ## 技能库位置
 
@@ -10,10 +10,14 @@ d:\JeBrainsWorkSpace\AikSteinsGrimoire\aik-skills-lab\
 
 ## 已连接的 IDE
 
-| IDE | 用户技能目录 | 连接方式 |
+| IDE / 宿主 | 用户技能目录 | 连接方式 |
 |---|---|---|
-| Lingma | `C:\Users\arrowInknee\.lingma\skills` | 目录联接（Junction） |
-| Qoder | `C:\Users\arrowInknee\.qoder\skills` | 目录联接（Junction） |
+| DSH（WSL，当前） | `~/.dsh/skills` | 每技能一条 symlink（`dsh-migration/install.sh`） |
+| DSH（Windows 原生） | `C:\Users\arrowInknee\.dsh\skills` | 每技能一条 Junction |
+| Qoder | `C:\Users\arrowInknee\.qoder\skills` | 整库 Junction（2026-11-11 实测有效） |
+| QoderCN | `C:\Users\arrowInknee\.qoder-cn\skills` | 整库 SymbolicLink（2026-11-11 实测有效） |
+
+> **实测状态（2026-11-11）**：Qoder / QoderCN 连接有效；Lingma / Claude 的用户技能目录当前不存在（历史记录保留在下方）；CcSwitch 目录存在但不是链接。失效的按下方"连接方法"重建即可。
 
 > **目录名称规范**：各 IDE 的技能目录标准名称固定为 `skills`，请勿使用 `skillslib` 或其他变体名称。
 
@@ -25,23 +29,25 @@ d:\JeBrainsWorkSpace\AikSteinsGrimoire\aik-skills-lab\
 
 1. **备份原目录**（如已存在）
    ```cmd
-   move "C:\Users\arrowInknee\.lingma\skills" "C:\Users\arrowInknee\.lingma\skills.bak"
+   move "C:\Users\arrowInknee\.qoder\skills" "C:\Users\arrowInknee\.qoder\skills.bak"
    ```
 
 2. **创建 Junction**
    ```cmd
-   mklink /J "C:\Users\arrowInknee\.lingma\skills" "d:\JeBrainsWorkSpace\AikSteinsGrimoire\aik-skills-lab"
+   mklink /J "C:\Users\arrowInknee\.qoder\skills" "d:\JeBrainsWorkSpace\AikSteinsGrimoire\aik-skills-lab"
    ```
 3. Windows PowerShell（管理员权限）
     ```cmd
-    cmd /c mklink /J "C:\Users\arrowInknee\.lingma\skills" "d:\JeBrainsWorkSpace\AikSteinsGrimoire\aik-skills-lab"
+    cmd /c mklink /J "C:\Users\arrowInknee\.qoder\skills" "d:\JeBrainsWorkSpace\AikSteinsGrimoire\aik-skills-lab"
     ```
 
 4. **验证连接**
    ```cmd
-   dir "C:\Users\arrowInknee\.lingma"
+   dir "C:\Users\arrowInknee\.qoder"
    ```
    应看到 `skills [d:\JeBrainsWorkSpace\AikSteinsGrimoire\aik-skills-lab]`
+
+> DSH（WSL）不用 Windows junction：`~/.dsh/skills` 由 `dsh-migration/install.sh` 维护为**每技能一条 symlink**（10 条），校验：`./dsh-migration/install.sh --verify`。
 
 ### 通用模板（替换路径即可）
 
@@ -81,12 +87,16 @@ git checkout v{新版本号}
 
 | IDE | 用户技能目录 | 连接方式 | 维护人 | 日期 |
 |---|---|---|---|---|
+| DSH（WSL） | `~/.dsh/skills` | per-skill symlink | a I k | 2026-11-10 |
+| DSH（Windows 原生） | `C:\Users\arrowInknee\.dsh\skills` | per-skill Junction | a I k | 2026-11-10 |
 | Lingma | `C:\Users\arrowInknee\.lingma\skills` | Junction | a I k | 2026-05-15 |
 | Qoder | `C:\Users\arrowInknee\.qoder\skills` | Junction | a I k | 2026-05-15 |
 | Claude | `C:\Users\arrowInknee\.claude\skills` | Junction | a I k | 2026-05-15 |
 | QoderCN | `C:\Users\syLvate\.qoder-cn\skills` | Junction | a I k | 2026-07-08 |
 | CcSwitch | `C:\Users\syLvate\.cc-switch\skills` | Junction | a I k | 2026-07-23 |
 | {新IDE} | `{路径}` | Junction | {维护人} | {日期} |
+
+> 上表为历史记录；2026-11-11 实测：Qoder / QoderCN 有效，Lingma / Claude 目录缺失，CcSwitch 非链接。
 
 ## 注意事项
 

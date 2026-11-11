@@ -1,0 +1,13 @@
+{
+  "runId": "20261111-1155",
+  "mode": "apply(commit)",
+  "db": "172.29.48.1:3306/aik_steins_grimoire",
+  "codes": [
+    "importer-smoke-test-20261111"
+  ],
+  "expected": 1,
+  "foundAfter": 1,
+  "at": "2026-11-11T04:42:26.433Z",
+  "draft": "/mnt/d/JeBrainsWorkSpace/AikSteinsGrimoire/dsh-migration/tests/p3-import-smoke/20261111-1155.sql",
+  "rollbackSql": "/mnt/d/JeBrainsWorkSpace/AikSteinsGrimoire/dsh-migration/tests/p3-import-smoke/rollback.sql"
+}

@@ -282,4 +282,4 @@ netstat -tlnp | grep 8080
 
 ---
 
-> 本文档由 spec-devops 生成，用于指导部署实施工作。
+> 本文档由 devops 技能生成，用于指导部署实施工作。

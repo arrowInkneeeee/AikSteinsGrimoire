@@ -300,7 +300,7 @@ private LocalDate effectDate;
 
 ## 主键策略
 
-- 使用 `IdType.INPUT` 或 `IdType.AUTO`
+- 统一使用 `IdType.INPUT` + `IdUtil.getSnowflakeNextId()` 显式生成 ID（本仓库约定）
 - 类型：`Long`
 - ID生成：使用项目统一的ID生成工具
 

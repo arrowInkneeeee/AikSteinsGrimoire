@@ -1,0 +1,16 @@
+{
+  "runId": "20261111-1155",
+  "grimoire": { "path": "/mnt/d/JeBrainsWorkSpace/AikSteinsGrimoire", "head": "3b1c577", "remote": "git@github.com:arrowInkneeeee/AikSteinsGrimoire.git" },
+  "env": { "envType": "wsl2", "strategy": "direct" },
+  "sources": [{ "type": "pasted-text", "ref": "smoke-test", "fetchedAt": "2026-11-11T11:55:00+08:00" }],
+  "items": [{
+    "type": "CODE",
+    "code": "importer-smoke-test-20261111",
+    "content": "// P3 importer commit-path smoke test; safe to delete\n",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "sourceRef": "smoke-test",
+    "db": { "table": "aik_knowledge", "code": "importer-smoke-test-20261111", "status": "pending" },
+    "approval": { "landing": false, "dbImport": true }
+  }],
+  "result": { "created": 0, "skipped": 0, "conflicts": 0, "failed": 0 }
+}

@@ -22,27 +22,17 @@ accumulation-component-{name}/
         └── service/XxServiceTest.java    # 单元测试
 ```
 
-## 3 层审查流程
+## 3 层审查流程（由 `code-review` 技能执行）
 
-### 第1层：代码风格审查（code-style-reviewer）
+本文件不复制审查规则，复写后直接调用 `code-review` 的对应子命令：
 
-- 命名规范
-- 注释规范
-- 格式规范
+| 层 | 子命令 | 关注点 |
+|---|---|---|
+| 第1层：风格 | `code-review style` | 命名、注释、格式（对照 `aIk-coding-style`） |
+| 第2层：质量 | `code-review quality` | N+1 查询、空指针、事务边界、资源泄漏 |
+| 第3层：安全 | `code-review security` | SQL 注入、越权、残留敏感数据 |
 
-### 第2层：代码质量审查（code-quality-reviewer）
-
-- N+1 查询
-- 空指针风险
-- 事务问题
-
-### 第3层：安全审查（code-security-reviewer）
-
-- SQL 注入
-- 权限校验
-- 残留敏感数据
-
-**全部通过才能交付，不通过则返回修复。**
+**三层全部通过才能交付，不通过则返回修复。**
 
 ## 3 个人工检查点
 
@@ -50,7 +40,7 @@ accumulation-component-{name}/
 
 复写前检查目标项目：
 - pom.xml 已有依赖
-- 已有通用组件（Result / BaseEntity / PageDTO / BusinessException）
+- 已有通用组件（ApiResponse / BaseEntity / PageDTO / BusinessException）
 - 包结构和集成位置建议
 - 确认数据库类型
 
@@ -71,7 +61,7 @@ accumulation-component-{name}/
 
 展示：
 - 交付物文件清单
-- 三层审查结果
+- `code-review` 三层审查结果（风格 / 质量 / 安全）
 - 测试用例数
 - 残留业务信息检查结果
 
@@ -82,4 +72,4 @@ accumulation-component-{name}/
 - 复写代码不得包含源项目的任何业务名称
 - 配置中的敏感项必须使用环境变量占位符
 - 所有类 100% 符合 aIk-coding-style
-- 三层审查必须全部通过才能交付
+- `code-review` 的 style / quality / security 必须全部通过才能交付

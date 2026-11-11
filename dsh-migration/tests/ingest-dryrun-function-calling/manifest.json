@@ -1,0 +1,46 @@
+{
+  "runId": "20261111-1150",
+  "grimoire": {
+    "path": "/mnt/d/JeBrainsWorkSpace/AikSteinsGrimoire",
+    "head": "3b1c577",
+    "remote": "git@github.com:arrowInkneeeee/AikSteinsGrimoire.git"
+  },
+  "env": {
+    "envType": "wsl2",
+    "strategy": "direct"
+  },
+  "sources": [
+    {
+      "type": "web-page",
+      "ref": "https://nengyongai.cn/learn/01-vibecoding-learning/01-what-is-vibecoding/function-calling",
+      "fetchedAt": "2026-11-11T11:50:00+08:00",
+      "title": "Function Calling（拓展阅读）",
+      "site": "能用AI",
+      "notes": "免费章节，全文可见；落盘为中文总结归纳"
+    }
+  ],
+  "items": [
+    {
+      "type": "NOTE",
+      "code": "function-calling",
+      "target": "grimoire-scrolls/function-calling/function-calling.md",
+      "sha256": "36bdb5c7db729d8296da2e3dbbe54228624482306bbb99de7aa7d701e1412966",
+      "sourceRef": "https://nengyongai.cn/learn/01-vibecoding-learning/01-what-is-vibecoding/function-calling",
+      "db": {
+        "table": "aik_knowledge",
+        "code": "function-calling",
+        "status": "pending"
+      },
+      "approval": {
+        "landing": false,
+        "dbImport": false
+      }
+    }
+  ],
+  "result": {
+    "created": 0,
+    "skipped": 0,
+    "conflicts": 0,
+    "failed": 0
+  }
+}

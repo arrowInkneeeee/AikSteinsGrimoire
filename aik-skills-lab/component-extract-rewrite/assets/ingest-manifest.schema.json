@@ -1,0 +1,222 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "aik-skills-lab/component-extract-rewrite/assets/ingest-manifest.schema.json",
+  "title": "DSH knowledge ingest manifest",
+  "description": "一次知识摄取运行的清单：来源、落地文件、SHA-256、元数据入库状态与审批记录。",
+  "type": "object",
+  "required": [
+    "runId",
+    "grimoire",
+    "sources",
+    "items"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "runId": {
+      "type": "string",
+      "pattern": "^[0-9]{8}-[0-9]{4}$"
+    },
+    "grimoire": {
+      "type": "object",
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "head": {
+          "type": "string"
+        },
+        "remote": {
+          "type": "string"
+        }
+      }
+    },
+    "env": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "envType": {
+          "enum": [
+            "wsl2",
+            "windows",
+            "vm-shared",
+            "vm-isolated",
+            "container",
+            "linux"
+          ]
+        },
+        "strategy": {
+          "enum": [
+            "direct",
+            "copy-bridge"
+          ]
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "type",
+          "ref"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "enum": [
+              "local-repo",
+              "workspace-doc",
+              "web-page",
+              "pasted-text"
+            ]
+          },
+          "ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fetchedAt": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "site": {
+            "type": "string"
+          },
+          "license": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "type",
+          "code",
+          "target",
+          "sha256"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "enum": [
+              "NOTE",
+              "COMPONENT",
+              "SOLUTION",
+              "CODE"
+            ]
+          },
+          "code": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "target": {
+            "type": "string",
+            "description": "相对魔典根的文件路径；CODE 类型留空"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "db": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "table": {
+                "const": "aik_knowledge"
+              },
+              "code": {
+                "type": "string"
+              },
+              "status": {
+                "enum": [
+                  "pending",
+                  "generated",
+                  "inserted",
+                  "skipped",
+                  "failed"
+                ]
+              }
+            }
+          },
+          "approval": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "landing": {
+                "type": "boolean"
+              },
+              "dbImport": {
+                "type": "boolean"
+              }
+            }
+          },
+          "sourceRef": {
+            "type": "string",
+            "description": "对应 sources[].ref"
+          },
+          "title": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "sourceProject": {
+            "type": "string"
+          },
+          "sourcePath": {
+            "type": "string"
+          },
+          "resourcePath": {
+            "type": "string"
+          },
+          "categoryId": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "extJson": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "created": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "skipped": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "conflicts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "failed": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

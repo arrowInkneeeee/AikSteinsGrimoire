@@ -4,6 +4,8 @@
 > 测试类型: 技术型 + 纪律型
 > 规范来源: [aIk-coding-style](../../aIk-coding-style/SKILL.md)
 
+> ⚠️ 时效性（2026-11-11 同步批注）：本场景编写于旧规范；断言以当前 `aIk-coding-style` 与对应 SKILL 为准：表名/字段名小写、注解按项目选 Swagger `@ApiModel` 或 SpringDoc `@Schema`（本仓库 `@Schema`）、`@Transactional` 默认不加/多表写入先确认、路由以 `component-extract-rewrite` 新表为准。样例与规范冲突时以规范为准，勿按旧样例判分。
+
 ---
 
 ## 测试场景概述

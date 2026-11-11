@@ -3,7 +3,7 @@
 > 本文件是 AikSteinsGrimoire **系统自身**（需求 / 设计 / 契约 / 计划 / 决策）的**唯一入口**。
 > 任何"这条事实该写在哪"的问题，先查 [§3 权威边界](#3-权威边界防漂移核心)。
 >
-> 版本：v2.0 | 更新：2026-09-20 | 状态：生效中 | 权威范围：文档结构与权威归属
+> 版本：v2.3 | 更新：2026-11-11 | 状态：生效中 | 权威范围：文档结构与权威归属
 
 ---
 
@@ -41,6 +41,8 @@ grimoire-files/
 │       └── design.md               # Grimoire Web 前端设计
 ├── plans/                          # 计划与历史记录
 │   ├── execution-plan.md           #   仓库级执行计划：顺序 / 门禁 / 证据索引 / 回滚
+│   ├── knowledge-ingestion-rework.md # 知识摄取与魔典定位链路改造方案（技能侧）
+│   ├── ingest-reports/             #   知识摄取运行报告与 SQL 草案（运行时产物）
 │   ├── project-architecture.md     # ⚠️ 已取代（保留溯源）
 │   ├── file-storage-research-report.md
 │   └── file-storage-strategy-refactor.md
@@ -66,6 +68,7 @@ grimoire-files/
 | **前端**页面、路由、组件、视觉 | `design-docs/frontend/design.md` | 前端 |
 | **执行阶段划分与验收** | `design-docs/system-module/api-contract.md` §4 | 全部 |
 | **仓库级执行顺序、门禁、证据索引、提交时点、回滚决策点** | `plans/execution-plan.md` | 全部 |
+| **知识摄取/魔典定位链路改造方案与执行进展** | `plans/knowledge-ingestion-rework.md` | 全部 |
 | **代码与 DDL 的实测现状**、模块间矛盾清单；本轮改造的**退役台账 / 风险登记 / 改动边界 / 提交策略**（§10–§13） | `design-docs/system-module/backend-audit.md` | 后端、全部 |
 | 跨模块**决策记录** | `grimoire-agent/agent/decision-log.md` | 全部 |
 
@@ -105,6 +108,7 @@ grimoire-files/
 | `knowledge-module/design.md` | v1.3 | 2026-09-20 | 生效中 | 包结构与表结构；§3.2 已重写为**通用附件挂载表** + knowledge 侧接入边界；**不含** `aik_sys_attachment`（归属 system 模块） |
 | `frontend/design.md` | v2.3 | 2026-09-20 | 生效中 | §附件交互 已定稿（零 URL 拼接 / blob 约定 / **8 字段**）；R18 已解决；§待修订项 18 项中 **15 项**未处置（含 1 项需用户决策 R09） |
 | `plans/execution-plan.md` | v1.0 | 2026-09-20 | 生效中 | **仓库级执行计划**：执行顺序 / 门禁 G0–G6 / 验收判据 A1–A4 / 证据索引 / 提交时点 / 回滚决策点（**接口级**验收命令仍归 `api-contract.md` §4） |
+| `plans/knowledge-ingestion-rework.md` | v1.4 | 2026-11-11 | 生效中（P0/P1/P2 已执行；P3 核心已实现） | 多源知识摄取、魔典定位链路、`component-extract-rewrite` 改造、`skill-tester` 维护态方案；P3 导入器已实现并冒烟测试 |
 | `plans/project-architecture.md` | — | — | **已取代** | 仅保留溯源，勿引用 |
 
 **状态取值**：`起草中` / `生效中` / `已取代` / `已归档`

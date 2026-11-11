@@ -225,4 +225,4 @@ Phase 3: Could Have（第4周，视进度）
 
 ---
 
-> 本文档由 spec-requirement-analyser 生成，用于指导后续设计和开发工作。
+> 本文档由 requirement-engineering 技能生成，用于指导后续设计和开发工作。

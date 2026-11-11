@@ -1,6 +1,6 @@
 ---
 name: system-design
-description: 系统设计全流程技能——架构分层设计、数据库设计、API设计、流程设计、技术选型、设计评审，最终产出结构化SDD文档。适用于"系统设计"、"架构设计"、"数据库设计"、"API设计"、"流程设计"、"技术选型"、"设计评审"、"出设计方案"等场景。
+description: '从 PRD 产出系统设计（SDD）时使用：分层架构、数据库表与索引、RESTful API 契约、核心流程与状态机、技术选型决策树、P0-P3 设计评审，产出 docs/sdd。用户说"设计架构 / 建表 / 设计接口 / 技术选型"时加载。'
 type: Skill
 version: 1.0.0
 trigger:
@@ -24,6 +24,8 @@ trigger:
 
 # system-design
 
+> **落盘确认门禁（DSH workspace-write）**：本技能会创建或修改工作区文件。每次写入前先列出将创建/修改的文件路径与摘要，等用户确认后再写；一次流程结束给出变更清单。
+
 系统设计全流程技能，覆盖架构分层、数据库表设计、API接口设计、核心流程设计、技术方案选型和设计评审，最终产出结构化SDD文档。
 
 ## 前置检查
@@ -32,10 +34,10 @@ trigger:
 
 ```bash
 # 检查项目结构
-find src -type d -name "common" -o -name "util" -o -name "config" | head -20
+find src \( -type d -name "common" -o -type d -name "util" -o -type d -name "config" \) | head -20
 
 # 检查已有通用类
-grep -r "class Result" --include="*.java" src/
+grep -r "class ApiResponse" --include="*.java" src/
 grep -r "class BaseEntity" --include="*.java" src/
 grep -r "class PageDTO" --include="*.java" src/
 
@@ -58,12 +60,12 @@ cat pom.xml | grep -E "(redis|rabbitmq|redisson|kafka)"
 **输出**：
 - 包结构设计（controller/service/dao/entity/dto/vo/common）
 - 各层职责定义
-- 通用组件复用清单（优先复用项目已有的 Result, BaseEntity, PageDTO）
+- 通用组件复用清单（优先复用项目已有的 ApiResponse、BaseEntity、PageDTO）
 - 模块划分方案
 
 **执行步骤**：
 1. 分析需求，识别业务模块边界
-2. 检查项目已有的通用组件（Result, BaseEntity, PageDTO等）
+2. 检查项目已有的通用组件（ApiResponse、BaseEntity、PageDTO 等）
 3. 设计包结构，遵循 aIk-coding-style 分层规范
 4. 定义各层职责和交互规则
 5. 标注可复用的项目通用组件
@@ -90,7 +92,7 @@ cat pom.xml | grep -E "(redis|rabbitmq|redisson|kafka)"
 
 **执行步骤**：
 1. 分析需求中的实体和关系
-2. 设计表结构（表名大写下划线，字段大写下划线）
+2. 设计表结构（表名/字段名小写下划线，与 `aIk-coding-style/references/16-naming.md` 一致）
 3. 设计索引（主键、唯一索引、普通索引）
 4. 生成ER图（PlantUML格式）
 5. 生成MyBatis-Plus实体类（遵循 aIk-coding-style 注解规范）
@@ -112,7 +114,7 @@ RESTful API接口设计，定义请求参数、响应结构和URL路径。
 **输出**：
 - API列表（方法 + URL + 说明）
 - 请求参数定义（DTO）
-- 响应结构定义（VO，统一使用 Result 包装）
+- 响应结构定义（VO，统一使用项目响应封装类 `ApiResponse<T>` 包装）
 - 错误码定义
 - API契约文档
 
@@ -120,7 +122,7 @@ RESTful API接口设计，定义请求参数、响应结构和URL路径。
 1. 分析需求中的操作行为，映射为RESTful操作
 2. 设计URL路径（复数名词、层级关系）
 3. 定义请求参数（Query/Path/Body）
-4. 定义响应结构（统一使用 Result<T> 包装）
+4. 定义响应结构（统一使用项目响应封装类，本仓库为 `ApiResponse<T>`）
 5. 设计错误码体系
 6. 使用 `assets/api-contract-template.md` 模板输出
 
@@ -272,8 +274,8 @@ RESTful API接口设计，定义请求参数、响应结构和URL路径。
 ## 约束
 
 - 所有代码产出必须遵循 `aIk-coding-style` 规范
-- 优先复用项目已有的通用组件（Result, BaseEntity, PageDTO）
-- 表名大写下划线，字段大写下划线，索引 IDX_/UK_ 前缀
+- 优先复用项目已有的通用组件（统一响应类如 `ApiResponse`、BaseEntity、PageDTO）
+- 表名/字段名小写下划线，索引 IDX_/UK_ 前缀
 - Java类驼峰命名
 - SDD文档使用 Markdown 格式
 - 时序图和ER图使用 PlantUML 格式

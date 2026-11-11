@@ -4,7 +4,7 @@
 
 一套完整的软件开发生命周期（SDLC）技能库，专为 Java 8 + Spring Boot + MyBatis-Plus + Lombok 技术栈设计。
 
-包含 **10 个技能**，采用子命令模式覆盖需求分析、系统设计、开发实施、测试质量、部署运维、组件萃取全流程。消灭编排层，每个技能独立可用，通过 `full` 子命令支持全流程执行。
+包含 **10 个核心技能**（另有 `ccgui-plugin-creator` 由 CC GUI 托管），采用子命令模式覆盖需求分析、系统设计、开发实施、测试质量、部署运维、组件萃取全流程。消灭编排层，每个技能独立可用，通过 `full` 子命令支持全流程执行。
 
 ## 技能库结构
 
@@ -97,24 +97,28 @@ aik-skills-lab/
 完整萃取复写流水线               → component-extract-rewrite full-pipeline
 ```
 
-### 方式四：全局/项目级安装
+### 方式四：全局/项目级安装（单一来源，不复制）
 
-**全局使用（已配置）：**
-```
-C:\Users\arrowInknee\.lingma\skills\
-```
+技能真身只在 `aik-skills-lab/`；各宿主用**文件系统链接**引用，改一处全部生效，不需要同步：
 
-**项目级符号链接（推荐，自动同步）：**
+| 宿主 | 用户技能目录 | 方式 |
+|---|---|---|
+| DSH（WSL，当前） | `~/.dsh/skills` | 每技能一条 symlink（已配置） |
+| DSH（Windows 原生） | `C:\Users\arrowInknee\.dsh\skills` | 每技能一条 Junction |
+| Qoder | `C:\Users\arrowInknee\.qoder\skills` | 整库 Junction |
+| QoderCN | `C:\Users\arrowInknee\.qoder-cn\skills` | 整库 SymbolicLink |
+
 ```bash
-# Windows CMD（管理员权限）
-mklink /J .skills C:\Users\arrowInknee\.lingma\skills
+# DSH（WSL）：安装 / 校验 / 卸载
+cd /mnt/d/JeBrainsWorkSpace/AikSteinsGrimoire
+./dsh-migration/install.sh           # 默认用户级
+./dsh-migration/install.sh --verify
 
-# Windows PowerShell（管理员权限）
-cmd /c mklink /J .skills C:\Users\arrowInknee\.lingma\skills
-
-# Mac/Linux
-ln -s ~/.lingma/skills .skills
+# Windows 原生 DSH（管理员或开发者模式）
+mklink /J "C:\Users\arrowInknee\.dsh\skills\code-review" "D:\JeBrainsWorkSpace\AikSteinsGrimoire\aik-skills-lab\code-review"
 ```
+
+> 链接只是"多一个入口"，不产生第二份内容；仓库移动后重建链接即可，无需复制或写同步脚本。
 
 ## 技能间协作
 
@@ -151,14 +155,14 @@ skill-tester：任意技能均可被测试验证
 - **MyBatis-Plus 3.5.x**：LambdaQueryWrapper、BaseMapper、IService
 - **Lombok**：@Data、@Builder、@RequiredArgsConstructor、@Slf4j
 - **分层架构**：Controller/Service(impl)/Mapper/Entity/DTO/VO
-- **数据库规范**：大写下划线命名（T_ORDER、CREATE_TIME）
+- **数据库规范**：小写下划线命名（如 `aik_knowledge`、`CREATE_TIME`）
 - **测试框架**：JUnit 5 + Mockito + AssertJ
 - **构建工具**：Maven
 
 ## 注意事项
 
 1. **子命令模式**：每个技能通过子命令提供细粒度控制，`full` 子命令执行完整流程
-2. **优先复用**：所有技能遵循"优先复用项目已有"原则（Result / BaseEntity / PageDTO 等不重复创建）
+2. **优先复用**：所有技能遵循"优先复用项目已有"原则（ApiResponse / BaseEntity / PageDTO 等不重复创建）
 3. **人工决策点**：数据库类型确认、覆盖率阈值调整、敏感信息处理、部署时间窗口等场景需暂停确认
 4. **L3 渐进式加载**：
    - L1（YAML 元数据）：name/description/type/version

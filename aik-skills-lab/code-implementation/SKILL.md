@@ -1,6 +1,6 @@
 ---
 name: code-implementation
-description: 代码实现全流程技能——从SDD生成代码骨架、填充业务逻辑、生成API文档和数据库迁移脚本，最终产出完整可运行代码。适用于"实现代码"、"开发功能"、"写代码"、"根据设计编码"、"代码实施"、"生成代码骨架"、"生成API文档"、"生成迁移脚本"等场景。
+description: '按 SDD 实现 Java 代码时使用：生成 Controller/Service/Mapper/PO/DTO/VO 骨架、填充业务逻辑、生成 API 文档与建表迁移 SQL、补模块 README；产出须符合 aik-coding-style。用户说"实现功能 / 写代码 / 生成骨架"时加载。'
 type: Skill
 version: 1.0.0
 trigger:
@@ -21,6 +21,8 @@ trigger:
 
 # code-implementation
 
+> **落盘确认门禁（DSH workspace-write）**：本技能会创建或修改工作区文件。每次写入前先列出将创建/修改的文件路径与摘要，等用户确认后再写；一次流程结束给出变更清单。
+
 代码实现全流程技能，覆盖代码骨架生成、业务逻辑填充、API文档生成和数据库迁移脚本生成，最终产出完整可运行代码。
 
 > **重要**：本技能所有代码产出必须严格遵循 [aIk-coding-style](../aIk-coding-style/SKILL.md) 规范。
@@ -35,11 +37,11 @@ trigger:
 6. **PO实体注解**：
    - 无继承：`@Data + @Builder + @NoArgsConstructor + @AllArgsConstructor`
    - 有继承：`@Data + @SuperBuilder + @AllArgsConstructor + @ToString(callSuper) + @EqualsAndHashCode(callSuper)` + 显式无参构造
-7. **DTO/VO注解**：
-   - DTO（独立）：`@Data + @ApiModel`
-   - DTO（继承PO）：`@Data + @EqualsAndHashCode(callSuper) + @ApiModel`
-   - VO（默认）：`@Data + @ApiModel`，必须包含 `of()` 方法
-   - VO（复杂）：`@Data + @Builder + @NoArgsConstructor + @AllArgsConstructor + @ApiModel`
+7. **DTO/VO注解**（按 `aIk-coding-style/references/01-api-doc-annotations.md` 选择 Swagger `@ApiModel` 或 SpringDoc `@Schema`；本仓库为 `@Schema`）：
+   - DTO（独立）：`@Data` + 上述注解
+   - DTO（继承PO）：`@Data + @EqualsAndHashCode(callSuper)` + 上述注解
+   - VO（默认）：`@Data` + 上述注解，必须包含 `of()` 方法
+   - VO（复杂）：`@Data + @Builder + @NoArgsConstructor + @AllArgsConstructor` + 上述注解
 8. **SQL实现方式**：优先 MyBatis-Plus API，复杂 SQL 才用 XML，不生成空 XML
 9. **XML位置**：放在 Java源代码目录的 `dao/mapping/` 下，禁止放在 resources 目录
 10. **文件编码**：UTF-8 无 BOM
@@ -60,7 +62,7 @@ trigger:
 
 **执行步骤**：
 1. 解析SDD中的数据库设计和API设计
-2. 检查项目已有通用组件（BaseEntity, Result, PageDTO）
+2. 检查项目已有通用组件（BaseEntity、ApiResponse、PageDTO）
 3. 生成PO实体类（XxPo，放在 common/po/）
 4. 生成Mapper接口（继承BaseMapper）
 5. 生成Service接口和实现类骨架
@@ -91,7 +93,7 @@ trigger:
 
 **执行步骤**：
 1. 根据SDD中的流程设计，实现Service层业务逻辑
-2. 实现事务管理（@Transactional，标注传播行为）
+2. 实现事务管理：按 aIk 事务规范默认不加 `@Transactional`；多表/批量写入前先经用户确认，再标注传播行为
 3. 实现缓存逻辑（如有技术选型）
 4. 实现消息队列逻辑（如有技术选型）
 5. 实现Controller层参数校验和调用
@@ -142,7 +144,7 @@ trigger:
 3. 生成索引SQL（CREATE INDEX）
 4. 生成注释SQL（COMMENT）
 5. 按版本号命名（V1.0.0__create_xxx_table.sql）
-6. 保存至 `db/migration/` 或 `sql/` 目录
+6. 保存至项目现有 SQL 目录（默认 `sql/`；已有迁移目录则跟随）
 
 **人机协作节点**（如未明确数据库类型）：
 - 自动检测：`grep -E "mysql|postgresql|oracle" pom.xml`
@@ -163,7 +165,7 @@ trigger:
 - 完整代码结构 + API文档 + 数据库脚本 + README.md
 
 **执行步骤**：
-1. 检查项目已有组件（BaseEntity, Result, PageDTO, 全局异常处理, 配置类）
+1. 检查项目已有组件（BaseEntity、ApiResponse、PageDTO、全局异常处理、配置类）
 2. **【人机协作】** 确认缺失组件是否需要创建
 3. 执行 `skeleton` → 生成代码骨架
 4. 执行 `implement` → 填充业务逻辑
@@ -213,7 +215,7 @@ trigger:
 | Java代码 | `src/main/java/com/xxx/module/` | Java源文件 |
 | Mapper XML | `src/main/java/com/xxx/module/dao/mapping/` | XML文件 |
 | API文档 | `docs/api/xx-api.md` | Markdown |
-| 数据库脚本 | `db/migration/` 或 `sql/` | SQL文件 |
+| 数据库脚本 | `sql/`（或项目现有 SQL 目录） | SQL文件 |
 | README | 模块根目录 | Markdown |
 
 ## 工作流上下文
@@ -229,7 +231,7 @@ trigger:
 
 | 检查点 | 条件 | 动作 |
 |--------|------|------|
-| 通用组件检查 | 已确认 BaseEntity/Result/PageDTO 存在 | 继续 |
+| 通用组件检查 | 已确认 BaseEntity/ApiResponse/PageDTO 存在 | 继续 |
 | 编码规范 | 所有类使用 -anchor 注释 | 继续 |
 | 文件编码 | UTF-8 无 BOM | 继续 |
 

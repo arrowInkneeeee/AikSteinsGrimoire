@@ -5,11 +5,14 @@
 ### 1. 确认技能已安装
 
 ```bash
-# 检查用户级技能目录
-dir C:\Users\arrowInknee\.lingma\skills\
+# DSH（WSL）：检查用户级技能根（应为 10 条链接）
+ls -l ~/.dsh/skills/
+# 或直接校验
+cd /mnt/d/JeBrainsWorkSpace/AikSteinsGrimoire && ./dsh-migration/install.sh --verify
 ```
 
-重启 IDE，在设置中查看"技能"是否显示 10 个技能。
+- DSH：技能根是 `~/.dsh/skills`（每技能一条符号链接，不复制内容）。
+- IDE（Lingma/Qoder/QoderCN）：用户技能目录是整库链接（Junction/SymbolicLink）。
 
 ### 2. 推荐使用方式
 
@@ -49,6 +52,8 @@ cmd /c mklink /J .skills C:\Users\arrowInknee\.lingma\skills
 # Mac/Linux
 ln -s ~/.lingma/skills .skills
 ```
+
+> DSH 用户级已由 `dsh-migration/install.sh` 配置为每技能一条链接，通常无需在项目内再建链接。
 
 **优点：** 一处修改，全局生效；无需手动同步
 

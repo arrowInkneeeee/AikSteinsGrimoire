@@ -1,0 +1,38 @@
+# DSH skill migration manifest
+#
+# Format: <link-name> <TAB> <source-dir-relative-to-repo-root> <TAB> <set> <TAB> <catalog-name>
+#   link-name    name of the symlink created under the DSH skill root. It equals the
+#                source directory name so base-relative links inside references/
+#                (e.g. ../aIk-coding-style/references/x.md) keep resolving.
+#   catalog-name name DSH shows and routes by; it comes from `name:` in SKILL.md
+#                and must be strictly kebab-case (^[a-z0-9]+(?:-[a-z0-9]+)*$).
+#   set          core -> installed by default; extra -> only with --set all
+#
+# The canonical skill files stay in aik-skills-lab/ (shared with Lingma/Qoder/
+# Claude through junctions), so installs are symlinks to a single source of truth.
+#
+# Adapter applied during migration:
+#   aIk-coding-style: frontmatter `name:` changed from `aIk-coding-style` to
+#   `aik-coding-style` (DSH rejects uppercase in skill names). The directory and
+#   the link keep the original name so existing relative links still resolve.
+#   Additionally (user-approved), tools/apply-audit-fixes.mjs applied the audit's
+#   source improvements: description rewrites for DSH routing, the 3
+#   code-generating contradiction fixes, write-before-confirm gates, the
+#   component location-chain rewrite, and skill-tester catalog opt-out.
+#
+# Skills deliberately NOT migrated:
+#   ccgui-plugin-creator  - targets the CC GUI desktop app plugin SDK; DSH uses its
+#                           own Cordis plugin system, so the instructions do not apply.
+#   gitnexus-*            - depend on the GitNexus MCP server/tools, which are not
+#                           configured in this DSH profile; see report/.
+link-name	source	set	catalog-name
+aIk-coding-style	aik-skills-lab/aIk-coding-style	core	aik-coding-style
+requirement-engineering	aik-skills-lab/requirement-engineering	core	requirement-engineering
+system-design	aik-skills-lab/system-design	core	system-design
+code-implementation	aik-skills-lab/code-implementation	core	code-implementation
+code-review	aik-skills-lab/code-review	core	code-review
+testing	aik-skills-lab/testing	core	testing
+devops	aik-skills-lab/devops	core	devops
+handoff-bundle	aik-skills-lab/handoff-bundle	core	handoff-bundle
+component-extract-rewrite	aik-skills-lab/component-extract-rewrite	extra	component-extract-rewrite
+skill-tester	aik-skills-lab/skill-tester	extra	skill-tester

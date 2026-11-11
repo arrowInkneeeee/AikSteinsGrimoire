@@ -422,4 +422,4 @@ WantedBy=multi-user.target
 
 ---
 
-> 本文档由 spec-devops 生成，供运维团队日常使用。请根据实际情况更新和维护。
+> 本文档由 devops 技能生成，供运维团队日常使用。请根据实际情况更新和维护。

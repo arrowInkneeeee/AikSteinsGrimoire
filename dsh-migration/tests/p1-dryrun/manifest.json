@@ -1,0 +1,68 @@
+{
+  "runId": "20261111-1130",
+  "grimoire": {
+    "path": "/mnt/d/JeBrainsWorkSpace/AikSteinsGrimoire",
+    "head": "3b1c577",
+    "remote": "git@github.com:arrowInkneeeee/AikSteinsGrimoire.git"
+  },
+  "env": {
+    "envType": "wsl2",
+    "strategy": "direct"
+  },
+  "sources": [
+    {
+      "type": "web-page",
+      "ref": "https://www.conventionalcommits.org/en/v1.0.0/",
+      "fetchedAt": "2026-11-11T11:26:00+08:00",
+      "title": "Conventional Commits 1.0.0",
+      "site": "conventionalcommits.org",
+      "license": "CC BY 3.0"
+    },
+    {
+      "type": "local-repo",
+      "ref": "/mnt/d/JeBrainsWorkSpace/AikSteinsGrimoire/src/main/java/io/aik/steins/grimoire/components/threadpool",
+      "fetchedAt": "2026-11-11T11:27:00+08:00",
+      "notes": "既有组件包；用于验证 COMPONENT 分类与目标已存在的冲突处理"
+    }
+  ],
+  "items": [
+    {
+      "type": "NOTE",
+      "code": "conventional-commits",
+      "target": "grimoire-scrolls/conventional-commits/conventional-commits.md",
+      "sha256": "81ca47cb1bb645293057e7d03dbcb0f85e881eed710ff9f9831acc82c4b9c5f4",
+      "sourceRef": "https://www.conventionalcommits.org/en/v1.0.0/",
+      "db": {
+        "table": "aik_knowledge",
+        "code": "conventional-commits",
+        "status": "pending"
+      },
+      "approval": {
+        "landing": false,
+        "dbImport": false
+      }
+    },
+    {
+      "type": "COMPONENT",
+      "code": "threadpool-executor",
+      "target": "grimoire-files/component-manuals/threadpool-executor.md",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "sourceRef": "/mnt/d/JeBrainsWorkSpace/AikSteinsGrimoire/src/main/java/io/aik/steins/grimoire/components/threadpool",
+      "db": {
+        "table": "aik_knowledge",
+        "code": "threadpool-executor",
+        "status": "skipped"
+      },
+      "approval": {
+        "landing": false,
+        "dbImport": false
+      }
+    }
+  ],
+  "result": {
+    "created": 0,
+    "skipped": 1,
+    "conflicts": 1,
+    "failed": 0
+  }
+}

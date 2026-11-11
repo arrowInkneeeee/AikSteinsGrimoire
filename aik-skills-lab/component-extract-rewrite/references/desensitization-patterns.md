@@ -231,7 +231,7 @@ mapper.selectOne(new LambdaQueryWrapper<ResourcePo>()
 ### Controller（如有）
 - [ ] `@RestController` + `@RequestMapping`
 - [ ] 参数校验：`@Valid @RequestBody`
-- [ ] 返回：`Result<T>` 统一包装
+- [ ] 返回：`ApiResponse<T>` 统一包装
 
 ### 通用
 - [ ] 类注释：`-anchor` 格式，`@author a I k .`
