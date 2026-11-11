@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 使用说明：复制本文件为 config/aspose-license.xml，填入你自己的 Aspose 许可证。
+     该真实文件已被 .gitignore 忽略，切勿提交；也可用环境变量 ASPOSE_LICENSE_XML / ASPOSE_LICENSE_FILE 提供。 -->
+<License>
+  <Data>
+    <Products>
+      <Product>Aspose.Total for Java</Product>
+      <Product>Aspose.Words for Java</Product>
+    </Products>
+    <EditionType>Enterprise</EditionType>
+    <SubscriptionExpiry>20991231</SubscriptionExpiry>
+    <LicenseExpiry>20991231</LicenseExpiry>
+    <SerialNumber>YOUR-SERIAL-NUMBER</SerialNumber>
+  </Data>
+  <Signature>YOUR-SIGNATURE</Signature>
+</License>

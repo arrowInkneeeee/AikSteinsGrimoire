@@ -40,8 +40,8 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: input
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 springdoc:
   swagger-ui:

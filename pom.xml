@@ -131,6 +131,17 @@
             <artifactId>guava</artifactId>
             <version>33.0.0-jre</version>
         </dependency>
+
+        <!-- Aspose.Words：Word文档生成。
+             system 依赖：jar 不随仓库分发（lib/*.jar 已被 .gitignore 忽略）；
+             使用者需自行获取 aspose-words-21.11-jdk17.jar 放入 lib/，或改为内部 Maven 仓库依赖。 -->
+        <dependency>
+            <groupId>com.aspose</groupId>
+            <artifactId>aspose-words</artifactId>
+            <version>21.11</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/aspose-words-21.11-jdk17.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <build>
