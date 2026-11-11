@@ -12,8 +12,10 @@ DSH bundle：注册 agent preset **`grimoire-trinity`**（显示名「月見里 
 dsh plugin --profile web add /path/to/repo/grimoire-agent/dsh-preset
 ```
 
-安装后重启 DSH（或由 DSH profile 重载），在 Web 设置的 Agent 预设中选 `grimoire-trinity`。
-先保持“可选”，测试稳定后再设默认。
+安装后重启 DSH（或由 DSH profile 重载）。本 bundle 同时把 `agent-preset-registry.default`
+设为 `grimoire-trinity`，所以**新会话默认使用它**；旧会话保持原 preset。
+如果只想让它可选、不设默认，从 `build.mjs` 生成的 `cordis.patch.yml` 末尾删掉
+`agent-preset-registry` 那段即可。
 
 ## 更新 persona
 

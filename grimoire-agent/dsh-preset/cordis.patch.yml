@@ -199,3 +199,6 @@
         - id: tool-plugin-market
           name: '@deepseek-ai/dsh-plugin-market/tools'
           disabled: true
+- id: agent-preset-registry
+  config:
+    default: grimoire-trinity

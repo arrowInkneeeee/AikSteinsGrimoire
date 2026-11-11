@@ -49,6 +49,13 @@ const header = [
   '    plugins:',
 ];
 const row = [...header, ...persona, ...children];
-const patch = ['- insert:', ...row.map((line) => `  ${line}`), ''].join('\n');
+const patch = [
+  '- insert:',
+  ...row.map((line) => `  ${line}`),
+  '- id: agent-preset-registry',
+  '  config:',
+  '    default: grimoire-trinity',
+  '',
+].join('\n');
 writeFileSync(join(HERE, 'cordis.patch.yml'), patch, 'utf8');
 console.log(`wrote cordis.patch.yml (${row.length} lines, ${children.length} child plugins)`);
