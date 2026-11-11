@@ -1,0 +1,25 @@
+{
+  "name": "dsh-grimoire-trinity",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "DSH agent preset grimoire-trinity: 綾雾彌奈 (default/daily) + 月見里緋緖 (development), one Agent with two personas.",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js"
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "node build.mjs"
+  }
+}
