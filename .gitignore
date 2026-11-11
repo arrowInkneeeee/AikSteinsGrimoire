@@ -50,8 +50,6 @@ contracts.json
 .ccgui/
 .codex/
 .qoder-backup/
-AGENTS.md
-CLAUDE.md
 
 # AgentTeams 团队运行时状态（非源码，勿入库）
 .agent-teams/

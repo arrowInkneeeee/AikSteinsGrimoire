@@ -13,3 +13,8 @@
 
 > 仍在使用：`grimoire-agent/agent/decision-log.md`（项目决策档案，保留在原路径）。
 > 新智能体契约/人设（若需要）应另建 DSH agent preset，不在本存档中继续演进。
+
+## 追加归档（2026-11-11）
+
+- `plans/agent-v3-restructuring.md`：旧智能体 v3 改造方案（已完成）
+- `plans/aik-skills-lab-consolidation.md`：旧 47→10 技能整合方案（已完成）
