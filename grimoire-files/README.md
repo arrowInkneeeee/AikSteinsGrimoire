@@ -18,8 +18,7 @@
 | `component-manuals/` | 知识卷轴产物（组件萃取手册） |
 | `learning-notes/` | 知识卷轴产物（学习笔记） |
 | `wsl/` | 环境搭建操作手册，非项目设计 |
-| `.qoder/repowiki/`（86 份） | AI 生成的派生文档，**不作权威** |
-| `grimoire-agent/` | 智能体自身的演进档案，独立体系 |
+| `grimoire-agent/` | 智能体协作约定/人设/决策档案（旧定义已归档到 `history/`） |
 | 文件存储调研与重构记录 | 历史记录，仅在 §4 登记指针 |
 
 ---
@@ -46,6 +45,10 @@ grimoire-files/
 │   ├── project-architecture.md     # ⚠️ 已取代（保留溯源）
 │   ├── file-storage-research-report.md
 │   └── file-storage-strategy-refactor.md
+├── history/                        # 历史归档（旧智能体、旧计划）
+│   ├── README.md
+│   ├── grimoire-agent/
+│   └── plans/
 ├── component-manuals/              # 知识卷轴产物（不在本体系）
 └── learning-notes/                 # 知识卷轴产物（不在本体系）
 ```
@@ -151,7 +154,9 @@ grimoire-files/
 | `plans/backend-api-contract.md` | → `system-module/api-contract.md` |
 | `plans/frontend-design.md` | → `design-docs/frontend/design.md` |
 | `plans/knowledge-module-design.md` | → `design-docs/knowledge-module/design.md` |
-| `plans/agent-expansion-plan.md`（v0.1） | 已合并入 `grimoire-agent/plan/agent-expansion-plan.md` v0.3 |
+| `plans/agent-expansion-plan.md`（v0.1） | 已归档到 `grimoire-files/history/grimoire-agent/plan/agent-expansion-plan.md` |
+| `plans/agent-v3-restructuring.md` | → `grimoire-files/history/plans/agent-v3-restructuring.md` |
+| `plans/aik-skills-lab-consolidation.md` | → `grimoire-files/history/plans/aik-skills-lab-consolidation.md` |
 | `plans/aik-dev-agent/`（曾被本 README 引用） | 该目录**从不存在**，引用已移除 |
 
 > 文档内部若留有指向旧路径的链接，按上表替换。

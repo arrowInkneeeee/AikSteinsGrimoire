@@ -3,14 +3,18 @@
 把工作区里沉淀的 Java/Spring Boot 全生命周期技能库（`aik-skills-lab/`）接入 DSH 的
 skill 系统，让 DSH 会话能像 Lingma/Qoder/Claude 一样自动发现、按需加载这些技能。
 
+> 历史记录说明（2026-11-11）：本文记录迁移当时的状态。随后清理了 `.qoder/`、`.gitnexus/`、
+> `.claude/`、`.codex/`、`handoff_bundle/` 与 `aik-skills-lab/ccgui-plugin-creator/`；
+> 下文涉及这些对象的段落保留为历史判断，不代表当前目录仍存在。
+
 ## 结论（详见 `report/MIGRATION-ASSESSMENT.md`）
 
 | 资产 | 判定 | 当前状态 |
 |---|---|---|
 | `aik-skills-lab/` 的 8 个核心技能 | ✅ 值得迁移 | **已装到用户级 `~/.dsh/skills` 并通过验证** |
 | `aik-skills-lab/` 的 2 个可选技能 | ✅ 已装 | 已通过 `--set all` 安装（用户级） |
-| `ccgui-plugin-creator` | ❌ 不迁 | CC GUI 产品线专用，与 DSH 无关 |
-| `.claude/skills/gitnexus/*`（6 个） | ⏸ 暂缓 | 依赖 GitNexus MCP，DSH 当前未接；见报告 |
+| `ccgui-plugin-creator` | — 已删除 | CC GUI 产品线专用；目录已于 2026-11-11 清理 |
+| `.claude/skills/gitnexus/*`（6 个） | — 已删除 | 依赖 GitNexus MCP，DSH 未接；随 2026-11-11 清理删除 |
 
 按用户决定：**只保留用户级安装，项目级 `.agents/skills` 已删除**。用户级安装让所有
 DSH 会话（不分项目、不分 profile）都能看到这 10 个技能。
@@ -105,12 +109,12 @@ provider，不受 catalog 缓存影响）。
 
 ## 刻意不迁移的内容
 
-- `ccgui-plugin-creator`：CC GUI 桌面端的插件 SDK，不是 DSH 插件体系；迁入必漂移。
-- `.claude/skills/gitnexus/*`：正文依赖 `gitnexus_*` 工具与 `gitnexus://` 资源，
+- `ccgui-plugin-creator`：CC GUI 桌面端的插件 SDK，不是 DSH 插件体系；迁入必漂移（目录已清理）。
+- `.claude/skills/gitnexus/*`：正文依赖 `gitnexus_*` 工具与 `gitnexus://` 资源（技能已随清理删除），
   DSH web profile 目前没有 MCP server；且仓库索引已 stale、WSL 侧未注册。
   接通步骤见 `report/skills-gitnexus-audit.md`（加 `dsh-mcp-client` 配置 → 在 WSL 重建索引 → 改技能工具名/前缀 → 后再迁）。
 - `aik-skills-lab/agent.md`、`README/QUICK-START/SKILL-LINK-GUIDE` 等：文档/人设，不是技能。
-- 根 `handoff_bundle/`：`handoff-bundle` 技能的一次真实产出实例，不是技能本身。
+- 根 `handoff_bundle/`：`handoff-bundle` 技能曾有一次真实产出实例，已于 2026-11-11 清理；技能本身仍在 `aik-skills-lab/handoff-bundle/`。
 
 ## 注意与限制
 

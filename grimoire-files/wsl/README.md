@@ -1,13 +1,12 @@
 # WSL 初始化快照资料
 
-本目录保存当前 WSL Ubuntu 26.04 初始化快照及其导入说明。
+本目录保存 WSL Ubuntu 26.04 初始化、导入与连接相关文档。
 
 ## 快照
 
-- `Ubuntu-26.04-init.tar`：当前 WSL Ubuntu 26.04 的完整初始化快照。
-- 文件来源：`D:\WSL\WSL-snapshots\Ubuntu-26.04-before-services-2026-08-20.tar`
-- 文件大小：`5,848,791,040` bytes
-- SHA-256：`b84691dcfa6c6d89bfb534e7ff7667f0d9157200bb1d21c8a6d54b31af460f32`
+- 本仓库**不保存** tar 快照（体积大，且可能包含凭证）；需要时从私有备份恢复。
+- 原始来源：`D:\\WSL\\WSL-snapshots\\Ubuntu-26.04-before-services-2026-08-20.tar`。
+- 不要把快照放进 git；只通过可信的私有渠道传输。
 
 ## 文档
 
@@ -15,9 +14,10 @@
 - `wsl2.md`：WSL2 初始安装方案。
 - `wsl2-2.0.md`：WSL2 开发环境方案 v2.2。
 - `wsl2-3.0.md`：WSL2 开发环境方案 v3.0。
+- `wsl2-mirrored-ssh.md`：WSL2 镜像网络模式下的 SSH 配置。
+- `wsl2-ssh-key-localhost.md`：WSL2 下 SSH key 与 localhost 连接配置。
+- `dsh-plugin-market-warm.sh`：DSH 插件市场预热脚本。
 
 ## 注意事项
 
-Tar 快照只包含 WSL Linux 文件系统，不包含 Windows 的 `D:\service`、Windows 版数据库和 Windows 应用。快照中可能包含 Codex、Claude、DeepSeek 等配置及凭证，应通过可信的私有渠道传输，不要公开分享。
-
-本目录及快照文件暂不加入 Git，适合使用百度网盘等私有方式传输。
+Tar 快照只包含 WSL Linux 文件系统，不包含 Windows 的 `D:\\service`、Windows 版数据库和 Windows 应用。快照中可能包含 Codex、Claude、DeepSeek 等配置及凭证，应通过可信的私有渠道传输，不要公开分享。

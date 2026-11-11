@@ -36,6 +36,15 @@ core/
     ├── WebMvcConfig         # CORS 跨域配置
     ├── FileStorageConfig    # 文件存储配置项（@ConfigurationProperties）
     └── BaseMetaObjectHandler # MyBatis-Plus 自动填充处理器
+├── storage/          # 文件存储策略（local / oss / sftp）
+│   ├── FileStorageStrategy   # 存储策略接口
+│   ├── AbstractFileStorage   # 策略模板基类
+│   ├── LocalFileStorage
+│   ├── OssFileStorage
+│   └── SftpFileStorage
+└── tree/             # 树结构工具
+    ├── TreeNode       # 树节点模型
+    └── TreeUtils      # 树构建/遍历工具
 ```
 
 ## 使用示例
